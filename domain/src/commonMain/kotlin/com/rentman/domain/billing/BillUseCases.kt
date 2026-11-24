@@ -13,6 +13,8 @@ import kotlinx.datetime.LocalDate
 import com.rentman.domain.settings.SettingsRepository
 import com.rentman.domain.tenancy.AddressRepository
 import com.rentman.domain.tenancy.ObserveRenterSummariesUseCase
+import com.rentman.domain.tenancy.RentHistory
+import com.rentman.domain.tenancy.RentIncreaseRepository
 import com.rentman.domain.tenancy.RenterId
 import com.rentman.domain.tenancy.RenterRepository
 import com.rentman.domain.tenancy.RentIncreaseOffer
@@ -68,12 +70,23 @@ class ObserveBillContextUseCase(
     private val bills: BillRepository,
     private val settings: SettingsRepository,
     private val payments: PaymentRepository,
+    private val rentChanges: RentIncreaseRepository,
 ) {
     private companion object {
         const val USUAL_USAGE_BILLS = 3
     }
 
+    /** The context for [month], with the rent that applied in that month (a raise accepted later doesn't change an earlier month). */
     operator fun invoke(renterId: RenterId, month: BillingMonth): Flow<Outcome<BillContext>> =
+        combine(context(renterId, month), rentChanges.observeAll()) { context, changes ->
+            context.flatMap { c ->
+                changes.map { all ->
+                    c.copy(rent = RentHistory.rentFor(month, c.summary.renter.monthlyRent, all.filter { it.renterId == renterId }))
+                }
+            }
+        }
+
+    private fun context(renterId: RenterId, month: BillingMonth): Flow<Outcome<BillContext>> =
         combine(
             renters.observeActive(),
             addresses.observeAll(),

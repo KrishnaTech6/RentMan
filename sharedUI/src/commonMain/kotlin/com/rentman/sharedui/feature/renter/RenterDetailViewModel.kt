@@ -21,7 +21,6 @@ import com.rentman.sharedui.feature.renter.RenterDetailIntent.MoveBack
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RecordPayment
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RemovePayment
-import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.Retry
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.SetRemindersMuted
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemove
@@ -38,6 +37,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
@@ -62,13 +63,10 @@ internal class RenterDetailViewModel(
     override val uiState: StateFlow<DetailState> = merge(
         loadReducers(observeLedger, renterId),
         removeReducers(),
-        removeBillReducers(),
         muteReducers(),
         leavingReducers(),
         undoReducers(),
         undoExpiryReducers(),
-        undoBillReducers(),
-        undoBillExpiryReducers(),
         navigationReducers(),
     ).toState(Loading)
 
@@ -80,46 +78,20 @@ internal class RenterDetailViewModel(
                     .onStart { emit { Loading } }
             }
 
-    private fun removeReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<RemovePayment>().flatMapFirst { remove ->
-        flow {
-            emit(
-                removePayment(remove.payment.id).fold(
-                    onSuccess = { content { it.copy(removed = remove.payment, actionError = null) } },
-                    onFailure = { error -> content { it.copy(actionError = error) } },
-                ),
-            )
+    /** A payment or a bill is taken out of the history, and the removal is offered for Undo. One at a time. */
+    private fun removeReducers(): Flow<Reducer<DetailState>> = intents
+        .mapNotNull { intent ->
+            when (intent) {
+                is RemovePayment -> RemovedEntry.OfPayment(intent.payment) to suspend { removePayment(intent.payment.id) }
+                is RemoveBill -> RemovedEntry.OfBill(intent.bill) to suspend { removeBill(intent.bill) }
+                else -> null
+            }
         }
-    }
-
-    private fun removeBillReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<RemoveBill>().flatMapFirst { remove ->
-        flow {
-            emit(
-                removeBill(remove.bill).fold(
-                    onSuccess = { content { it.copy(removedBill = remove.bill, actionError = null) } },
-                    onFailure = ::actionFailed,
-                ),
-            )
+        .flatMapFirst { (entry, remove) ->
+            flow {
+                emit(remove().fold(onSuccess = { content { it.copy(removed = entry, actionError = null) } }, onFailure = ::actionFailed))
+            }
         }
-    }
-
-    private fun undoBillReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<UndoRemoveBill>().flatMapFirst { undo ->
-        flow {
-            emit(
-                restoreBill(undo.bill).fold(
-                    onSuccess = { content { it.copy(removedBill = null, actionError = null) } },
-                    onFailure = ::actionFailed,
-                ),
-            )
-        }
-    }
-
-    /** The bill's Undo offer lasts a few seconds too. */
-    private fun undoBillExpiryReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<RemoveBill>().flatMapLatest {
-        flow {
-            delay(UNDO_MILLIS)
-            emit(content { it.copy(removedBill = null) })
-        }
-    }
 
     private fun muteReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<SetRemindersMuted>().flatMapFirst { change ->
         flow {
@@ -145,17 +117,16 @@ internal class RenterDetailViewModel(
 
     private fun undoReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<UndoRemove>().flatMapFirst { undo ->
         flow {
-            emit(
-                restorePayment(undo.payment.id).fold(
-                    onSuccess = { content { it.copy(removed = null, actionError = null) } },
-                    onFailure = { error -> content { it.copy(actionError = error) } },
-                ),
-            )
+            val restored = when (val entry = undo.entry) {
+                is RemovedEntry.OfPayment -> restorePayment(entry.payment.id)
+                is RemovedEntry.OfBill -> restoreBill(entry.bill)
+            }
+            emit(restored.fold(onSuccess = { content { it.copy(removed = null, actionError = null) } }, onFailure = ::actionFailed))
         }
     }
 
     /** The Undo offer lasts a few seconds. A newer removal starts the wait again. */
-    private fun undoExpiryReducers(): Flow<Reducer<DetailState>> = intents.filterIsInstance<RemovePayment>().flatMapLatest {
+    private fun undoExpiryReducers(): Flow<Reducer<DetailState>> = intents.filter { it is RemovePayment || it is RemoveBill }.flatMapLatest {
         flow {
             delay(UNDO_MILLIS)
             emit(content { it.copy(removed = null) })

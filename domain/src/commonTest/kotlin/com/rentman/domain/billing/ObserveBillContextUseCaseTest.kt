@@ -17,6 +17,8 @@ import com.rentman.domain.tenancy.RenterId
 import com.rentman.domain.tenancy.RenterSummary
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
+import com.rentman.domain.tenancy.FakeRentIncreaseRepository
+import com.rentman.domain.tenancy.RentChange
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -28,12 +30,14 @@ class ObserveBillContextUseCaseTest {
         bills: List<Bill> = emptyList(),
         settings: AppSettings = AppSettings(),
         payments: List<Payment> = emptyList(),
+        rentChanges: List<RentChange> = emptyList(),
     ) = ObserveBillContextUseCase(
         FakeRenterRepository(renters),
         FakeAddressRepository(listOf(TestData.address)),
         FakeBillRepository(bills),
         FakeSettingsRepository(settings),
         FakePaymentRepository(payments),
+        FakeRentIncreaseRepository(rentChanges),
     )
 
     private fun pastBill(month: BillingMonth, total: Paise, reading: Int?, renterId: Long = 1) = Bill(
@@ -165,6 +169,23 @@ class ObserveBillContextUseCaseTest {
     fun anUnknownRenterIsNotFound() = runTest {
         useCase()(RenterId(99), november).test {
             assertEquals(Outcome.Failure(DomainError.NotFound), awaitItem())
+        }
+    }
+
+    @Test
+    fun aBillMadeAgainForAMonthBeforeARaiseGetsTheRentOfThatMonth() = runTest {
+        // The raise to 8,250 was accepted for December, so the renter's rent is already 8,250.
+        val raised = TestData.renter().copy(monthlyRent = 8_250L.rupees)
+        val raise = RentChange(
+            renterId = RenterId(1), oldRent = 7_500L.rupees, newRent = 8_250L.rupees,
+            effectiveMonth = BillingMonth.of(2026, 12), decidedOn = LocalDate(2026, 11, 25),
+        )
+
+        useCase(renters = listOf(raised), rentChanges = listOf(raise))(RenterId(1), november).test {
+            assertEquals(7_500L.rupees, (awaitItem() as Outcome.Success).value.rent)
+        }
+        useCase(renters = listOf(raised), rentChanges = listOf(raise))(RenterId(1), BillingMonth.of(2026, 12)).test {
+            assertEquals(8_250L.rupees, (awaitItem() as Outcome.Success).value.rent)
         }
     }
 }

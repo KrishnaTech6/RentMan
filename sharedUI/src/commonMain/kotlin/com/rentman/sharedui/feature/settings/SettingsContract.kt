@@ -40,7 +40,7 @@ internal sealed interface SettingsUiState {
         val saveError: DomainError? = null,
         val isSaving: Boolean = false,
         /** What the form was last filled from. If the saved settings change (a restore), the form is filled again. */
-        val seed: SettingsForm = SettingsForm(rate, reminderMinuteOfDay, reminderRepeatDays),
+        val seed: SettingsForm = SettingsForm(rate),
         val lastBackupOn: LocalDate? = null,
         /** Set after a restore: the day "Undo last restore" goes back to. */
         val undoRestoreOn: LocalDate? = null,
@@ -50,7 +50,7 @@ internal sealed interface SettingsUiState {
         /** A backup, restore or undo is running. */
         val isWorking: Boolean = false,
     ) : SettingsUiState {
-        fun toForm() = SettingsForm(rate, reminderMinuteOfDay, reminderRepeatDays)
+        fun toForm() = SettingsForm(rate)
     }
 }
 

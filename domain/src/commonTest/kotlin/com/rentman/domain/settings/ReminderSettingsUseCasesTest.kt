@@ -37,6 +37,7 @@ class ReminderSettingsUseCasesTest {
             assertEquals(days, repository.current.reminderRepeatDays)
         }
         assertEquals(saved.globalRate, repository.current.globalRate)
+        assertEquals(listOf(2, 3, 0), AppSettings.REPEAT_CHOICES)
     }
 
     @Test

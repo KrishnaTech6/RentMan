@@ -23,6 +23,16 @@ class BuildBillUseCaseTest {
         rate: Paise = Paise(800),
     ) = BillContext(RenterSummary(renter, TestData.address), november, previousReading, rate, pendingBefore = Paise.Zero)
 
+    @Test
+    fun theRentLineIsTheRentOfTheMonthNotWhatTheRenterPaysNow() {
+        val renter = TestData.renter().copy(monthlyRent = 8_250L.rupees) // raised since
+        val context = BillContext(RenterSummary(renter, TestData.address), november, 1240, Paise(800), pendingBefore = Paise.Zero, rent = 7_500L.rupees)
+
+        val rent = bill(build(context, reading = "1325", newMeterStart = "")).lines.first { it.kind == BillLineKind.Rent }
+
+        assertEquals(7_500L.rupees, rent.amount)
+    }
+
     private fun bill(outcome: Outcome<Bill>) = (outcome as Outcome.Success).value
 
     @Test

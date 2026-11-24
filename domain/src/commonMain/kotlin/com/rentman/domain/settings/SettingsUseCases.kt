@@ -8,10 +8,10 @@ import com.rentman.domain.tenancy.FieldProblem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
-/** What a person typed or picked on the Settings screen, before any checking. */
-data class SettingsForm(val rate: String, val reminderMinuteOfDay: Int, val reminderRepeatDays: Int)
+/** What a person typed on the Settings screen, before any checking. Only the rate needs Save: the reminder time and interval save as soon as they change. */
+data class SettingsForm(val rate: String)
 
-enum class SettingsField { Rate, Time, Repeat }
+enum class SettingsField { Rate, Repeat }
 
 class ObserveSettingsUseCase(private val settings: SettingsRepository) {
     operator fun invoke(): Flow<Outcome<AppSettings>> = settings.observe()
@@ -20,22 +20,11 @@ class ObserveSettingsUseCase(private val settings: SettingsRepository) {
 class SaveSettingsUseCase(private val settings: SettingsRepository) {
     suspend operator fun invoke(form: SettingsForm): Outcome<AppSettings> {
         val rate = MoneyInput.rate(form.rate)
-        val problems = listOf(
-            SettingsField.Rate to when {
-                form.rate.isBlank() -> FieldProblem.Required
-                rate == null -> FieldProblem.Invalid
-                else -> null
-            },
-            SettingsField.Time to FieldProblem.Invalid.takeUnless { form.reminderMinuteOfDay in 0 until AppSettings.MINUTES_PER_DAY },
-            SettingsField.Repeat to FieldProblem.Invalid.takeUnless { form.reminderRepeatDays in AppSettings.REPEAT_CHOICES },
-        ).mapNotNull { (field, problem) -> problem?.let { field to it } }.toMap()
-        if (problems.isNotEmpty() || rate == null) return Outcome.Failure(DomainError.InvalidSettings(problems))
-        // Only these three are edited here. The rest (the last backup) is kept as it is.
-        return settings.observe().first().flatMap { current ->
-            settings.save(
-                current.copy(globalRate = rate, reminderMinuteOfDay = form.reminderMinuteOfDay, reminderRepeatDays = form.reminderRepeatDays),
+            ?: return Outcome.Failure(
+                DomainError.InvalidSettings(mapOf(SettingsField.Rate to if (form.rate.isBlank()) FieldProblem.Required else FieldProblem.Invalid)),
             )
-        }
+        // Only the rate is edited here. The reminder time and interval are saved as they change, and the last backup is kept as it is.
+        return settings.observe().first().flatMap { current -> settings.save(current.copy(globalRate = rate)) }
     }
 }
 

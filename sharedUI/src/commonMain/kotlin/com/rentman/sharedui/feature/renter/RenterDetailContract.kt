@@ -15,12 +15,18 @@ internal sealed interface RenterDetailIntent {
     /** "Stop this month" ([muted] = true) or "Resume". */
     data class SetRemindersMuted(val muted: Boolean) : RenterDetailIntent
     data class RemovePayment(val payment: Payment) : RenterDetailIntent
-    data class UndoRemove(val payment: Payment) : RenterDetailIntent
     /** Takes a wrong bill out of the history so it can be made again. Only the newest bill is offered for it. */
     data class RemoveBill(val bill: Bill) : RenterDetailIntent
-    data class UndoRemoveBill(val bill: Bill) : RenterDetailIntent
+    /** Puts back the payment or bill that was just removed. */
+    data class UndoRemove(val entry: RemovedEntry) : RenterDetailIntent
     data object Back : RenterDetailIntent
     data object Retry : RenterDetailIntent
+}
+
+/** What was just removed from the history, so Undo knows what to put back. */
+internal sealed interface RemovedEntry {
+    data class OfPayment(val payment: Payment) : RemovedEntry
+    data class OfBill(val bill: Bill) : RemovedEntry
 }
 
 internal sealed interface RenterDetailUiState {
@@ -30,10 +36,8 @@ internal sealed interface RenterDetailUiState {
 
     data class Content(
         val ledger: RenterLedger,
-        /** The payment just removed, offered for Undo for a few seconds. */
-        val removed: Payment? = null,
-        /** The bill just removed, offered for Undo for a few seconds. */
-        val removedBill: Bill? = null,
+        /** The payment or bill just removed, offered for Undo for a few seconds. Only the latest removal is offered. */
+        val removed: RemovedEntry? = null,
         /** A failed remove or undo. The ledger on screen is still right. */
         val actionError: DomainError? = null,
     ) : RenterDetailUiState

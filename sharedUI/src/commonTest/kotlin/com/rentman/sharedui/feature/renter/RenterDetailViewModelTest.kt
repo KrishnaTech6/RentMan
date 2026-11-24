@@ -30,7 +30,6 @@ import com.rentman.sharedui.feature.renter.RenterDetailIntent.MoveBack
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RecordPayment
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RemovePayment
-import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.Retry
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.SetRemindersMuted
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemove
@@ -120,7 +119,7 @@ class RenterDetailViewModelTest {
 
         val content = vm.content()
         assertEquals(3_380L.rupees, content.ledger.pending)
-        assertEquals(secondHalf, content.removed)
+        assertEquals(RemovedEntry.OfPayment(secondHalf), content.removed)
     }
 
     @Test
@@ -128,7 +127,7 @@ class RenterDetailViewModelTest {
         val vm = viewModel()
         vm.onIntent(RemovePayment(secondHalf))
 
-        vm.onIntent(UndoRemove(secondHalf))
+        vm.onIntent(UndoRemove(RemovedEntry.OfPayment(secondHalf)))
 
         val content = vm.content()
         assertEquals(2_380L.rupees, content.ledger.pending)
@@ -141,7 +140,7 @@ class RenterDetailViewModelTest {
         vm.onIntent(RemovePayment(secondHalf))
 
         advanceTimeBy(4_900)
-        assertEquals(secondHalf, vm.content().removed)
+        assertEquals(RemovedEntry.OfPayment(secondHalf), vm.content().removed)
 
         advanceTimeBy(200)
         assertEquals(null, vm.content().removed)
@@ -157,7 +156,7 @@ class RenterDetailViewModelTest {
         vm.onIntent(RemovePayment(firstHalf))
         advanceTimeBy(3_000) // 6s after the first removal, but only 3s after the second
 
-        assertEquals(firstHalf, vm.content().removed)
+        assertEquals(RemovedEntry.OfPayment(firstHalf), vm.content().removed)
         advanceTimeBy(2_100)
         assertEquals(null, vm.content().removed)
     }
@@ -357,7 +356,7 @@ class RenterDetailViewModelTest {
         assertEquals(2, content.ledger.entries.filterIsInstance<LedgerEntry.PaymentEntry>().size)
         assertEquals((-6_000L).rupees, content.ledger.pending) // 6,000 was paid and nothing is billed: paid ahead
         assertEquals(null, content.ledger.removableBill)
-        assertEquals(novemberBill, content.removedBill)
+        assertEquals(RemovedEntry.OfBill(novemberBill), content.removed)
     }
 
     @Test
@@ -365,12 +364,12 @@ class RenterDetailViewModelTest {
         val vm = viewModel()
         vm.onIntent(RemoveBill(novemberBill))
 
-        vm.onIntent(UndoRemoveBill(novemberBill))
+        vm.onIntent(UndoRemove(RemovedEntry.OfBill(novemberBill)))
 
         val content = vm.content()
         assertEquals(2_380L.rupees, content.ledger.pending)
         assertEquals(novemberBill.id, content.ledger.removableBill)
-        assertEquals(null, content.removedBill)
+        assertEquals(null, content.removed)
     }
 
     @Test
@@ -379,11 +378,21 @@ class RenterDetailViewModelTest {
         vm.onIntent(RemoveBill(novemberBill))
 
         advanceTimeBy(4_900)
-        assertEquals(novemberBill, vm.content().removedBill)
+        assertEquals(RemovedEntry.OfBill(novemberBill), vm.content().removed)
 
         advanceTimeBy(200)
-        assertEquals(null, vm.content().removedBill)
+        assertEquals(null, vm.content().removed)
         assertEquals(emptyList(), vm.content().ledger.entries.filterIsInstance<LedgerEntry.BillEntry>())
+    }
+
+    @Test
+    fun onlyTheLatestRemovalIsOfferedForUndoWhetherItIsAPaymentOrABill() = runTest {
+        val vm = viewModel()
+
+        vm.onIntent(RemovePayment(secondHalf))
+        vm.onIntent(RemoveBill(novemberBill))
+
+        assertEquals(RemovedEntry.OfBill(novemberBill), vm.content().removed)
     }
 
     @Test
@@ -396,6 +405,6 @@ class RenterDetailViewModelTest {
 
         assertEquals(DomainError.BillNotRemovable, vm.content().actionError)
         assertEquals(listOf(novemberBill), bills.saved)
-        assertEquals(null, vm.content().removedBill)
+        assertEquals(null, vm.content().removed)
     }
 }

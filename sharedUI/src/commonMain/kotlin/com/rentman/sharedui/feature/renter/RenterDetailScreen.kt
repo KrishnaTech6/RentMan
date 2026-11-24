@@ -68,7 +68,6 @@ import com.rentman.sharedui.feature.renter.RenterDetailIntent.Retry
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.SetRemindersMuted
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.RemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemove
-import com.rentman.sharedui.feature.renter.RenterDetailIntent.UndoRemoveBill
 import com.rentman.sharedui.feature.renter.RenterDetailUiState.Content
 import com.rentman.sharedui.feature.renter.RenterDetailUiState.Error
 import com.rentman.sharedui.feature.renter.RenterDetailUiState.Loading
@@ -194,10 +193,11 @@ private fun Body(state: Content, onIntent: (RenterDetailIntent) -> Unit) {
             BasicText(error.message(), style = TextStyle(fontSize = 14.sp, color = RentManColors.Danger), modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
         }
         state.removed?.let { removed ->
-            UndoBar(stringResource(Res.string.payment_removed, formatRupees(removed.amount)), onUndo = { onIntent(UndoRemove(removed)) })
-        }
-        state.removedBill?.let { removed ->
-            UndoBar(stringResource(Res.string.bill_removed, removed.month.label()), onUndo = { onIntent(UndoRemoveBill(removed)) })
+            val message = when (removed) {
+                is RemovedEntry.OfPayment -> stringResource(Res.string.payment_removed, formatRupees(removed.payment.amount))
+                is RemovedEntry.OfBill -> stringResource(Res.string.bill_removed, removed.bill.month.label())
+            }
+            UndoBar(message, onUndo = { onIntent(UndoRemove(removed)) })
         }
         if (state.ledger.summary.renter.active) {
             ActionButton(
@@ -397,4 +397,4 @@ private fun LeftPreview() = RenterDetailScreen(
 
 @Preview
 @Composable
-private fun UndoPreview() = RenterDetailScreen(Content(previewLedger, removed = previewPayment)) {}
+private fun UndoPreview() = RenterDetailScreen(Content(previewLedger, removed = RemovedEntry.OfPayment(previewPayment))) {}

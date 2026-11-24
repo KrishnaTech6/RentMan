@@ -72,7 +72,7 @@ private val domainModule = module {
     factory { BuildBillUseCase() }
     factory { SuggestMeterReadingUseCase() }
     factory { CreateBillUseCase(get()) }
-    factory { ObserveBillContextUseCase(get(), get(), get(), get(), get()) }
+    factory { ObserveBillContextUseCase(get(), get(), get(), get(), get(), get()) }
     factory { ObserveBillTodosUseCase(get(), get(), get(), get()) }
     factory { ExportBackupUseCase(get(), get(), get()) }
     factory { MarkBackedUpUseCase(get(), get()) }

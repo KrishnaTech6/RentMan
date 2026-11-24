@@ -89,7 +89,7 @@ internal class SettingsViewModel(
 
     private fun inputReducers(): Flow<Reducer<SettingsState>> = intents.map { intent ->
         when (intent) {
-            is RateChanged -> edit(SettingsField.Rate) { it.copy(rate = intent.text) }
+            is RateChanged -> content { it.copy(rate = intent.text, problems = it.problems - SettingsField.Rate, saveError = null) }
             // The reminder time and interval are saved at once (see reminderReducers) and the form follows what was saved.
             is TimeStepped, is RepeatChanged, is Save, BackUpNow, BackupShared, BackupShareFailed, is RestoreFrom, UndoRestore, Back, Retry -> unchanged
         }
@@ -174,21 +174,19 @@ internal class SettingsViewModel(
         .map { unchanged }
 
     /**
-     * Data can arrive again: a backup was made, or a restore changed the saved settings. What was typed is kept, unless the
-     * saved settings themselves changed, which is when the form is filled again.
+     * Data can arrive again: a backup was made, the reminder time or interval was saved, or a restore changed the settings. With the
+     * same saved rate, what is typed in the rate field is kept and the reminder time and interval follow what was saved. If the saved
+     * rate itself changed (a restore), the form is filled again.
      */
     private fun withData(settings: AppSettings, status: BackupStatus): Reducer<SettingsState> = { state ->
-        val seed = SettingsForm(MoneyInput.text(settings.globalRate), settings.reminderMinuteOfDay, settings.reminderRepeatDays)
+        val seed = SettingsForm(MoneyInput.text(settings.globalRate))
         val shown = if (state is Content && state.seed == seed) {
-            state
-        } else if (state is Content && state.seed.rate == seed.rate) {
-            // Only the reminder time or interval was saved: what is typed in the rate field is not lost.
-            state.copy(reminderMinuteOfDay = seed.reminderMinuteOfDay, reminderRepeatDays = seed.reminderRepeatDays, seed = seed)
+            state.copy(reminderMinuteOfDay = settings.reminderMinuteOfDay, reminderRepeatDays = settings.reminderRepeatDays)
         } else {
             Content(
                 rate = seed.rate,
-                reminderMinuteOfDay = seed.reminderMinuteOfDay,
-                reminderRepeatDays = seed.reminderRepeatDays,
+                reminderMinuteOfDay = settings.reminderMinuteOfDay,
+                reminderRepeatDays = settings.reminderRepeatDays,
                 seed = seed,
                 backupMessage = (state as? Content)?.backupMessage,
                 backupError = (state as? Content)?.backupError,
@@ -205,10 +203,6 @@ internal class SettingsViewModel(
     private fun content(change: (Content) -> Content): Reducer<SettingsState> = { state ->
         if (state is Content) change(state) else state
     }
-
-    /** A change to one field clears that field's problem and any save error. */
-    private fun edit(vararg fields: SettingsField, change: (Content) -> Content): Reducer<SettingsState> =
-        content { change(it).copy(problems = it.problems - fields.toSet(), saveError = null) }
 
     private fun Content.withError(error: DomainError): Content =
         if (error is DomainError.InvalidSettings) copy(problems = error.problems) else copy(saveError = error)

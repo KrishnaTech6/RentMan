@@ -95,6 +95,7 @@ Built: **remove a wrong bill** (decision: ADR 0009). Checked on the Android emul
 - Only the newest bill: removing an older one would break the chain of readings (each bill starts from the one before). To fix an older bill, remove the newer ones first.
 - Payments are left alone. What the renter owes is worked out again, so someone who had paid the removed bill is shown as paid ahead until the new bill is made. The renter may already have the wrong bill on WhatsApp, so the new one is sent again by the landlord.
 - Not a "soft" hide like payments: bills are unique per renter and month, so a hidden bill would block making the bill again. The bill is deleted, and Undo puts it back with the same id. No schema change, so no migration, and the data on real phones is not touched.
+- A bill made again uses the **rent of its own month**, not what the renter pays now (`RentHistory.rentFor`): a raise accepted later, for a later month, does not leak into it. The rate per unit and the fixed charges are still today's, so a bill made again after changing those uses the new ones.
 - Not built: editing a bill's reading in place, and adjustment lines (the type exists, there is no screen).
 
 Screens: Home (total to collect + to-do cards: create bill, remind late renter, approve rent increase), Renter detail (bills, payments, running balance), Enter reading → bill preview, Record payment, Add/edit renter, Address picker, Settings (global rate, reminder time, repeat interval, addresses, backup/restore).

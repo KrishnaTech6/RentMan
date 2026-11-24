@@ -39,6 +39,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.LocalDate
+import com.rentman.sharedui.feature.renter.FakeRentIncreaseRepository
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -64,7 +65,7 @@ class CreateBillViewModelTest {
     ) = CreateBillViewModel(
         renterId = RenterId(renterId),
         month = november,
-        observeContext = ObserveBillContextUseCase(renters, FakeAddressRepository(listOf(Ravi.address)), bills, FakeSettingsRepository(), payments),
+        observeContext = ObserveBillContextUseCase(renters, FakeAddressRepository(listOf(Ravi.address)), bills, FakeSettingsRepository(), payments, FakeRentIncreaseRepository(renters)),
         buildBill = BuildBillUseCase(),
         suggestReading = SuggestMeterReadingUseCase(),
         createBill = CreateBillUseCase(bills),

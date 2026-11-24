@@ -19,6 +19,8 @@ data class BillContext(
     val pendingBefore: Paise,
     /** Average units over the last few bills, to spot a typo. Null when there is nothing to compare with. */
     val usualUnits: Int? = null,
+    /** The rent for [month]: the renter's rent then, which differs from today's if a raise was accepted since. */
+    val rent: Paise = summary.renter.monthlyRent,
 ) {
     /** What the renter has to pay now: this bill plus whatever was still owed. */
     fun totalDue(bill: Bill): Paise = bill.total + pendingBefore
@@ -47,7 +49,7 @@ class BuildBillUseCase {
      */
     operator fun invoke(context: BillContext, reading: String, newMeterStart: String): Outcome<Bill> {
         val renter = context.summary.renter
-        val rent = BillLine(BillLineKind.Rent, "Rent", renter.monthlyRent)
+        val rent = BillLine(BillLineKind.Rent, "Rent", context.rent)
         val charges = renter.fixedCharges.filter { it.active }.map { BillLine(BillLineKind.FixedCharge, it.label, it.amount) }
         fun bill(lines: List<BillLine>, previous: Int? = null, current: Int? = null, replaced: Boolean = false) = Bill(
             renterId = renter.id,
