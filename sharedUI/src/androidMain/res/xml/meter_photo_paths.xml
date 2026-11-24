@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- The proof photos of meter readings. They stay with the app and are opened by other apps one at a time. -->
+    <files-path name="meter_photos" path="meter_photos/" />
+</paths>

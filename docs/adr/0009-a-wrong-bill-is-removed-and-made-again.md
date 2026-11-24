@@ -1,0 +1,7 @@
+# A wrong bill is removed and made again
+
+A bill that was made with a mistake, for example a wrong meter reading, can be removed from the renter's history, and its month then shows as a "Create bill" to-do again. This narrows ADR 0002 and does not reverse it: a bill is still never edited or recalculated, so the saved amounts, rate and readings of every bill that stays are exactly what they were. Only the renter's newest bill can be removed, and only while the renter is active. Older bills could not be removed without breaking the chain of readings (each bill's previous reading is the one before it), and a renter who left must not get an unbilled month back.
+
+Adjustment lines stay for amounts (a waiver, a repair), not for readings. A wrong reading fixed with an adjustment leaves the wrong reading on the bill, and the next bill starts from it, so the same mistake is paid back twice.
+
+The bill is deleted, not hidden the way payments are. Payments keep a `voidedAt` mark, but bills have a unique index on (renter, month), and a hidden bill would still hold that month, so the bill could never be made again. Undo puts the same bill back with the same id and lines, and fails if a new bill has already taken the month. Payments are not touched by removing a bill: the balance is worked out again from what is left, so a renter who had paid for the removed bill is shown as paid ahead until the new bill is made. The bill may already have been sent on WhatsApp, so the landlord sends the new bill again.

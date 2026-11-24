@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared -->
+    <string name="back">Back</string>
+    <string name="loading">Loading…</string>
+    <string name="retry">Try again</string>
+    <string name="error_blank_name">Type an address first.</string>
+    <string name="error_duplicate_name">This address is already in the list.</string>
+    <string name="error_storage">Couldn't read your data. Try again.</string>
+    <string name="error_bill_exists">This month's bill was already created.</string>
+    <string name="error_offer_outdated">That rent raise was already handled.</string>
+    <string name="error_not_found">This renter could not be found.</string>
+    <string name="error_generic">Something went wrong.</string>
+
+    <!-- Address picker -->
+    <string name="choose_address">Choose address</string>
+    <string name="new_address">NEW ADDRESS</string>
+    <string name="new_address_hint">e.g. Supertech B9-1906</string>
+    <string name="new_address_note">It's added to the list and picked for this renter.</string>
+    <string name="add">Add</string>
+    <string name="use_address">Use %1$s</string>
+    <string name="pick_an_address">Pick an address</string>
+
+    <!-- Home -->
+    <string name="renters_title">Renters</string>
+    <string name="add_renter">Add renter</string>
+    <string name="no_renters">No renters yet</string>
+    <string name="no_renters_hint">Add your first renter to start billing.</string>
+
+    <string name="do_next">Do next</string>
+    <string name="all_renters">All renters</string>
+    <string name="create_bill_card">Create %1$s bill</string>
+    <string name="create_action">Create</string>
+
+    <!-- Create bill -->
+    <string name="bill_title">%1$s bill</string>
+    <string name="new_reading">New reading</string>
+    <string name="last_reading">Last time: %1$s</string>
+    <string name="math_units">%1$s − %2$s = %3$s units</string>
+    <string name="math_rate">× %1$s per unit</string>
+    <string name="electricity">Electricity</string>
+    <string name="meter_replaced_question">Meter was replaced?</string>
+    <string name="new_meter_start">New meter's first reading</string>
+    <string name="same_meter">It's the same meter</string>
+    <string name="review_bill">Review bill</string>
+    <string name="save_bill">Save bill</string>
+    <string name="save_and_send">Save &amp; send on WhatsApp</string>
+    <string name="save_only">Save only</string>
+    <string name="change_reading">Change reading</string>
+    <string name="previous_pending">Previous pending</string>
+    <string name="total_due">Total due</string>
+    <string name="pay_by">Pay by %1$s</string>
+    <string name="usage_warning">This is %1$s units. Usually about %2$s. Check the reading before you save.</string>
+    <string name="reading_required">Enter the meter reading</string>
+    <string name="reading_invalid">Enter a whole number</string>
+    <string name="reading_too_low">Lower than last time (%1$s). If the meter was replaced, tap "Meter was replaced?".</string>
+    <string name="new_meter_required">Enter the new meter's first reading</string>
+
+    <!-- Add renter -->
+    <string name="section_who">WHO</string>
+    <string name="section_rent">RENT</string>
+    <string name="section_electricity">ELECTRICITY</string>
+    <string name="field_name">Name</string>
+    <string name="field_phone">WhatsApp number</string>
+    <string name="field_address">Address</string>
+    <string name="field_address_placeholder">Choose address</string>
+    <string name="field_unit">Flat / floor</string>
+    <string name="field_rent">Monthly rent</string>
+    <string name="field_due_day">Due every month on day</string>
+    <string name="field_agreement_start">Agreement started</string>
+    <string name="section_charges">FIXED MONTHLY CHARGES</string>
+    <string name="field_charge_label">Charge name (e.g. Water)</string>
+    <string name="field_charge_amount">Amount per month</string>
+    <string name="add_charge">Add charge</string>
+    <string name="remove_charge">Remove %1$s</string>
+    <string name="problem_charge_duplicate">Already added</string>
+    <string name="problem_charge_unfinished">Tap Add charge, or clear these fields.</string>
+    <string name="problem_charge_amount">Enter a whole number of rupees</string>
+    <string name="problem_charge_label_long">Use 40 characters or fewer</string>
+    <string name="field_starting_reading">Starting meter reading</string>
+    <string name="field_own_rate">Own rate per unit (optional)</string>
+    <string name="field_own_rate_hint">Leave empty to use the global rate</string>
+    <string name="ask_to_raise">Ask me to raise rent 10%</string>
+    <string name="ask_to_raise_hint">Every 11 months</string>
+    <string name="i_bill_them">I bill them</string>
+    <string name="they_pay_directly">They pay directly</string>
+    <string name="previous_month">Previous month</string>
+    <string name="next_month">Next month</string>
+    <string name="save_renter">Save renter</string>
+    <string name="problems_summary">Check the fields marked in red.</string>
+    <string name="problem_required">Required</string>
+    <string name="problem_phone">Enter a valid mobile number</string>
+    <string name="problem_rent">Enter the monthly rent in rupees</string>
+    <string name="problem_due_day">Enter a day from 1 to 31</string>
+    <string name="problem_reading">Enter a whole number</string>
+    <string name="problem_rate">Enter a rate like 8 or 8.50</string>
+    <string name="problem_unit_required">Needed, because this address has another renter</string>
+    <string name="problem_unit_duplicate">Another renter at this address already has this</string>
+
+    <string name="still_to_collect">Still to collect</string>
+    <string name="collect_late">%1$s late</string>
+    <string name="collect_not_due">%1$s not due yet</string>
+    <string name="collect_owing">%1$d owing</string>
+    <string name="collect_not_billed">%1$d not billed yet (%2$s rent)</string>
+    <string name="status_no_bill">No bill yet</string>
+    <string name="status_paid">Paid</string>
+    <string name="status_part_paid">Part paid</string>
+    <string name="status_unpaid">Unpaid</string>
+    <string name="status_late">Late</string>
+    <string name="record_payment">Record payment</string>
+    <string name="history">History</string>
+    <string name="no_history">No bills or payments yet.</string>
+    <string name="ledger_bill">%1$s bill</string>
+    <string name="payment_upi">UPI</string>
+    <string name="payment_cash">Cash</string>
+    <string name="payment_bank">Bank</string>
+    <string name="remove_payment">Remove</string>
+    <string name="payment_removed">Payment of %1$s removed</string>
+    <string name="remove_bill">Remove bill</string>
+    <string name="bill_removed">%1$s bill removed. Make it again from Home.</string>
+    <string name="error_bill_not_removable">Only the newest bill of a renter who still lives there can be removed.</string>
+    <string name="undo">Undo</string>
+    <string name="field_amount">How much did they pay?</string>
+    <string name="full_amount">Full amount %1$s</string>
+    <string name="field_paid_by">Paid by</string>
+    <string name="field_date">Date</string>
+    <string name="field_note">Note (optional)</string>
+    <string name="previous_day">Previous day</string>
+    <string name="next_day">Next day</string>
+    <string name="payment_pending_hint">%1$s pending</string>
+    <string name="save_payment">Save payment</string>
+    <string name="problem_amount">Enter an amount like 3,380 or 3,380.50</string>
+    <string name="problem_date">Pick today or an earlier day</string>
+    <string name="problem_note">Keep the note under 100 characters</string>
+    <string name="balance_owes">Owes %1$s</string>
+    <string name="balance_settled">All paid</string>
+    <string name="balance_paid_ahead">Paid ahead %1$s</string>
+    <string name="section_note">Note</string>
+    <string name="overpayment_hint">That is %1$s more than what is pending</string>
+    <string name="credit_from_payments">Credit from earlier payments</string>
+
+    <string name="settings_open">Settings</string>
+    <string name="settings_title">Settings</string>
+    <string name="section_rate">Electricity rate</string>
+    <string name="field_global_rate">Rate per unit (₹)</string>
+    <string name="rate_hint">Applies to future bills. A renter with their own rate keeps it.</string>
+    <string name="section_reminders">Reminders</string>
+    <string name="field_reminder_time">Remind me at</string>
+    <string name="earlier_time">Earlier</string>
+    <string name="later_time">Later</string>
+    <string name="repeat_every_2">Every 2 days</string>
+    <string name="repeat_every_3">Every 3 days</string>
+    <string name="repeat_once">Once</string>
+    <string name="save_settings">Save settings</string>
+    <string name="time_am">%1$s AM</string>
+    <string name="time_pm">%1$s PM</string>
+
+    <string name="raise_card_title">Raise rent for %1$s by %2$s?</string>
+    <string name="raise_card_detail">%1$s → %2$s from the %3$s bill</string>
+    <string name="raise_action">Raise rent</string>
+    <string name="not_now">Not now</string>
+    <string name="rent_raised">Rent raised to %1$s</string>
+
+    <string name="reminders_stop">Stop reminders this month</string>
+    <string name="reminders_stopped">Reminders stopped until the next bill</string>
+    <string name="reminders_resume">Resume</string>
+
+    <string name="reminder_channel_name">Reminders</string>
+    <string name="reminder_create_bills_title">Time to create %1$s bills</string>
+    <string name="reminder_create_bills_body">Bills still to create: %1$d</string>
+    <string name="reminder_pending_title">Rent pending: %1$s</string>
+    <string name="reminder_pending_body">%1$s is still to be paid</string>
+    <string name="reminder_stop_action">Stop this month</string>
+    <string name="notifications_allow">Allow notifications</string>
+    <string name="notifications_hint">Reminders can't show until you allow notifications.</string>
+
+    <string name="backup_title">Backup</string>
+    <string name="backup_last">Last backup: %1$s</string>
+    <string name="backup_never">No backup yet</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_restore">Restore from a file</string>
+    <string name="backup_undo">Undo last restore</string>
+    <string name="backup_undo_hint">Brings back what you had before you restored on %1$s.</string>
+    <string name="backup_privacy">The backup file is not protected by a password and has your renters' names and phone numbers. Keep it somewhere private.</string>
+    <string name="backup_share_failed">Couldn't open the share sheet. Try again.</string>
+    <string name="backup_restored">Restored from the backup.</string>
+    <string name="backup_undone">Your earlier data is back.</string>
+    <string name="error_backup_invalid">That file is not a Rent Manager backup, or it is damaged.</string>
+    <string name="error_backup_newer">This backup was made by a newer version of the app. Update the app and try again.</string>
+
+    <string name="edit_renter_title">Edit renter</string>
+    <string name="save_changes">Save changes</string>
+    <string name="edit_action">Edit</string>
+    <string name="mark_left">Mark as left</string>
+    <string name="mark_left_blocked">Record what they owe first, then you can mark them as left.</string>
+    <string name="left_on">Left on %1$s</string>
+    <string name="move_back">Move back in</string>
+    <string name="left_renters">Left renters</string>
+    <string name="error_still_owes">They still owe %1$s. Record a payment first.</string>
+    <string name="error_unit_taken">Someone else lives at this address now, so this renter needs a different unit label. Edit the unit, then move them back in.</string>
+    <string name="error_unbilled_month">Create the %1$s bill first, then mark them as left.</string>
+
+    <string name="scan_meter">Scan the meter with the camera</string>
+    <string name="scan_meter_hint">The number is read from the photo, and you check it before saving.</string>
+    <string name="meter_photo_attached">Meter photo attached</string>
+    <string name="meter_photo_retake">Retake</string>
+    <string name="meter_photo_remove">Remove photo</string>
+    <string name="scan_read">Read from the photo. Check it against the meter.</string>
+    <string name="scan_nothing">No number found in the photo. Type the reading in.</string>
+    <string name="scan_from_gallery">Choose from gallery</string>
+    <string name="meter_photo_gallery">Gallery</string>
+    <string name="meter_photo_description">Photo of the meter. Tap to open it full size.</string>
+    <string name="crop_title">Pick the part to keep</string>
+    <string name="crop_hint">Drag the box, or its corners, around the meter's number. Only this part is saved.</string>
+    <string name="crop_use">Use this part</string>
+    <string name="crop_whole">Use whole photo</string>
+    <string name="crop_cancel">Cancel</string>
+    <string name="crop_reading">Reading the photo…</string>
+    <string name="crop_image_description">The photo to crop</string>
+    <string name="meter_photo_view">Meter photo</string>
+
+    <string-array name="months_short">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+</resources>

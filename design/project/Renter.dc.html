@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Renter ledger</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2747C9}a:hover{color:#1A3399}
+</style>
+</helmet>
+<div style="width: 390px; height: 900px; box-sizing: border-box; background: #F4F5F7; font-family: Inter, system-ui, sans-serif; color: #101828; display: flex; flex-direction: column; font-variant-numeric: tabular-nums">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 12px 8px">
+    <a href="Main.dc.html" aria-label="Back" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #101828"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <a href="AddRenter.dc.html" style="height: 44px; padding: 0 14px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none">Edit</a>
+  </div>
+
+  <div style="padding: 0 20px; display: flex; flex-direction: column; gap: 4px">
+    <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.4px">Neha Verma</h1>
+    <span style="font-size: 14px; color: #475467">2nd floor · Home building</span>
+  </div>
+
+  <div style="margin: 16px 16px 0; padding: 18px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7EC; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 14px; color: #475467">Pending</span>
+        <span style="font-size: 32px; font-weight: 800; color: #1E40AF">₹3,000</span>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 12px; background: #DBEAFE; color: #1E40AF">Part paid</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <a href="Payment.dc.html" style="height: 48px; border-radius: 12px; background: #2747C9; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Got paid</a>
+      <button style="height: 48px; border-radius: 12px; border: 1px solid #D0D5DD; background: #FFFFFF; color: #101828; font-size: 14px; font-weight: 600">Remind</button>
+      <button style="height: 48px; border-radius: 12px; border: 1px solid #D0D5DD; background: #FFFFFF; color: #101828; font-size: 14px; font-weight: 600">Call</button>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid #EAECF0">
+      <span style="font-size: 13px; color: #475467; line-height: 1.4">Reminders repeat every 3 days until paid</span>
+      <button style="height: 44px; padding: 0 12px; border: none; background: transparent; color: #2747C9; font-size: 14px; font-weight: 600; flex-shrink: 0">Stop this month</button>
+    </div>
+  </div>
+
+  <div style="margin: 12px 16px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+    <div style="padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7EC; display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 13px; color: #475467">Monthly rent</span>
+      <span style="font-size: 17px; font-weight: 700">₹8,000</span>
+      <span style="font-size: 12px; color: #475467">+10% due Feb 2027</span>
+    </div>
+    <div style="padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7EC; display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 13px; color: #475467">Electricity</span>
+      <span style="font-size: 17px; font-weight: 700">Pays directly</span>
+      <span style="font-size: 12px; color: #475467">Not on your bill</span>
+    </div>
+  </div>
+
+  <div style="padding: 22px 20px 8px; font-size: 17px; font-weight: 700">History</div>
+  <div style="margin: 0 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 16px; overflow: hidden">
+    <sc-for list="{{rows}}" as="row" hint-placeholder-count="5">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: {{row.divider}}">
+        <div style="width: 36px; height: 36px; border-radius: 18px; background: {{row.iconBg}}; color: {{row.iconFg}}; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{row.sign}}</div>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 600">{{row.title}}</span>
+          <span style="font-size: 13px; color: #475467">{{row.sub}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700; color: {{row.amtColor}}">{{row.amount}}</span>
+          <span style="font-size: 12px; color: #475467">Bal {{row.bal}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var rows = [
+      { t: 'pay', title: 'Payment · UPI', sub: '22 Nov', amount: '− ₹5,000', bal: '₹3,000' },
+      { t: 'bill', title: 'November bill', sub: '1 Nov · rent', amount: '+ ₹8,000', bal: '₹8,000' },
+      { t: 'pay', title: 'Payment · Cash', sub: '6 Oct', amount: '− ₹8,000', bal: '₹0' },
+      { t: 'bill', title: 'October bill', sub: '1 Oct · rent', amount: '+ ₹8,000', bal: '₹8,000' },
+      { t: 'pay', title: 'Payment · UPI', sub: '4 Sep', amount: '− ₹8,000', bal: '₹0' }
+    ];
+    return {
+      rows: rows.map(function (r, i) {
+        var pay = r.t === 'pay';
+        return Object.assign({}, r, {
+          sign: pay ? '↓' : '₹',
+          iconBg: pay ? '#DCFCE7' : '#F2F4F7',
+          iconFg: pay ? '#166534' : '#344054',
+          amtColor: pay ? '#166534' : '#101828',
+          divider: i === 0 ? 'none' : '1px solid #EAECF0'
+        });
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

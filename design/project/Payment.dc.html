@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Record payment</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2747C9}a:hover{color:#1A3399}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F4F5F7; font-family: Inter, system-ui, sans-serif; color: #101828; display: flex; flex-direction: column; font-variant-numeric: tabular-nums">
+
+  <div style="display: flex; align-items: center; gap: 8px; padding: 16px 12px 8px">
+    <a href="Renter.dc.html" aria-label="Close" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #101828"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    <div style="display: flex; flex-direction: column">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 700">Record payment</h1>
+      <span style="font-size: 13px; color: #475467">Neha Verma · ₹3,000 left this month</span>
+    </div>
+  </div>
+
+  <div style="padding: 16px 20px 8px; font-size: 14px; font-weight: 600; color: #344054">How much did they pay?</div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0 16px">
+    <button style="height: 72px; border-radius: 14px; border: 2px solid #2747C9; background: #EEF2FF; color: #1C2E8A; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: Inter, system-ui, sans-serif"><span style="font-size: 13px; font-weight: 600">Full amount</span><span style="font-size: 20px; font-weight: 800">₹3,000</span></button>
+    <button style="height: 72px; border-radius: 14px; border: 1px solid #D0D5DD; background: #FFFFFF; color: #101828; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: Inter, system-ui, sans-serif"><span style="font-size: 13px; font-weight: 600; color: #475467">Part payment</span><span style="font-size: 20px; font-weight: 800">Other</span></button>
+  </div>
+
+  <div style="padding: 22px 20px 8px; font-size: 14px; font-weight: 600; color: #344054">Paid by</div>
+  <div style="margin: 0 16px; padding: 4px; border-radius: 14px; background: #E4E7EC; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px">
+    <button style="height: 44px; border-radius: 10px; border: none; background: #FFFFFF; font-size: 15px; font-weight: 700; color: #101828; box-shadow: 0 1px 2px rgba(16,24,40,0.12)">UPI</button>
+    <button style="height: 44px; border-radius: 10px; border: none; background: transparent; font-size: 15px; font-weight: 600; color: #344054">Cash</button>
+    <button style="height: 44px; border-radius: 10px; border: none; background: transparent; font-size: 15px; font-weight: 600; color: #344054">Bank</button>
+  </div>
+
+  <div style="margin: 22px 16px 0; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 16px; overflow: hidden">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px">
+      <label for="pdate" style="font-size: 15px; color: #344054">Date</label>
+      <input id="pdate" value="Today, 22 Nov" style="border: none; text-align: right; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 600; color: #101828; background: transparent; width: 160px">
+    </div>
+    <div style="height: 1px; background: #EAECF0"></div>
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px">
+      <label for="pnote" style="font-size: 15px; color: #344054">Note</label>
+      <input id="pnote" placeholder="Optional" style="border: none; text-align: right; font-family: Inter, system-ui, sans-serif; font-size: 15px; color: #101828; background: transparent; width: 200px">
+    </div>
+    <div style="height: 1px; background: #EAECF0"></div>
+    <label style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; font-size: 15px; color: #344054">Send receipt on WhatsApp
+      <input type="checkbox" checked style="width: 22px; height: 22px; accent-color: #2747C9">
+    </label>
+  </div>
+
+  <div style="margin: 16px 16px 0; padding: 14px 16px; border-radius: 14px; background: #DCFCE7; color: #166534; font-size: 14px; font-weight: 600">After this, November is fully paid ✓</div>
+
+  <div style="flex: 1"></div>
+  <div style="padding: 12px 16px 24px; background: #FFFFFF; border-top: 1px solid #E4E7EC">
+    <a href="Renter.dc.html" style="height: 56px; border-radius: 14px; background: #2747C9; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Save ₹3,000</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
