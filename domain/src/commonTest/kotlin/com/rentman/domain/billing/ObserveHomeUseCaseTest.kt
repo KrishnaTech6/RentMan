@@ -248,4 +248,42 @@ class ObserveHomeUseCaseTest {
             assertEquals(Paise.Zero, awaitItem().home().thisMonth.collected)
         }
     }
+
+    @Test
+    fun anOldUnpaidBillMakesTheRenterLateEvenWhenTheNewestBillIsNotDue() = runTest {
+        // October's bill was due on 5 Nov and is unpaid. November's (due 5 Dec) was made since. Today is 23 Nov.
+        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees, month = BillingMonth.of(2026, 10)), bill(1, 5_000L.rupees)))
+
+        useCase(FakeRenterRepository(listOf(TestData.renter())), bills)().test {
+            val row = awaitItem().home().renters.single()
+            assertEquals(RenterStatus.Late, row.status)
+            assertEquals(18, row.daysLate) // from 5 Nov, the oldest bill still owed
+            assertEquals(LocalDate(2026, 12, 5), row.dueOn) // the newest bill's own date
+        }
+    }
+
+    @Test
+    fun onceTheOldBillIsPaidTheRenterIsNoLongerLate() = runTest {
+        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees, month = BillingMonth.of(2026, 10)), bill(1, 5_000L.rupees)))
+        val payments = FakePaymentRepository(listOf(payment(1, 8_000L.rupees, LocalDate(2026, 10, 20))))
+
+        useCase(FakeRenterRepository(listOf(TestData.renter())), bills, payments)().test {
+            val row = awaitItem().home().renters.single()
+            assertEquals(RenterStatus.Unpaid, row.status)
+            assertEquals(0, row.daysLate)
+        }
+    }
+
+    @Test
+    fun aRenterWhoLeftStaysInThisMonthsIncome() = runTest {
+        val left = TestData.renter(id = 2, name = "Neha").copy(active = false, leftOn = LocalDate(2026, 11, 20))
+        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees), bill(2, 6_000L.rupees)))
+        val payments = FakePaymentRepository(listOf(payment(2, 6_000L.rupees, LocalDate(2026, 11, 15))))
+
+        useCase(FakeRenterRepository(listOf(TestData.renter(), left)), bills, payments)().test {
+            val month = awaitItem().home().thisMonth
+            assertEquals(6_000L.rupees, month.collected)
+            assertEquals(14_000L.rupees, month.billed)
+        }
+    }
 }

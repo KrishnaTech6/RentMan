@@ -13,6 +13,7 @@ import com.rentman.sharedui.feature.home.HomeIntent.AddRenter
 import com.rentman.sharedui.feature.home.HomeIntent.CreateBill
 import com.rentman.sharedui.feature.home.HomeIntent.OpenRenter
 import com.rentman.sharedui.feature.home.HomeIntent.NotNow
+import com.rentman.sharedui.feature.home.HomeIntent.OpenMonths
 import com.rentman.sharedui.feature.home.HomeIntent.OpenSettings
 import com.rentman.sharedui.feature.home.HomeIntent.RaiseRent
 import com.rentman.sharedui.feature.home.HomeIntent.UndoRaise
@@ -121,6 +122,7 @@ internal class HomeViewModel(
                 is CreateBill -> navigate(HomeNavEvent.OpenCreateBill(intent.renterId, intent.month))
                 is OpenRenter -> navigate(HomeNavEvent.OpenRenter(intent.renterId))
                 OpenSettings -> navigate(HomeNavEvent.OpenSettings)
+                OpenMonths -> navigate(HomeNavEvent.OpenMonths)
                 is RaiseRent, is NotNow, is UndoRaise, is SelectFilter, Retry, Refresh -> Unit
             }
         }

@@ -36,6 +36,7 @@ import com.rentman.sharedui.feature.home.HomeIntent.NotNow
 import com.rentman.sharedui.feature.home.HomeIntent.OpenRenter
 import com.rentman.sharedui.feature.home.HomeIntent.RaiseRent
 import com.rentman.sharedui.feature.home.HomeIntent.UndoRaise
+import com.rentman.sharedui.feature.home.HomeIntent.OpenMonths
 import com.rentman.sharedui.feature.home.HomeIntent.OpenSettings
 import com.rentman.sharedui.feature.home.HomeIntent.Refresh
 import com.rentman.sharedui.feature.home.HomeIntent.Retry
@@ -348,6 +349,17 @@ class HomeViewModelTest {
             vm.onIntent(OpenSettings)
 
             assertEquals(HomeNavEvent.OpenSettings, awaitItem())
+        }
+    }
+
+    @Test
+    fun openMonthsAsksTheScreenToOpenTheMonths() = runTest {
+        val vm = viewModel(FakeRenterRepository())
+
+        vm.navigation.test {
+            vm.onIntent(OpenMonths)
+
+            assertEquals(HomeNavEvent.OpenMonths, awaitItem())
         }
     }
 

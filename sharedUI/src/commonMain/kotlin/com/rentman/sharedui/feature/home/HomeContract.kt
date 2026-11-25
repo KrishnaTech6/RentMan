@@ -16,6 +16,7 @@ internal sealed interface HomeIntent {
     data class CreateBill(val renterId: RenterId, val month: BillingMonth) : HomeIntent
     data class OpenRenter(val renterId: RenterId) : HomeIntent
     data object OpenSettings : HomeIntent
+    data object OpenMonths : HomeIntent
     /** Show only the renters with [status], or everyone when it is null. */
     data class SelectFilter(val status: RenterStatus?) : HomeIntent
     data class RaiseRent(val offer: RentIncreaseOffer) : HomeIntent
@@ -36,7 +37,7 @@ internal sealed interface HomeUiState {
         val renters: List<RenterRow>,
         val todos: List<BillTodo>,
         val raises: List<RentIncreaseOffer>,
-        /** Renters who have left. They can still be opened to see their history or to move them back. */
+        /** Renters who have left. They can still be opened to see their history or to move them back, and still count in [thisMonth]. */
         val left: List<RenterSummary>,
         val thisMonth: MonthSummary,
         /** The raise just accepted, offered for Undo for a few seconds. */
@@ -59,4 +60,5 @@ internal sealed interface HomeNavEvent {
     data class OpenCreateBill(val renterId: RenterId, val month: BillingMonth) : HomeNavEvent
     data class OpenRenter(val renterId: RenterId) : HomeNavEvent
     data object OpenSettings : HomeNavEvent
+    data object OpenMonths : HomeNavEvent
 }

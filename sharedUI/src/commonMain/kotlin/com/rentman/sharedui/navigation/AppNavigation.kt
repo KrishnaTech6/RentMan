@@ -14,6 +14,8 @@ import com.rentman.domain.tenancy.RenterId
 import com.rentman.sharedui.feature.address.AddressPickerRoute
 import com.rentman.sharedui.feature.bill.CreateBillRoute
 import com.rentman.sharedui.feature.home.HomeRoute
+import com.rentman.sharedui.feature.months.MonthDetailRoute
+import com.rentman.sharedui.feature.months.MonthsRoute
 import com.rentman.sharedui.feature.payment.RecordPaymentRoute
 import com.rentman.sharedui.feature.renter.AddRenterRoute
 import com.rentman.sharedui.feature.renter.RenterDetailRoute
@@ -35,6 +37,8 @@ private val navigationState = SavedStateConfiguration {
             subclass(RecordPaymentKey::class)
             subclass(SettingsKey::class)
             subclass(EditRenterKey::class)
+            subclass(MonthsKey::class)
+            subclass(MonthKey::class)
         }
     }
 }
@@ -59,6 +63,7 @@ internal fun AppNavigation() {
                     onCreateBill = { renterId, month -> navigator.open(CreateBillKey(renterId.value, month.value)) },
                     onOpenRenter = { renterId -> navigator.open(RenterKey(renterId.value)) },
                     onOpenSettings = { navigator.open(SettingsKey) },
+                    onOpenMonths = { navigator.open(MonthsKey) },
                 )
             }
             entry<AddRenterKey> {
@@ -86,6 +91,14 @@ internal fun AppNavigation() {
                 RecordPaymentRoute(renterId = RenterId(key.renterId), onDone = navigator::back)
             }
             entry<SettingsKey> { SettingsRoute(onDone = navigator::back) }
+            entry<MonthsKey> { MonthsRoute(onOpenMonth = { month -> navigator.open(MonthKey(month.value)) }, onBack = navigator::back) }
+            entry<MonthKey> { key ->
+                MonthDetailRoute(
+                    month = BillingMonth.fromValue(key.month),
+                    onOpenRenter = { renterId -> navigator.open(RenterKey(renterId.value)) },
+                    onBack = navigator::back,
+                )
+            }
             entry<AddressPickerKey> {
                 AddressPickerRoute(onPicked = { id ->
                     addressSelection.pick(id)

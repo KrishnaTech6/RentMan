@@ -186,4 +186,12 @@ class ReminderPlannerTest {
         assertEquals("pending-1-2026-12-12", plan().rentPending().first().id)
         assertEquals("create-bill-1-202611-2026-11-25", plan(bills = emptyList(), now = "2026-11-24T10:00:00Z").items.first().id)
     }
+
+    @Test
+    fun aRenterWithAnOlderOverdueBillIsRemindedFromThatBillsDueDateNotTheNewestOnes() {
+        // September's bill (due 5 Oct) is unpaid and November's (due 5 Dec) was made since. Cadence from 6 Oct, every 3 days.
+        val bills = listOf(bill(month = BillingMonth.of(2026, 9)), bill())
+
+        assertEquals("2026-11-11T09:00:00Z", plan(bills = bills, now = "2026-11-10T10:00:00Z").pending().first())
+    }
 }

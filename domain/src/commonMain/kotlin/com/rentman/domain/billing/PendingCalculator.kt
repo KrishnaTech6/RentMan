@@ -18,4 +18,16 @@ object PendingCalculator {
         val stillOwedOnPastDue = BillCalculator.total(bills.filter { it.dueOn < today }.map(Bill::total)) - paid
         return maxOf(Paise.Zero, minOf(stillOwedOnPastDue, pending(bills.map(Bill::total), payments)))
     }
+
+    /**
+     * The due date of the oldest bill that is still owed (payments settle the oldest first) and past its due day, or null when
+     * nothing is overdue. How long someone has really been late counts from here, not from their newest bill.
+     */
+    fun overdueSince(bills: List<Bill>, payments: List<Paise>, today: LocalDate): LocalDate? {
+        val paid = BillCalculator.total(payments)
+        val oldestFirst = bills.sortedBy { it.month }
+        return oldestFirst.indices
+            .firstOrNull { i -> BillCalculator.total(oldestFirst.take(i + 1).map(Bill::total)) > paid && oldestFirst[i].dueOn < today }
+            ?.let { oldestFirst[it].dueOn }
+    }
 }

@@ -98,16 +98,31 @@ _Avoid_: Due
 **Due day**:
 The day of the month by which a renter should pay. A bill for one month is due on this day of that same month (the landlord makes it a few days before).
 
-**Still to collect**:
-What Home shows as the big number: the pending of every renter who owes, added up. A credit doesn't reduce it. It is split into the **late amount** (the part that comes from bills past their due day) and the amount that is Not due yet.
-_Avoid_: Outstanding, receivable, dues
+**Received**:
+What Home's month card shows as the big number: how much of this month's bills the renters' payments have settled. Payments settle a renter's oldest bill first, so an unpaid older bill is settled before this month's. It is not counted by the day the payment was made.
+_Avoid_: Income, revenue
+
+**Month**:
+A calendar month of billing, shown on the Months screen with what was received of what was billed. Open one to see every renter in it. Figures are as of today: an October bill still unpaid now counts as late in October.
+_Avoid_: Period, cycle
+
+**Cash received**:
+Every payment dated in a month, whichever bill it went to. It answers "what reached my bank in October", which is a different number from **Received** (how much of October's bills is settled).
+_Avoid_: Earnings, income
+
+**Expected**:
+This month's bills added up, plus one month's rent for each renter who has no bill for it (**Not billed**). It counts renters who have left for the bills they were given.
+_Avoid_: Target, total due
+
+**Not billed**:
+An active renter who has no bill for a month, whether it is this month or one that was skipped. Shown on the month card with the number of renters and one month's rent each, with no electricity because that isn't known before the reading. A renter who has left is never not billed.
 
 **Not due yet**:
-The part of what renters owe that comes from bills not yet past their due day. It is worked out per bill, so a renter with an old overdue bill and a new bill that isn't due has both: the old one is late, the new one is not due yet.
+The part of this month's bills, left after payments, that is not yet past the due day. The **late amount** is the part that is. What a renter still owes on bills of earlier months is shown apart, as "still owed from earlier months".
 _Avoid_: Upcoming, current
 
 **Late**:
-A renter with a pending amount after the due day of their latest bill.
+A renter who owes money on any bill that is past its due day, even when their newest bill is not due yet. Days late count from the due day of the oldest bill that is still owed.
 _Avoid_: Overdue, defaulted
 
 **Reminder mute**:

@@ -99,13 +99,22 @@
 
     <string name="month_received">%1$s received</string>
     <string name="of_expected">of %1$s expected</string>
-    <string name="no_bills_month">No %1$s bills made yet</string>
+    <string name="no_bills_month">No %1$s bills made</string>
     <string name="legend_not_due">Not due yet</string>
     <string name="legend_late">Late</string>
-    <string name="legend_not_billed">%1$d not billed yet</string>
+    <string name="legend_not_billed">%1$d not billed</string>
     <string name="all_collected">All %1$s bills collected</string>
+    <string name="months_title">Months</string>
+    <string name="all_months">All months</string>
+    <string name="month_billed">of %1$s billed</string>
+    <string name="month_left">%1$s left</string>
+    <string name="month_all_collected">All collected</string>
+    <string name="month_no_bills">No bills made</string>
+    <string name="months_empty">No months yet. Make your first bill from Home.</string>
+    <string name="cash_in">Cash received in %1$s</string>
+    <string name="renters_in_month">Renters</string>
     <string name="from_earlier">+ %1$s still owed from earlier months</string>
-    <string name="status_no_bill">No bill yet</string>
+    <string name="status_no_bill">No bill</string>
     <string name="status_paid">Paid</string>
     <string name="status_part_paid">Part paid</string>
     <string name="status_unpaid">Unpaid</string>

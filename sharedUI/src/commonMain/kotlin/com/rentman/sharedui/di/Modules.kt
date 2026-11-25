@@ -7,6 +7,8 @@ import com.rentman.domain.billing.ObserveBillContextUseCase
 import com.rentman.domain.billing.SuggestMeterReadingUseCase
 import com.rentman.domain.billing.ObserveBillTodosUseCase
 import com.rentman.domain.billing.ObserveHomeUseCase
+import com.rentman.domain.billing.ObserveMonthDetailUseCase
+import com.rentman.domain.billing.ObserveMonthsUseCase
 import com.rentman.domain.AppDispatchers
 import com.rentman.domain.backup.ExportBackupUseCase
 import com.rentman.domain.backup.MarkBackedUpUseCase
@@ -45,6 +47,8 @@ import com.rentman.domain.time.GetTodayUseCase
 import com.rentman.sharedui.feature.address.AddressPickerViewModel
 import com.rentman.sharedui.feature.bill.CreateBillViewModel
 import com.rentman.sharedui.feature.home.HomeViewModel
+import com.rentman.sharedui.feature.months.MonthDetailViewModel
+import com.rentman.sharedui.feature.months.MonthsViewModel
 import com.rentman.sharedui.feature.payment.RecordPaymentViewModel
 import com.rentman.sharedui.feature.renter.AddRenterViewModel
 import com.rentman.sharedui.feature.renter.RenterDetailViewModel
@@ -86,6 +90,8 @@ private val domainModule = module {
     factory { PostponeRentIncreaseUseCase(get(), get()) }
     factory { UndoRentIncreaseUseCase(get()) }
     factory { ObserveHomeUseCase(get(), get(), get(), get(), get(), get(), get()) }
+    factory { ObserveMonthsUseCase(get(), get(), get(), get(), get()) }
+    factory { ObserveMonthDetailUseCase(get(), get(), get(), get(), get()) }
     factory { ObserveSettingsUseCase(get()) }
     factory { SaveSettingsUseCase(get()) }
     factory { StepReminderTimeUseCase(get()) }
@@ -107,6 +113,8 @@ private val uiModule = module {
     single { AddressSelection() }
     viewModel { AddressPickerViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
+    viewModel { MonthsViewModel(get()) }
+    viewModel { params -> MonthDetailViewModel(BillingMonth.fromValue(params.get<Int>(0)), get()) }
     viewModel { params ->
         CreateBillViewModel(
             renterId = RenterId(params.get<Long>(0)),

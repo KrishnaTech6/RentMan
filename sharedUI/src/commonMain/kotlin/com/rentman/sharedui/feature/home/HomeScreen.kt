@@ -3,7 +3,6 @@ package com.rentman.sharedui.feature.home
 import com.rentman.sharedui.components.ErrorMessage
 import androidx.compose.foundation.background
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
@@ -60,6 +59,8 @@ import com.rentman.domain.tenancy.RenterSummary
 import com.rentman.sharedui.components.ActionButton
 import com.rentman.sharedui.components.AmountText
 import com.rentman.sharedui.components.BalanceText
+import com.rentman.sharedui.components.MonthCard
+import com.rentman.sharedui.components.SectionTitle
 import com.rentman.sharedui.components.StatusPill
 import com.rentman.sharedui.components.UndoBar
 import com.rentman.sharedui.components.colors
@@ -74,6 +75,7 @@ import com.rentman.sharedui.feature.home.HomeIntent.NotNow
 import com.rentman.sharedui.feature.home.HomeIntent.OpenRenter
 import com.rentman.sharedui.feature.home.HomeIntent.RaiseRent
 import com.rentman.sharedui.feature.home.HomeIntent.UndoRaise
+import com.rentman.sharedui.feature.home.HomeIntent.OpenMonths
 import com.rentman.sharedui.feature.home.HomeIntent.OpenSettings
 import com.rentman.sharedui.feature.home.HomeIntent.Retry
 import com.rentman.sharedui.feature.home.HomeIntent.SelectFilter
@@ -87,14 +89,6 @@ import com.rentman.sharedui.resources.all_renters
 import com.rentman.sharedui.resources.create_action
 import com.rentman.sharedui.resources.create_bill_card
 import com.rentman.sharedui.resources.do_next
-import com.rentman.sharedui.resources.all_collected
-import com.rentman.sharedui.resources.from_earlier
-import com.rentman.sharedui.resources.legend_late
-import com.rentman.sharedui.resources.legend_not_billed
-import com.rentman.sharedui.resources.legend_not_due
-import com.rentman.sharedui.resources.month_received
-import com.rentman.sharedui.resources.no_bills_month
-import com.rentman.sharedui.resources.of_expected
 import com.rentman.sharedui.resources.days_late_one
 import com.rentman.sharedui.resources.days_late_other
 import com.rentman.sharedui.resources.due_on
@@ -124,6 +118,7 @@ internal fun HomeRoute(
     onCreateBill: (RenterId, BillingMonth) -> Unit,
     onOpenRenter: (RenterId) -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenMonths: () -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -134,6 +129,7 @@ internal fun HomeRoute(
             is HomeNavEvent.OpenCreateBill -> onCreateBill(event.renterId, event.month)
             is HomeNavEvent.OpenRenter -> onOpenRenter(event.renterId)
             HomeNavEvent.OpenSettings -> onOpenSettings()
+            HomeNavEvent.OpenMonths -> onOpenMonths()
         }
     }
     HomeScreen(state, viewModel::onIntent)
@@ -181,7 +177,7 @@ private fun ColumnScope.ContentBody(state: Content, onIntent: (HomeIntent) -> Un
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            item(key = "this-month") { MonthCard(state.thisMonth) }
+            item(key = "this-month") { MonthCard(state.thisMonth, onOpenMonths = { onIntent(OpenMonths) }) }
             if (state.todos.isNotEmpty() || state.raises.isNotEmpty()) {
                 item(key = "do-next") { SectionTitle(stringResource(Res.string.do_next)) }
                 items(state.raises, key = { "raise-${it.summary.renter.id.value}" }) { offer ->
@@ -226,15 +222,6 @@ private fun ColumnScope.ContentBody(state: Content, onIntent: (HomeIntent) -> Un
 }
 
 @Composable
-private fun SectionTitle(text: String) {
-    BasicText(
-        text = text,
-        style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = RentManColors.Text),
-        modifier = Modifier.padding(start = 4.dp, top = 12.dp, bottom = 2.dp),
-    )
-}
-
-@Composable
 private fun BillTodoCard(todo: BillTodo, onCreate: () -> Unit) {
     val shape = RoundedCornerShape(16.dp)
     val where = listOfNotNull(todo.summary.renter.unit, todo.summary.address.name).joinToString(" · ")
@@ -256,81 +243,6 @@ private fun BillTodoCard(todo: BillTodo, onCreate: () -> Unit) {
             BasicText("${todo.summary.renter.name} · $where", style = TextStyle(fontSize = 13.sp, color = RentManColors.TextMuted))
         }
         ActionButton(text = stringResource(Res.string.create_action), enabled = true, onClick = onCreate)
-    }
-}
-
-/** How the month is going: what has come in out of what is expected, one bar for the parts, and what is left. */
-@Composable
-private fun MonthCard(month: MonthSummary) {
-    val shape = RoundedCornerShape(20.dp)
-    val soft = RentManColors.OnPrimary.copy(alpha = 0.7f)
-    val note = TextStyle(fontSize = 13.sp, color = soft)
-    Column(
-        Modifier.fillMaxWidth().background(RentManColors.HeroCard, shape).padding(20.dp).semantics(mergeDescendants = true) {},
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        if (month.billed > Paise.Zero) {
-            BasicText(stringResource(Res.string.month_received, month.month.label()), style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = soft))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AmountText(
-                    month.collected,
-                    style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = RentManColors.OnPrimary),
-                    modifier = Modifier.alignByBaseline(),
-                )
-                BasicText(
-                    stringResource(Res.string.of_expected, formatRupees(month.expected)),
-                    style = TextStyle(fontSize = 15.sp, color = soft),
-                    modifier = Modifier.alignByBaseline(),
-                )
-            }
-            MonthBar(month)
-        } else {
-            BasicText(stringResource(Res.string.no_bills_month, month.month.label()), style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = RentManColors.OnPrimary))
-        }
-        val hasLegend = month.notDue > Paise.Zero || month.late > Paise.Zero || month.notBilled > 0
-        if (hasLegend || month.earlier > Paise.Zero || month.billed > Paise.Zero) {
-            Box(Modifier.fillMaxWidth().height(1.dp).background(RentManColors.OnPrimary.copy(alpha = 0.12f)))
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                if (month.notDue > Paise.Zero) LegendRow(RentManColors.HeroDue, stringResource(Res.string.legend_not_due), month.notDue)
-                if (month.late > Paise.Zero) LegendRow(RentManColors.HeroLate, stringResource(Res.string.legend_late), month.late)
-                if (month.notBilled > 0) LegendRow(NotBilledColor, stringResource(Res.string.legend_not_billed, month.notBilled), month.notBilledRent)
-                if (month.billed > Paise.Zero && month.late + month.notDue == Paise.Zero) {
-                    BasicText(stringResource(Res.string.all_collected, month.month.label()), style = note)
-                }
-                if (month.earlier > Paise.Zero) {
-                    BasicText(stringResource(Res.string.from_earlier, formatRupees(month.earlier)), style = note, modifier = Modifier.padding(top = 4.dp))
-                }
-            }
-        }
-    }
-}
-
-/** Rent of bills not made yet: a quiet, hollow-looking part of the bar. */
-private val NotBilledColor = RentManColors.OnPrimary.copy(alpha = 0.35f)
-
-/** One bar for the whole month: received, not due yet, late, and the rent of bills not made yet. */
-@Composable
-private fun MonthBar(month: MonthSummary) {
-    val parts = listOf(
-        month.collected to RentManColors.HeroReceived,
-        month.notDue to RentManColors.HeroDue,
-        month.late to RentManColors.HeroLate,
-        month.notBilledRent to NotBilledColor,
-    ).filter { (amount, _) -> amount > Paise.Zero }
-    Row(
-        Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(RentManColors.HeroTrack),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-    ) {
-        parts.forEach { (amount, color) -> Box(Modifier.weight(amount.value.toFloat()).fillMaxHeight().background(color)) }
-    }
-}
-
-@Composable
-private fun LegendRow(color: Color, label: String, amount: Paise) {
-    Row(Modifier.heightIn(min = 28.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        Box(Modifier.size(8.dp).background(color, CircleShape))
-        BasicText(label, style = TextStyle(fontSize = 13.sp, color = RentManColors.OnPrimary.copy(alpha = 0.8f)), modifier = Modifier.weight(1f))
-        AmountText(amount, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = RentManColors.OnPrimary))
     }
 }
 

@@ -69,4 +69,25 @@ class PendingCalculatorTest {
         assertEquals(Paise.Zero, PendingCalculator.overdue(listOf(october), emptyList(), LocalDate(2026, 11, 15)))
         assertEquals(8_000L.rupees, PendingCalculator.overdue(listOf(october), emptyList(), LocalDate(2026, 11, 16)))
     }
+
+    private val september = bill(BillingMonth.of(2026, 9), 4_000L.rupees) // due 15 Oct: past due on 28 Nov
+
+    @Test
+    fun overdueSinceIsNothingWhenNothingIsOverdue() {
+        assertEquals(null, PendingCalculator.overdueSince(listOf(november), emptyList(), today))
+        assertEquals(null, PendingCalculator.overdueSince(listOf(october), listOf(8_000L.rupees), today)) // paid in full
+        assertEquals(null, PendingCalculator.overdueSince(emptyList(), emptyList(), today))
+    }
+
+    @Test
+    fun overdueSinceIsTheDueDateOfTheOldestBillStillOwedAndPastDue() {
+        assertEquals(LocalDate(2026, 11, 15), PendingCalculator.overdueSince(listOf(october, november), emptyList(), today))
+        // A part payment leaves the oldest bill still owed.
+        assertEquals(LocalDate(2026, 10, 15), PendingCalculator.overdueSince(listOf(september, october), listOf(1_000L.rupees), today))
+    }
+
+    @Test
+    fun overdueSinceMovesOnWhenTheOldestBillIsPaid() {
+        assertEquals(LocalDate(2026, 11, 15), PendingCalculator.overdueSince(listOf(september, october), listOf(4_000L.rupees), today))
+    }
 }

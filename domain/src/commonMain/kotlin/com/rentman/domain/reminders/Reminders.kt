@@ -85,7 +85,8 @@ object ReminderPlanner {
                 .toList()
 
         // The oldest month with no bill, looking one month ahead: a renter due on the 1st is reminded at the end of the month before.
-        val nextMonth = BillingMonth.of(now.toLocalDate(zone)).plusMonths(1)
+        val today = now.toLocalDate(zone)
+        val nextMonth = BillingMonth.of(today).plusMonths(1)
         val createBill = renters.flatMap { renter ->
             val month = UnbilledMonths.first(renter.firstBillMonth, bills.filter { it.renterId == renter.id }, nextMonth)
                 ?: return@flatMap emptyList()
@@ -97,9 +98,11 @@ object ReminderPlanner {
         val pending = renters.flatMap { renter ->
             val renterBills = bills.filter { it.renterId == renter.id }
             val latest = renterBills.maxByOrNull { it.month } ?: return@flatMap emptyList()
-            val owed = PendingCalculator.pending(renterBills.map { it.total }, payments.filter { it.renterId == renter.id }.map { it.amount })
+            val renterPayments = payments.filter { it.renterId == renter.id }
+            val owed = PendingCalculator.pending(renterBills.map { it.total }, renterPayments.map { it.amount })
             if (owed <= Paise.Zero || renter.remindersMutedFor(latest.month)) return@flatMap emptyList()
-            slots(latest.dueOn.plus(1, DateTimeUnit.DAY)).map { (date, at) ->
+            val overdueSince = PendingCalculator.overdueSince(renterBills, renterPayments.map { it.amount }, today)
+            slots((overdueSince ?: latest.dueOn).plus(1, DateTimeUnit.DAY)).map { (date, at) ->
                 ScheduledReminder("pending-${renter.id.value}-$date", at, Reminder.RentPending(renter.id, renter.name, owed))
             }
         }

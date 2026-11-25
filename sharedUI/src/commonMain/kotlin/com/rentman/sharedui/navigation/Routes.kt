@@ -29,3 +29,11 @@ internal data object SettingsKey : NavKey
 /** The Add renter form filled in with a renter who is already saved. */
 @Serializable
 internal data class EditRenterKey(val renterId: Long) : NavKey
+
+/** The list of months, newest first. */
+@Serializable
+internal data object MonthsKey : NavKey
+
+/** One month and every renter in it. [month] is the BillingMonth value (YYYYMM). */
+@Serializable
+internal data class MonthKey(val month: Int) : NavKey
