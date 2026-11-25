@@ -17,8 +17,9 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 
 class ObserveBillTodosUseCaseTest {
+    private var now = Instant.parse("2026-11-23T10:00:00Z")
     private val clock = object : Clock {
-        override fun now(): Instant = Instant.parse("2026-11-23T10:00:00Z")
+        override fun now(): Instant = now
     }
 
     private fun useCase(renters: List<com.rentman.domain.tenancy.Renter>, bills: List<Bill> = emptyList()) =
@@ -95,6 +96,38 @@ class ObserveBillTodosUseCaseTest {
                 listOf("Neha" to BillingMonth.of(2026, 10), "Amit" to BillingMonth.of(2026, 11), "Zoya" to BillingMonth.of(2026, 11)),
                 awaitItem().todos(),
             )
+        }
+    }
+
+    @Test
+    fun nextMonthsBillOpensThreeDaysBeforeItsDueDay() = runTest {
+        // Due on the 1st: December's bill is made at the end of November. 3 days before 1 Dec is 28 Nov.
+        val renter = TestData.renter(dueDay = 1)
+        val bills = listOf(billFor(1, BillingMonth.of(2026, 11)))
+
+        now = Instant.parse("2026-11-27T10:00:00Z")
+        useCase(listOf(renter), bills)().test { assertEquals(emptyList(), awaitItem().todos()) }
+
+        now = Instant.parse("2026-11-28T10:00:00Z")
+        useCase(listOf(renter), bills)().test { assertEquals(listOf("Ravi Kumar" to BillingMonth.of(2026, 12)), awaitItem().todos()) }
+    }
+
+    @Test
+    fun aLaterDueDayDoesNotOpenNextMonthEarly() = runTest {
+        // Due on the 5th: December's bill opens on 2 Dec, and until then November's was the last one to make.
+        now = Instant.parse("2026-11-30T10:00:00Z")
+
+        useCase(listOf(TestData.renter(dueDay = 5)), listOf(billFor(1, BillingMonth.of(2026, 11))))().test {
+            assertEquals(emptyList(), awaitItem().todos())
+        }
+    }
+
+    @Test
+    fun anUnbilledCurrentMonthStillComesBeforeNextMonth() = runTest {
+        now = Instant.parse("2026-11-29T10:00:00Z")
+
+        useCase(listOf(TestData.renter(dueDay = 1, firstBillMonth = BillingMonth.of(2026, 11))))().test {
+            assertEquals(listOf("Ravi Kumar" to BillingMonth.of(2026, 11)), awaitItem().todos())
         }
     }
 }

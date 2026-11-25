@@ -54,8 +54,8 @@ class BuildBillUseCase {
         fun bill(lines: List<BillLine>, previous: Int? = null, current: Int? = null, replaced: Boolean = false) = Bill(
             renterId = renter.id,
             month = context.month,
-            // The bill for a month is paid in the next one: the November bill says "pay by 5 Dec" (PLAN.md).
-            dueOn = context.month.plusMonths(1).dueOn(renter.dueDay),
+            // The landlord makes a month's bill a few days before the due day, which is in the same month: "pay by 5 Nov" (PLAN.md).
+            dueOn = context.month.dueOn(renter.dueDay),
             previousReading = previous,
             currentReading = current,
             rate = context.rate.takeIf { renter.billsElectricity },

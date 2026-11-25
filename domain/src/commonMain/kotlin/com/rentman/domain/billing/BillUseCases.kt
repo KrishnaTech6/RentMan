@@ -9,7 +9,10 @@ import com.rentman.domain.money.Paise
 import com.rentman.domain.payments.Payment
 import com.rentman.domain.payments.PaymentRepository
 import com.rentman.domain.time.GetTodayUseCase
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.daysUntil
 import com.rentman.domain.settings.SettingsRepository
 import com.rentman.domain.tenancy.AddressRepository
 import com.rentman.domain.tenancy.ObserveRenterSummariesUseCase
@@ -28,6 +31,19 @@ import kotlin.math.roundToInt
 
 /** Which months of a renter still have no bill. Used for the to-do list and to stop a renter leaving with a month unbilled. */
 object UnbilledMonths {
+    /** The landlord makes a bill about this many days before its due day. */
+    private const val DAYS_AHEAD = 3
+
+    /** The first day [month]'s bill can be made: the 1st, or [DAYS_AHEAD] days before the due day if that is earlier (due on the 1st: the 28th before). */
+    fun opensOn(month: BillingMonth, dueDay: Int): LocalDate =
+        minOf(month.atStartOfMonth(), month.dueOn(dueDay).minus(DAYS_AHEAD, DateTimeUnit.DAY))
+
+    /** The latest month that can be billed today: this month, or next month once it has opened. */
+    fun billable(today: LocalDate, dueDay: Int): BillingMonth {
+        val next = BillingMonth.of(today).plusMonths(1)
+        return if (today >= opensOn(next, dueDay)) next else BillingMonth.of(today)
+    }
+
     /** The oldest month from [firstBillMonth] up to [current] that none of the renter's [bills] covers, or null. */
     fun first(firstBillMonth: BillingMonth, bills: List<Bill>, current: BillingMonth): BillingMonth? {
         val billed = bills.map { it.month }.toSet()
@@ -50,11 +66,11 @@ class ObserveBillTodosUseCase(
             renterOutcome.flatMap { renterList ->
                 addressOutcome.flatMap { addressList ->
                     billOutcome.map { billList ->
-                        val current = BillingMonth.of(today())
+                        val day = today()
                         // shortcut: a renter whose address is archived gets no to-do. Archiving isn't a feature yet.
                         renterList.mapNotNull { renter ->
                             val address = addressList.firstOrNull { it.id == renter.addressId } ?: return@mapNotNull null
-                            UnbilledMonths.first(renter.firstBillMonth, billList.filter { it.renterId == renter.id }, current)
+                            UnbilledMonths.first(renter.firstBillMonth, billList.filter { it.renterId == renter.id }, UnbilledMonths.billable(day, renter.dueDay))
                                 ?.let { BillTodo(RenterSummary(renter, address), it) }
                         }.sortedWith(compareBy({ it.month.value }, { it.summary.renter.name }))
                     }
@@ -149,40 +165,36 @@ enum class RenterStatus { NoBillYet, Paid, PartPaid, Unpaid, Late }
 /**
  * One line of Home's renter list: who, what they owe right now (negative means paid ahead), where they stand, and how much of
  * what they owe is [overdue] (from bills past their due day, whatever the newest bill says).
+ * [paidSinceBill] is what they paid since the newest bill came, so "paid of paid + pending" is a share that never passes 100%
+ * even when an older bill is still owed. [billMonth] and [dueOn] are the newest bill's month and due day (a month's bill falls due in the
+ * next month), and [daysLate] counts from it, only when [status] is Late.
  */
-data class RenterRow(val summary: RenterSummary, val pending: Paise, val status: RenterStatus, val overdue: Paise)
-
-/**
- * What is owed right now, from the renters who owe, split by whether it is [late] (from bills past their due day) or not due yet.
- * [late] and [notDueYet] add up to [total]. Someone who paid ahead doesn't reduce what the others owe. The [notBilled] renters have a bill to create, so they are not in the amounts;
- * [notBilledRent] is one month's rent for each, with no electricity because that isn't known before the reading.
- */
-data class StillToCollect(val late: Paise, val notDueYet: Paise, val owing: Int, val notBilled: Int, val notBilledRent: Paise) {
-    val total: Paise get() = late + notDueYet
-
-    companion object {
-        fun of(rows: List<RenterRow>, todos: List<BillTodo>): StillToCollect {
-            val owed = rows.filter { it.pending > Paise.Zero }
-            val late = BillCalculator.total(owed.map { it.overdue })
-            return StillToCollect(
-                late = late,
-                notDueYet = BillCalculator.total(owed.map { it.pending }) - late,
-                owing = owed.size,
-                notBilled = todos.size,
-                notBilledRent = BillCalculator.total(todos.map { it.summary.renter.monthlyRent }),
-            )
+data class RenterRow(
+    val summary: RenterSummary,
+    val pending: Paise,
+    val status: RenterStatus,
+    val overdue: Paise,
+    val paidSinceBill: Paise = Paise.Zero,
+    val billMonth: BillingMonth? = null,
+    val dueOn: LocalDate? = null,
+    val daysLate: Int = 0,
+) {
+    /** How much of what was owed when the newest bill came has been paid since, from 0 to 1. */
+    val paidShare: Float
+        get() {
+            val owed = paidSinceBill + pending
+            return if (pending <= Paise.Zero || owed <= Paise.Zero) 0f else paidSinceBill.value.toFloat() / owed.value
         }
-    }
 }
 
-/** What Home shows: every renter with their balance, the bills to create, the rent raises to decide, and the total still to collect. */
+/** What Home shows: every renter with their balance, the bills to create, the rent raises to decide, and how this month is going. */
 data class HomeSnapshot(
     val renters: List<RenterRow>,
     val todos: List<BillTodo>,
     val raises: List<RentIncreaseOffer>,
     /** Renters who have left. They are not in the list, the to-dos or the total. */
     val left: List<RenterSummary>,
-    val stillToCollect: StillToCollect,
+    val thisMonth: MonthSummary,
 )
 
 class ObserveHomeUseCase(
@@ -215,13 +227,13 @@ class ObserveHomeUseCase(
         return combine(lists, money) { listsOutcome, moneyOutcome ->
             listsOutcome.flatMap { l ->
                 moneyOutcome.map { (billList, paymentList) ->
-                    val rows = l.renters.map { rowOf(it, billList, paymentList, today()) }
+                    val rows = l.renters.map { rowOf(it, billList, paymentList, today()) }.sortedWith(mostUrgentFirst)
                     HomeSnapshot(
                         renters = rows,
                         todos = l.todos,
                         raises = l.raises,
                         left = l.left,
-                        stillToCollect = StillToCollect.of(rows, l.todos),
+                        thisMonth = MonthSummary.of(BillingMonth.of(today()), today(), l.renters.map { it.renter }, billList, paymentList),
                     )
                 }
             }
@@ -241,6 +253,28 @@ class ObserveHomeUseCase(
             renterPayments.any { it.paidOn >= latestBill.issuedOn } -> RenterStatus.PartPaid
             else -> RenterStatus.Unpaid
         }
-        return RenterRow(summary, pending, status, PendingCalculator.overdue(renterBills, renterPayments.map { it.amount }, today))
+        return RenterRow(
+            summary = summary,
+            pending = pending,
+            status = status,
+            overdue = PendingCalculator.overdue(renterBills, renterPayments.map { it.amount }, today),
+            paidSinceBill = latestBill?.let { bill -> BillCalculator.total(renterPayments.filter { it.paidOn >= bill.issuedOn }.map { it.amount }) } ?: Paise.Zero,
+            billMonth = latestBill?.month,
+            dueOn = latestBill?.dueOn,
+            daysLate = if (status == RenterStatus.Late && latestBill != null) latestBill.dueOn.daysUntil(today) else 0,
+        )
+    }
+
+    private companion object {
+        /** Who needs a call first: Late, then Part paid, Unpaid, No bill yet, Paid. Larger amounts first, then by name. */
+        val mostUrgentFirst = compareBy<RenterRow> {
+            when (it.status) {
+                RenterStatus.Late -> 0
+                RenterStatus.PartPaid -> 1
+                RenterStatus.Unpaid -> 2
+                RenterStatus.NoBillYet -> 3
+                RenterStatus.Paid -> 4
+            }
+        }.thenByDescending { it.pending }.thenBy { it.summary.renter.name }
     }
 }

@@ -8,7 +8,7 @@ import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.ObserveBillTodosUseCase
 import com.rentman.domain.billing.ObserveHomeUseCase
 import com.rentman.domain.billing.RenterStatus
-import com.rentman.domain.billing.StillToCollect
+import com.rentman.domain.billing.MonthSummary
 import com.rentman.domain.money.Paise
 import com.rentman.domain.payments.Payment
 import com.rentman.domain.payments.PaymentId
@@ -39,6 +39,7 @@ import com.rentman.sharedui.feature.home.HomeIntent.UndoRaise
 import com.rentman.sharedui.feature.home.HomeIntent.OpenSettings
 import com.rentman.sharedui.feature.home.HomeIntent.Refresh
 import com.rentman.sharedui.feature.home.HomeIntent.Retry
+import com.rentman.sharedui.feature.home.HomeIntent.SelectFilter
 import com.rentman.sharedui.feature.home.HomeUiState.Content
 import com.rentman.sharedui.feature.home.HomeUiState.Error
 import com.rentman.sharedui.feature.renter.FakeRentIncreaseRepository
@@ -171,11 +172,11 @@ class HomeViewModelTest {
 
     @Test
     fun noRentersIsAnEmptyContentNotAnError() = runTest {
-        assertEquals(Content(emptyList(), emptyList(), emptyList(), emptyList(), StillToCollect.of(emptyList(), emptyList())), viewModel(FakeRenterRepository()).uiState.value)
+        assertEquals(Content(emptyList(), emptyList(), emptyList(), emptyList(), MonthSummary(BillingMonth.of(2026, 11), Paise.Zero, Paise.Zero, Paise.Zero, 0, Paise.Zero, Paise.Zero)), viewModel(FakeRenterRepository()).uiState.value)
     }
 
     @Test
-    fun showsWhatEachRenterOwesTheirStatusAndTheTotalStillToCollect() = runTest {
+    fun showsWhatEachRenterOwesTheirStatusAndHowThisMonthIsGoing() = runTest {
         val bill = Bill(
             renterId = ravi.id,
             month = BillingMonth.of(2026, 11),
@@ -190,9 +191,8 @@ class HomeViewModelTest {
         val content = vm.uiState.value as Content
         assertEquals(3_380L.rupees, content.renters.single().pending)
         assertEquals(RenterStatus.PartPaid, content.renters.single().status)
-        assertEquals(3_380L.rupees, content.stillToCollect.total)
-        assertEquals(3_380L.rupees, content.stillToCollect.notDueYet)
-        assertEquals(1, content.stillToCollect.owing)
+        assertEquals(5_000L.rupees, content.thisMonth.collected)
+        assertEquals(3_380L.rupees, content.thisMonth.notDue)
     }
 
     @Test
@@ -206,11 +206,11 @@ class HomeViewModelTest {
         )
         val payments = FakePaymentRepository()
         val vm = viewModel(FakeRenterRepository(listOf(ravi)), bills = FakeBillRepository(listOf(bill)), payments = payments)
-        assertEquals(8_380L.rupees, (vm.uiState.value as Content).stillToCollect.total)
+        assertEquals(Paise.Zero, (vm.uiState.value as Content).thisMonth.collected)
 
         payments.add(Payment(renterId = ravi.id, amount = 8_380L.rupees, paidOn = LocalDate(2026, 11, 23), mode = PaymentMode.Cash))
 
-        assertEquals(Paise.Zero, (vm.uiState.value as Content).stillToCollect.total)
+        assertEquals(8_380L.rupees, (vm.uiState.value as Content).thisMonth.collected)
         assertEquals(RenterStatus.Paid, (vm.uiState.value as Content).renters.single().status)
     }
 
@@ -394,5 +394,78 @@ class HomeViewModelTest {
 
             assertEquals(HomeNavEvent.OpenAddRenter, awaitItem())
         }
+    }
+
+    private val neha = ravi.copy(id = RenterId(2), name = "Neha Verma", unit = "1st floor")
+
+    private fun bill(renter: Renter) = Bill(
+        renterId = renter.id,
+        month = BillingMonth.of(2026, 11),
+        createdOn = LocalDate(2026, 11, 3),
+        dueOn = LocalDate(2026, 12, 5),
+        lines = listOf(BillLine(BillLineKind.Rent, "Rent", 8_380L.rupees)),
+    )
+
+    /** Ravi has not paid (Unpaid), Neha has paid in full (Paid). */
+    private suspend fun raviOwesNehaPaid(payments: FakePaymentRepository = FakePaymentRepository()): HomeViewModel {
+        payments.add(Payment(renterId = neha.id, amount = 8_380L.rupees, paidOn = LocalDate(2026, 11, 22), mode = PaymentMode.Upi))
+        return viewModel(FakeRenterRepository(listOf(ravi, neha)), bills = FakeBillRepository(listOf(bill(ravi), bill(neha))), payments = payments)
+    }
+
+    @Test
+    fun theChipsCountEachStatusMostUrgentFirst() = runTest {
+        val content = raviOwesNehaPaid().uiState.value as Content
+
+        assertEquals(listOf(RenterStatus.Unpaid to 1, RenterStatus.Paid to 1), content.statusCounts)
+    }
+
+    @Test
+    fun choosingAStatusShowsOnlyThoseRentersAndAllShowsEveryone() = runTest {
+        val vm = raviOwesNehaPaid()
+
+        vm.onIntent(SelectFilter(RenterStatus.Paid))
+        assertEquals(listOf("Neha Verma"), (vm.uiState.value as Content).shown.map { it.summary.renter.name })
+
+        vm.onIntent(SelectFilter(null))
+        assertEquals(listOf("Ravi Kumar", "Neha Verma"), (vm.uiState.value as Content).shown.map { it.summary.renter.name })
+    }
+
+    @Test
+    fun theChosenStatusSurvivesNewData() = runTest {
+        val payments = FakePaymentRepository()
+        val vm = raviOwesNehaPaid(payments)
+        vm.onIntent(SelectFilter(RenterStatus.Paid))
+
+        payments.add(Payment(renterId = ravi.id, amount = 1_000L.rupees, paidOn = LocalDate(2026, 11, 23), mode = PaymentMode.Cash))
+
+        val content = vm.uiState.value as Content
+        assertEquals(RenterStatus.Paid, content.filter)
+        assertEquals(listOf("Neha Verma"), content.shown.map { it.summary.renter.name })
+    }
+
+    @Test
+    fun theFilterIsDroppedWhenNobodyHasThatStatusAnyMore() = runTest {
+        val payments = FakePaymentRepository()
+        val vm = raviOwesNehaPaid(payments)
+        vm.onIntent(SelectFilter(RenterStatus.Unpaid))
+
+        payments.add(Payment(renterId = ravi.id, amount = 8_380L.rupees, paidOn = LocalDate(2026, 11, 23), mode = PaymentMode.Cash))
+
+        val content = vm.uiState.value as Content
+        assertEquals(null, content.filter)
+        assertEquals(2, content.shown.size)
+    }
+
+    @Test
+    fun theFilterIsDroppedWhenEveryoneEndsUpWithThatStatus() = runTest {
+        // The chips are hidden when everybody has one status, so a filter left on could never be cleared.
+        val bills = FakeBillRepository(listOf(bill(ravi), bill(neha)))
+        val payments = FakePaymentRepository(listOf(Payment(PaymentId(1), neha.id, 8_380L.rupees, LocalDate(2026, 11, 22), PaymentMode.Upi)))
+        val vm = viewModel(FakeRenterRepository(listOf(ravi, neha)), bills = bills, payments = payments)
+        vm.onIntent(SelectFilter(RenterStatus.Unpaid))
+
+        payments.setVoided(PaymentId(1), true) // Neha's payment is taken back: both are Unpaid now
+
+        assertEquals(null, (vm.uiState.value as Content).filter)
     }
 }

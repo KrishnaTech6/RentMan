@@ -4,7 +4,8 @@ import com.rentman.domain.DomainError
 import com.rentman.domain.billing.BillTodo
 import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.RenterRow
-import com.rentman.domain.billing.StillToCollect
+import com.rentman.domain.billing.RenterStatus
+import com.rentman.domain.billing.MonthSummary
 import com.rentman.domain.tenancy.RentChange
 import com.rentman.domain.tenancy.RentIncreaseOffer
 import com.rentman.domain.tenancy.RenterId
@@ -15,6 +16,8 @@ internal sealed interface HomeIntent {
     data class CreateBill(val renterId: RenterId, val month: BillingMonth) : HomeIntent
     data class OpenRenter(val renterId: RenterId) : HomeIntent
     data object OpenSettings : HomeIntent
+    /** Show only the renters with [status], or everyone when it is null. */
+    data class SelectFilter(val status: RenterStatus?) : HomeIntent
     data class RaiseRent(val offer: RentIncreaseOffer) : HomeIntent
     data class NotNow(val renterId: RenterId) : HomeIntent
     data class UndoRaise(val change: RentChange) : HomeIntent
@@ -35,12 +38,20 @@ internal sealed interface HomeUiState {
         val raises: List<RentIncreaseOffer>,
         /** Renters who have left. They can still be opened to see their history or to move them back. */
         val left: List<RenterSummary>,
-        val stillToCollect: StillToCollect,
+        val thisMonth: MonthSummary,
         /** The raise just accepted, offered for Undo for a few seconds. */
         val raiseUndo: RentChange? = null,
         /** A failed raise, "not now" or undo. What is on screen is still right. */
         val actionError: DomainError? = null,
-    ) : HomeUiState
+        /** The status chosen on the chips, or null for everyone. */
+        val filter: RenterStatus? = null,
+    ) : HomeUiState {
+        /** What the list shows: everyone, or only the renters with the chosen status. */
+        val shown: List<RenterRow> get() = filter?.let { status -> renters.filter { it.status == status } } ?: renters
+
+        /** One chip per status somebody has, with how many, most urgent first (the renters are already in that order). */
+        val statusCounts: List<Pair<RenterStatus, Int>> get() = renters.groupBy { it.status }.map { (status, rows) -> status to rows.size }
+    }
 }
 
 internal sealed interface HomeNavEvent {

@@ -174,24 +174,24 @@ class BuildBillUseCaseTest {
     }
 
     @Test
-    fun aBillIsDueOnTheDueDayOfTheFollowingMonth() {
-        // PLAN.md: the November bill says "Please pay by 5 Dec".
+    fun aBillIsDueOnTheDueDayOfItsOwnMonth() {
+        // The landlord makes the November bill a few days before the renter's due day, so it says "Please pay by 5 Nov".
         val bill = bill(build(context(), reading = "1325", newMeterStart = ""))
 
-        assertEquals(LocalDate(2026, 12, 5), bill.dueOn)
+        assertEquals(LocalDate(2026, 11, 5), bill.dueOn)
     }
 
     @Test
-    fun theDueDateRollsIntoTheNextYearAfterDecember() {
+    fun theDecemberBillIsDueInDecemberNotInTheNextYear() {
         val december = context().copy(month = BillingMonth.of(2026, 12))
 
-        assertEquals(LocalDate(2027, 1, 5), bill(build(december, reading = "1325", newMeterStart = "")).dueOn)
+        assertEquals(LocalDate(2026, 12, 5), bill(build(december, reading = "1325", newMeterStart = "")).dueOn)
     }
 
     @Test
-    fun aDueDayThatTheFollowingMonthDoesNotHaveIsClampedToItsLastDay() {
-        val january = context(TestData.renter(dueDay = 30)).copy(month = BillingMonth.of(2027, 1))
+    fun aDueDayThatTheMonthDoesNotHaveIsClampedToItsLastDay() {
+        val february = context(TestData.renter(dueDay = 30)).copy(month = BillingMonth.of(2027, 2))
 
-        assertEquals(LocalDate(2027, 2, 28), bill(build(january, reading = "1325", newMeterStart = "")).dueOn)
+        assertEquals(LocalDate(2027, 2, 28), bill(build(february, reading = "1325", newMeterStart = "")).dueOn)
     }
 }

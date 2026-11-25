@@ -46,7 +46,8 @@ class ReminderPlannerTest {
 
     private fun ReminderPlan.rentPending() = items.filter { it.reminder is Reminder.RentPending }
     private fun ReminderPlan.pending() = items.filter { it.reminder is Reminder.RentPending }.map { it.at.toString() }
-    private fun ReminderPlan.createBills() = items.filter { it.reminder is Reminder.CreateBills }.map { it.at.toString() }
+    private fun ReminderPlan.createBills(renterId: Long = 1) =
+        items.filter { (it.reminder as? Reminder.CreateBill)?.renterId == RenterId(renterId) }.map { it.at.toString() }
 
     @Test
     fun aLateRenterIsRemindedEveryThreeDaysFromTheDayAfterTheDueDate() {
@@ -115,28 +116,44 @@ class ReminderPlannerTest {
     }
 
     @Test
-    fun theMonthlyPromptRepeatsInsideTheMonthUntilEveryRenterHasABill() {
-        // It is 24 Nov and November has no bill yet: 1, 4, ... 25, 28 are the future slots, and none spill into December.
+    fun aRenterWithoutThisMonthsBillIsRemindedFromTheFirstEveryThreeDaysUntilItIsMade() {
+        // Due on the 5th, so the bill opens on the 1st. It is 24 Nov and November has no bill: 25, 28 Nov, 1, 4, 7 Dec.
         val plan = plan(bills = emptyList(), now = "2026-11-24T10:00:00Z")
 
-        assertEquals(listOf("2026-11-25T09:00:00Z", "2026-11-28T09:00:00Z"), plan.createBills())
-        assertEquals(Reminder.CreateBills(november, missing = 1), plan.items.first().reminder)
+        assertEquals(
+            listOf("2026-11-25T09:00:00Z", "2026-11-28T09:00:00Z", "2026-12-01T09:00:00Z", "2026-12-04T09:00:00Z", "2026-12-07T09:00:00Z"),
+            plan.createBills(),
+        )
+        assertEquals(Reminder.CreateBill(RenterId(1), "Ravi Kumar", november), plan.items.first().reminder)
     }
 
     @Test
-    fun theMonthlyPromptCountsHowManyRentersStillNeedABillAndStopsWhenNoneDo() {
-        val renters = listOf(TestData.renter(id = 1), TestData.renter(id = 2, name = "Neha"), TestData.renter(id = 3, name = "Zoya"))
-        val oneBilled = plan(renters = renters, bills = listOf(bill(renterId = 1)), now = "2026-11-24T10:00:00Z")
-        val allBilled = plan(renters = renters, bills = renters.map { bill(it.id.value) }, now = "2026-11-24T10:00:00Z")
+    fun aRenterDueOnTheFirstIsRemindedAboutNextMonthsBillFromThe28th() {
+        // November is billed. December's bill is due on 1 Dec, so it opens 3 days before: 28 Nov.
+        val plan = plan(renters = listOf(TestData.renter(dueDay = 1)), bills = listOf(bill()), now = "2026-11-24T10:00:00Z")
 
-        assertEquals(Reminder.CreateBills(november, missing = 2), oneBilled.items.first().reminder)
-        assertEquals(emptyList(), allBilled.createBills())
+        assertEquals("2026-11-28T09:00:00Z", plan.createBills().first())
+        assertEquals(Reminder.CreateBill(RenterId(1), "Ravi Kumar", BillingMonth.of(2026, 12)), plan.items.first { it.reminder is Reminder.CreateBill }.reminder)
     }
 
     @Test
-    fun theMonthlyPromptIsOnceWhenRepeatIsOnce() {
+    fun aRenterDueOnTheFifthIsNotRemindedAboutNextMonthBeforeItOpensOnThe1st() {
+        assertEquals("2026-12-01T09:00:00Z", plan(bills = listOf(bill()), now = "2026-11-30T10:00:00Z").createBills().first())
+    }
+
+    @Test
+    fun theBillReminderIsOnceWhenRepeatIsOnce() {
         assertEquals(emptyList(), plan(bills = emptyList(), repeatDays = 0, now = "2026-11-24T10:00:00Z").createBills()) // 1 Nov has passed
         assertEquals(listOf("2026-11-01T09:00:00Z"), plan(bills = emptyList(), repeatDays = 0, now = "2026-11-01T08:00:00Z").createBills())
+    }
+
+    @Test
+    fun everyRenterIsRemindedOnTheirOwnAndABilledMonthIsNotRemindedAgain() {
+        val renters = listOf(TestData.renter(id = 1), TestData.renter(id = 2, name = "Neha"))
+        val plan = plan(renters = renters, bills = listOf(bill(renterId = 1)), now = "2026-11-24T10:00:00Z")
+
+        assertEquals("2026-11-25T09:00:00Z", plan.createBills(renterId = 2).first()) // Neha still needs November's
+        assertEquals("2026-12-01T09:00:00Z", plan.createBills(renterId = 1).first()) // Ravi's next one opens in December
     }
 
     @Test
@@ -167,6 +184,6 @@ class ReminderPlannerTest {
     fun theSameDataGivesTheSamePlanAndStableIds() {
         assertEquals(plan(), plan())
         assertEquals("pending-1-2026-12-12", plan().rentPending().first().id)
-        assertEquals("create-bills-202611-2026-11-25", plan(bills = emptyList(), now = "2026-11-24T10:00:00Z").items.first().id)
+        assertEquals("create-bill-1-202611-2026-11-25", plan(bills = emptyList(), now = "2026-11-24T10:00:00Z").items.first().id)
     }
 }

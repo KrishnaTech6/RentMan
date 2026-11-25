@@ -63,7 +63,7 @@ Next raise month = (latest active `effectiveMonth`, or the agreement start month
 | id | INTEGER PK autogen | |
 | renterId | INTEGER NOT NULL | FK → renter, RESTRICT |
 | month | INTEGER NOT NULL | `YYYYMM`. **Unique with `renterId`.** |
-| dueOn | INTEGER NOT NULL | epoch day: the renter's due day in the month **after** the billing month (the November bill is due on 5 Dec), copied when the bill is made |
+| dueOn | INTEGER NOT NULL | epoch day: the renter's due day in the billing month itself (the November bill is due on 5 Nov), copied when the bill is made. Bills made earlier were due in the following month and keep the date they were made with |
 | prevReading | INTEGER | Null when electricity isn't billed. Stored explicitly, so no lookback is ever needed. |
 | currReading | INTEGER | |
 | ratePaise | INTEGER | The rate actually used (custom or global at that time). |

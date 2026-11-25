@@ -5,6 +5,7 @@ import com.rentman.domain.billing.Bill
 import com.rentman.domain.billing.BillRepository
 import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.PendingCalculator
+import com.rentman.domain.billing.UnbilledMonths
 import com.rentman.domain.flatMap
 import com.rentman.domain.map
 import com.rentman.domain.money.Paise
@@ -38,8 +39,8 @@ import kotlin.time.Instant
 
 /** What a notification is about. The platform turns it into text. */
 sealed interface Reminder {
-    /** [missing] renters still have no bill for [month]. */
-    data class CreateBills(val month: BillingMonth, val missing: Int) : Reminder
+    /** [renterName] still has no bill for [month]. */
+    data class CreateBill(val renterId: RenterId, val renterName: String, val month: BillingMonth) : Reminder
 
     /** [renterName] still owes [pending] after the due date. */
     data class RentPending(val renterId: RenterId, val renterName: String, val pending: Paise) : Reminder
@@ -76,21 +77,20 @@ object ReminderPlanner {
         now: Instant,
         zone: TimeZone,
     ): ReminderPlan {
-        fun slots(first: LocalDate, withinMonth: BillingMonth? = null): List<Pair<LocalDate, Instant>> =
+        fun slots(first: LocalDate): List<Pair<LocalDate, Instant>> =
             generateSequence(first) { if (settings.reminderRepeatDays > 0) it.plus(settings.reminderRepeatDays, DateTimeUnit.DAY) else null }
-                .takeWhile { withinMonth == null || BillingMonth.of(it) == withinMonth }
                 .map { it to it.atTime(settings.reminderMinuteOfDay / 60, settings.reminderMinuteOfDay % 60).toInstant(zone) }
                 .filter { (_, at) -> at > now }
                 .take(SLOTS_PER_REMINDER)
                 .toList()
 
-        val current = BillingMonth.of(now.toLocalDate(zone))
-        val unbilled = renters.count { renter -> bills.none { it.renterId == renter.id && it.month == current } }
-        val createBills = if (unbilled == 0) {
-            emptyList()
-        } else {
-            slots(current.atStartOfMonth(), withinMonth = current).map { (date, at) ->
-                ScheduledReminder("create-bills-${current.value}-$date", at, Reminder.CreateBills(current, unbilled))
+        // The oldest month with no bill, looking one month ahead: a renter due on the 1st is reminded at the end of the month before.
+        val nextMonth = BillingMonth.of(now.toLocalDate(zone)).plusMonths(1)
+        val createBill = renters.flatMap { renter ->
+            val month = UnbilledMonths.first(renter.firstBillMonth, bills.filter { it.renterId == renter.id }, nextMonth)
+                ?: return@flatMap emptyList()
+            slots(UnbilledMonths.opensOn(month, renter.dueDay)).map { (date, at) ->
+                ScheduledReminder("create-bill-${renter.id.value}-${month.value}-$date", at, Reminder.CreateBill(renter.id, renter.name, month))
             }
         }
 
@@ -104,7 +104,7 @@ object ReminderPlanner {
             }
         }
 
-        return ReminderPlan((createBills + pending).sortedWith(compareBy({ it.at }, { it.id })).take(MAX_SCHEDULED))
+        return ReminderPlan((createBill + pending).sortedWith(compareBy({ it.at }, { it.id })).take(MAX_SCHEDULED))
     }
 
     private fun Instant.toLocalDate(zone: TimeZone): LocalDate = this.toLocalDateTime(zone).date

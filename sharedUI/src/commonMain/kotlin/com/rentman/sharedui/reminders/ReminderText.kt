@@ -4,8 +4,8 @@ import com.rentman.domain.reminders.Reminder
 import com.rentman.sharedui.components.formatRupees
 import com.rentman.sharedui.resources.Res
 import com.rentman.sharedui.resources.months_short
-import com.rentman.sharedui.resources.reminder_create_bills_body
-import com.rentman.sharedui.resources.reminder_create_bills_title
+import com.rentman.sharedui.resources.reminder_create_bill_body
+import com.rentman.sharedui.resources.reminder_create_bill_title
 import com.rentman.sharedui.resources.reminder_pending_body
 import com.rentman.sharedui.resources.reminder_pending_title
 import org.jetbrains.compose.resources.getString
@@ -16,11 +16,11 @@ internal data class ReminderText(val title: String, val body: String)
 
 /** Written when the notification is scheduled or shown, outside any screen, so it uses the suspend string functions. */
 internal suspend fun Reminder.text(): ReminderText = when (this) {
-    is Reminder.CreateBills -> {
+    is Reminder.CreateBill -> {
         val monthName = "${getStringArray(Res.array.months_short)[month.month - 1]} ${month.year}"
         ReminderText(
-            title = getString(Res.string.reminder_create_bills_title, monthName),
-            body = getString(Res.string.reminder_create_bills_body, missing),
+            title = getString(Res.string.reminder_create_bill_title, monthName, renterName),
+            body = getString(Res.string.reminder_create_bill_body),
         )
     }
     is Reminder.RentPending -> ReminderText(

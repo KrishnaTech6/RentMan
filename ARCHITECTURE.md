@@ -150,7 +150,7 @@ The base class and its exact operator shape are a **draft until the first slice 
 
 ## 7. Reminders and background work
 A local notification can't check "is pending ₹0 yet?" when it fires, so reminders are a **resync**, not a repeating timer:
-- `ObserveReminderPlanUseCase` derives the desired schedule from the data: the monthly "create bills" prompt and each late renter's reminder, minus muted renters. Every payment, mute, bill or settings change changes the plan.
+- `ObserveReminderPlanUseCase` derives the desired schedule from the data: each renter's "create bill" reminder and each late renter's reminder, minus muted renters. Every payment, mute, bill or settings change changes the plan.
 - `ReminderScheduler.sync(plan)` (interface in `:domain`, actual per platform) cancels and reschedules, and is idempotent.
 - **Named exception to the no-manual-`launch` rule:** one app-scoped collector (`ReminderSync`, started with Koin at app start, with an injected `CoroutineScope`) collects the plan and calls `sync`. `resync()` schedules the current plan again when the phone's permission changed. It's the only place outside ViewModels that collects a flow. The two notification-button handlers also launch once each, as platform-edge handlers.
 - **Android:** WorkManager (an exact alarm isn't needed for a reminder around 9 AM) and the `POST_NOTIFICATIONS` runtime permission, requested from Settings. The text comes from the same string resources as the screens (`getString`), and the code lives in `:sharedUI` `androidMain` (the plan, the scheduler, the worker, the action receiver).

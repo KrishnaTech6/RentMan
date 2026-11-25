@@ -96,7 +96,7 @@ A renter who owes money, has paid nothing since their latest bill was made, and 
 _Avoid_: Due
 
 **Due day**:
-The day of the month by which a renter should pay. A bill for one month is due on this day of the following month.
+The day of the month by which a renter should pay. A bill for one month is due on this day of that same month (the landlord makes it a few days before).
 
 **Still to collect**:
 What Home shows as the big number: the pending of every renter who owes, added up. A credit doesn't reduce it. It is split into the **late amount** (the part that comes from bills past their due day) and the amount that is Not due yet.

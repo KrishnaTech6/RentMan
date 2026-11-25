@@ -38,7 +38,7 @@ The full schema is in `DATABASE.md` (v1). Summary:
 - Home shows a "Create <month> bill" to-do for each renter with an unbilled month, oldest first.
 - Renter who pays electricity: enter the reading → bill preview → send. Renter who doesn't: straight to the bill preview with rent and fixed charges filled in → send.
 - Skipped months stay on the to-do list until you create them. Pending only counts bills that exist.
-- On the 1st of each month the app sends a "Time to create <month> bills" notification (repeating per the Settings interval) until every renter has a bill for that month.
+- Each renter gets a "Create <month> bill: <name>" notification (repeating per the Settings interval) from the day that bill opens until it is made. A bill opens on the 1st of its month, or 3 days before the renter's due day if that is earlier (due on the 1st: the 28th before), so Home's "Create bill" card and the notification start together.
 
 ## Flow and screens
 Monthly path: create bill (reading if needed) → bill preview (math shown: 1325 − 1240 = 85 × ₹8) → send on WhatsApp → record payment.
@@ -50,7 +50,7 @@ Built: Settings, opened from Home. It has the rate per unit (future bills only),
 Built: the rent increase. From the raise month, Home shows "Raise rent for Ravi by 10%?" with the old and new rent and the bill it starts from. "Raise rent" applies it at once with an Undo bar for 5 seconds. "Not now" brings the card back next month. The next raise is counted from the last accepted one.
 
 Built: reminders.
-- **What is planned** (`ReminderPlanner`): the monthly "Time to create <month> bills" prompt on the 1st, repeating inside that month until every renter has a bill; and "Rent pending: <name>" from the day after the latest bill's due date, repeating until it is paid. Both use the reminder time and the repeat interval from Settings, and the cadence is counted from the first day, so it doesn't drift when the app is opened late.
+- **What is planned** (`ReminderPlanner`): "Create <month> bill: <name>" for each renter, from the day that bill opens (see Creating bills) and repeating until it is made; and "Rent pending: <name>" from the day after the latest bill's due date, repeating until it is paid. Both use the reminder time and the repeat interval from Settings, and the cadence is counted from the first day, so it doesn't drift when the app is opened late.
 - **How it works:** a notification can't check "is it paid yet?", so the app plans up to 5 slots ahead per reminder (60 in all, under iOS's limit of 64) and plans again whenever a bill, payment, mute or setting changes, and every time the app opens. Android uses WorkManager (the time is the earliest, so it can arrive a little late). iOS uses local notifications.
 - **Stop this month:** a button on the rent reminder and on the renter screen (with Resume). It lasts until the renter's next bill. The manual "Remind" button is not built.
 - **Permission:** Settings shows "Allow notifications" until it is granted, and only once the phone has said it is not (on iPhone the answer comes a moment late, and before it did the row flashed up and vanished). The app asks once, the first time it is opened: on iPhone only if it was never asked, on Android with a flag kept on the phone, because Android can't say "never asked". A refusal is not asked again at launch. The Settings row asks again, and when the phone won't ask any more it opens the phone's own settings for the app.
@@ -74,7 +74,14 @@ Built: the meter photo.
 - Retaking or removing a photo, or leaving without saving the bill, leaves the file behind in the photo folder. Nothing cleans those up yet.
 - On the iOS simulator, which has no camera, the button picks a photo from the library instead. Not checked on a real iPhone: the camera itself and the Quick Look viewer.
 
-Built: **Still to collect** in detail (Home). Checked on the emulator with a real backup: ₹5,796 not due yet, 1 owing, 4 not billed yet (₹53,000 rent). Late is covered by tests only, no late renter in that data.
+Built: **the month card** (Home), which replaces the "Still to collect" card below. Checked by hand on a real backup: November ₹69,784 received of ₹76,996, ₹7,212 left.
+- Why: the old card said what is owed but not out of how much. A landlord also wants "how is this month going".
+- What: one blue card for the current calendar month. Big number: **received**, then "of ₹X expected". One bar splits the month into received, not due yet, late, and the rent of renters with no bill yet, with a short legend under it. A line "+ ₹X still owed from earlier months" appears only when something older is open.
+- All figures belong to **one month**, so they add up: billed = received + late + not due yet, and expected = billed + rent of the not-billed renters. Received is **not** counted by payment date: a renter's payments settle their **oldest bill first** (the order the renter's running balance uses), so an unpaid October bill is settled before November's, and a December bill made early (at the end of November) and paid never counts as November. Late or not due is judged by the month's bill due day. A renter paying ahead is capped at the bill.
+- Dropped on purpose: "N owing" (the status chips show it) and tapping the legend to filter the list. Late here is per bill and the chips are per renter by the latest bill, so a tap would show a list that misses some of the late amount. Needs the Late-status decision first.
+- No schema change. The old `StillToCollect` is gone.
+
+Superseded: **Still to collect** in detail (Home). Checked on the emulator with a real backup: ₹5,796 not due yet, 1 owing, 4 not billed yet (₹53,000 rent). Late is covered by tests only, no late renter in that data.
 - Why: one number hides what to do. ₹9,000 late means call today. ₹9,000 not due yet means wait. And a renter with no bill yet is not in the number at all, so on a new setup the number looks small while most of the rent is still unbilled. (Seen in a real backup: 6 renters, 2 billed, 4 not.)
 - The big number stays what it is: what is owed now, from renters who owe, credits ignored (someone who paid ahead doesn't reduce what the others owe).
 - Under it, two lines: **late** and **not due yet** (the two add up to the big number; a part that is zero is left out), then **N owing** (renters who owe), then **N not billed yet (₹X rent)** (renters who have a "Create bill" to-do, and one month's rent each, rent only, because the electricity isn't known before the reading).
@@ -112,12 +119,12 @@ Electricity: 1240 → 1325 = 85 units × ₹8 = ₹680
 Water: ₹200
 Previous pending: ₹1,880
 Total due: ₹10,260
-Please pay by 5 Dec. Thanks!
+Please pay by 5 Nov. Thanks!
 ```
 
 ## Notifications
 Two kinds, both derived from the data and resynced whenever it changes (see `ARCHITECTURE.md` §7):
-- **Create bills** on the 1st, until every renter has that month's bill.
+- **Create a bill** for each renter, from the day it opens (the 1st, or 3 days before the due day if earlier) until it is made.
 - **Rent pending** for each renter with a pending amount after the due day, repeating (Settings: every 2 days / every 3 days / once) until it's paid.
 - **Stop for the month:** the notification has a "Stop reminders this month" action, and the Renter screen has "Stop this month". It stops reminders for that renter until a newer bill exists, so the pending amount carries into next month's bill as usual. The manual "Remind" button still works while muted.
 - Android: WorkManager and the notification permission. iOS: `UNUserNotificationCenter`.

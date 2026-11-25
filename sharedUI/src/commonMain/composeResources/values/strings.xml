@@ -97,16 +97,24 @@
     <string name="problem_unit_required">Needed, because this address has another renter</string>
     <string name="problem_unit_duplicate">Another renter at this address already has this</string>
 
-    <string name="still_to_collect">Still to collect</string>
-    <string name="collect_late">%1$s late</string>
-    <string name="collect_not_due">%1$s not due yet</string>
-    <string name="collect_owing">%1$d owing</string>
-    <string name="collect_not_billed">%1$d not billed yet (%2$s rent)</string>
+    <string name="month_received">%1$s received</string>
+    <string name="of_expected">of %1$s expected</string>
+    <string name="no_bills_month">No %1$s bills made yet</string>
+    <string name="legend_not_due">Not due yet</string>
+    <string name="legend_late">Late</string>
+    <string name="legend_not_billed">%1$d not billed yet</string>
+    <string name="all_collected">All %1$s bills collected</string>
+    <string name="from_earlier">+ %1$s still owed from earlier months</string>
     <string name="status_no_bill">No bill yet</string>
     <string name="status_paid">Paid</string>
     <string name="status_part_paid">Part paid</string>
     <string name="status_unpaid">Unpaid</string>
     <string name="status_late">Late</string>
+    <string name="filter_all">All</string>
+    <string name="days_late_one">1 day late</string>
+    <string name="days_late_other">%1$d days late</string>
+    <string name="due_on">%1$s bill · due %2$s</string>
+    <string name="paid_of">%1$s paid of %2$s</string>
     <string name="record_payment">Record payment</string>
     <string name="history">History</string>
     <string name="no_history">No bills or payments yet.</string>
@@ -166,8 +174,8 @@
     <string name="reminders_resume">Resume</string>
 
     <string name="reminder_channel_name">Reminders</string>
-    <string name="reminder_create_bills_title">Time to create %1$s bills</string>
-    <string name="reminder_create_bills_body">Bills still to create: %1$d</string>
+    <string name="reminder_create_bill_title">Create %1$s bill: %2$s</string>
+    <string name="reminder_create_bill_body">Make it a few days before it is due</string>
     <string name="reminder_pending_title">Rent pending: %1$s</string>
     <string name="reminder_pending_body">%1$s is still to be paid</string>
     <string name="reminder_stop_action">Stop this month</string>

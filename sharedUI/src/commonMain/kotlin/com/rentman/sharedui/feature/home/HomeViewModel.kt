@@ -18,6 +18,7 @@ import com.rentman.sharedui.feature.home.HomeIntent.RaiseRent
 import com.rentman.sharedui.feature.home.HomeIntent.UndoRaise
 import com.rentman.sharedui.feature.home.HomeIntent.Refresh
 import com.rentman.sharedui.feature.home.HomeIntent.Retry
+import com.rentman.sharedui.feature.home.HomeIntent.SelectFilter
 import com.rentman.sharedui.feature.home.HomeUiState.Content
 import com.rentman.sharedui.feature.home.HomeUiState.Error
 import com.rentman.sharedui.feature.home.HomeUiState.Loading
@@ -50,6 +51,7 @@ internal class HomeViewModel(
     override val uiState: StateFlow<State> = merge(
         loadReducers(observeHome),
         raiseReducers(),
+        filterReducers(),
         undoExpiryReducers(),
         navigationReducers(),
     ).toState(Loading)
@@ -101,6 +103,9 @@ internal class HomeViewModel(
         },
     )
 
+    private fun filterReducers(): Flow<Reducer<State>> =
+        intents.filterIsInstance<SelectFilter>().map { select -> content { it.copy(filter = select.status) } }
+
     /** The Undo offer lasts a few seconds. A newer raise starts the wait again. */
     private fun undoExpiryReducers(): Flow<Reducer<State>> = intents.filterIsInstance<RaiseRent>().flatMapLatest {
         flow {
@@ -116,15 +121,27 @@ internal class HomeViewModel(
                 is CreateBill -> navigate(HomeNavEvent.OpenCreateBill(intent.renterId, intent.month))
                 is OpenRenter -> navigate(HomeNavEvent.OpenRenter(intent.renterId))
                 OpenSettings -> navigate(HomeNavEvent.OpenSettings)
-                is RaiseRent, is NotNow, is UndoRaise, Retry, Refresh -> Unit
+                is RaiseRent, is NotNow, is UndoRaise, is SelectFilter, Retry, Refresh -> Unit
             }
         }
         .map { unchanged }
 
-    /** Keeps the Undo offer and any error on screen when the data arrives again, e.g. right after the raise itself. */
+    /**
+     * Keeps the Undo offer, any error and the chosen filter on screen when the data arrives again, e.g. right after the raise itself.
+     * A filter is dropped when nobody matches it any more (the last late renter just paid), and when everybody matches it: the chips
+     * are hidden then, so the filter could not be cleared and would keep the left renters out of sight.
+     */
     private fun withHome(home: HomeSnapshot): Reducer<State> = { state ->
-        val shown = Content(home.renters, home.todos, home.raises, home.left, home.stillToCollect)
-        if (state is Content) shown.copy(raiseUndo = state.raiseUndo, actionError = state.actionError) else shown
+        val shown = Content(home.renters, home.todos, home.raises, home.left, home.thisMonth)
+        if (state is Content) {
+            shown.copy(
+                raiseUndo = state.raiseUndo,
+                actionError = state.actionError,
+                filter = state.filter?.takeIf { status -> home.renters.any { it.status == status } && home.renters.any { it.status != status } },
+            )
+        } else {
+            shown
+        }
     }
 
     private fun content(change: (Content) -> Content): Reducer<State> = { state ->

@@ -176,7 +176,7 @@ class CreateBillViewModelTest {
         val saved = bills.saved.single()
         assertEquals(listOf("Rent", "Electricity", "Water"), saved.lines.map(BillLine::label))
         assertEquals(8_380L.rupees, saved.total)
-        assertEquals(LocalDate(2026, 12, 5), saved.dueOn) // the November bill is due on 5 Dec
+        assertEquals(LocalDate(2026, 11, 5), saved.dueOn) // the November bill is due on 5 Nov
         assertEquals(false, vm.content().isSaving)
     }
 

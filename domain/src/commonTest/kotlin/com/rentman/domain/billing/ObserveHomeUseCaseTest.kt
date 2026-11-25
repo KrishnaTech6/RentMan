@@ -86,7 +86,7 @@ class ObserveHomeUseCaseTest {
     @Test
     fun noRentersMeansNothingToShowNothingToDoAndNothingToCollect() = runTest {
         useCase(FakeRenterRepository())().test {
-            assertEquals(Outcome.Success(HomeSnapshot(renters = emptyList(), todos = emptyList(), raises = emptyList(), left = emptyList(), stillToCollect = StillToCollect.of(emptyList(), emptyList()))), awaitItem())
+            assertEquals(Outcome.Success(HomeSnapshot(renters = emptyList(), todos = emptyList(), raises = emptyList(), left = emptyList(), thisMonth = MonthSummary(november, Paise.Zero, Paise.Zero, Paise.Zero, 0, Paise.Zero, Paise.Zero))), awaitItem())
         }
     }
 
@@ -223,46 +223,20 @@ class ObserveHomeUseCaseTest {
     }
 
     @Test
-    fun stillToCollectAddsUpWhatIsOwedAndIgnoresCredits() = runTest {
+    fun thisMonthAddsUpNovembersBillsAndWhatWasPaidAgainstThem() = runTest {
         val renters = FakeRenterRepository(
             listOf(TestData.renter(id = 1, name = "Amit"), TestData.renter(id = 2, name = "Neha"), TestData.renter(id = 3, name = "Zoya")),
         )
-        val bills = FakeBillRepository(listOf(bill(1, 8_380L.rupees), bill(2, 5_000L.rupees), bill(3, 5_000L.rupees)))
-        val payments = FakePaymentRepository(
-            listOf(payment(2, 1_620L.rupees, LocalDate(2026, 11, 10)), payment(3, 7_000L.rupees, LocalDate(2026, 11, 10))),
-        )
+        // Amit still owes October's 8,000 and has a November bill of 5,000. Neha has paid 2,000 of her 5,000. Zoya has no November bill.
+        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees, month = BillingMonth.of(2026, 10)), bill(1, 5_000L.rupees), bill(2, 5_000L.rupees)))
+        val payments = FakePaymentRepository(listOf(payment(2, 2_000L.rupees, LocalDate(2026, 11, 10))))
 
         useCase(renters, bills, payments)().test {
-            // Amit owes 8,380, Neha owes 3,380, Zoya has paid 2,000 ahead: her credit is not taken off the others.
-            assertEquals(11_760L.rupees, awaitItem().home().stillToCollect.total)
-        }
-    }
-
-    @Test
-    fun stillToCollectSeparatesLateFromNotDueYetAndCountsWhatIsNotBilled() = runTest {
-        val renters = FakeRenterRepository(listOf(TestData.renter(id = 1, name = "Amit"), TestData.renter(id = 2, name = "Neha")))
-        // October's bill was due on 5 Nov, so Amit is late. November's bill is due on 5 Dec, so Neha is not. Amit has no November bill yet.
-        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees, month = BillingMonth.of(2026, 10)), bill(2, 5_000L.rupees)))
-
-        useCase(renters, bills)().test {
-            val result = awaitItem().home().stillToCollect
-            assertEquals(8_000L.rupees, result.late)
-            assertEquals(5_000L.rupees, result.notDueYet)
-            assertEquals(1, result.notBilled)
-        }
-    }
-
-    @Test
-    fun anOldUnpaidBillStaysLateAfterANewerBillIsMade() = runTest {
-        val renters = FakeRenterRepository(listOf(TestData.renter(id = 1, name = "Amit")))
-        // October's bill (due 5 Nov) is unpaid and November's (due 5 Dec) was made since. Today is 23 Nov.
-        val bills = FakeBillRepository(listOf(bill(1, 8_000L.rupees, month = BillingMonth.of(2026, 10)), bill(1, 5_000L.rupees)))
-
-        useCase(renters, bills)().test {
-            val home = awaitItem().home()
-            assertEquals(RenterStatus.Unpaid, home.renters.single().status)
-            assertEquals(8_000L.rupees, home.stillToCollect.late)
-            assertEquals(5_000L.rupees, home.stillToCollect.notDueYet)
+            val month = awaitItem().home().thisMonth
+            assertEquals(2_000L.rupees, month.collected)
+            assertEquals(8_000L.rupees, month.notDue) // November's bills are due on 5 Dec: Amit's 5,000 and Neha's 3,000
+            assertEquals(8_000L.rupees, month.earlier) // October's, shown apart
+            assertEquals(1, month.notBilled)
         }
     }
 
@@ -271,7 +245,7 @@ class ObserveHomeUseCaseTest {
         val payments = FakePaymentRepository(listOf(payment(2, 8_380L.rupees, LocalDate(2026, 11, 10))))
 
         useCase(FakeRenterRepository(listOf(TestData.renter())), FakeBillRepository(listOf(bill(1, 8_380L.rupees))), payments)().test {
-            assertEquals(8_380L.rupees, awaitItem().home().stillToCollect.total)
+            assertEquals(Paise.Zero, awaitItem().home().thisMonth.collected)
         }
     }
 }

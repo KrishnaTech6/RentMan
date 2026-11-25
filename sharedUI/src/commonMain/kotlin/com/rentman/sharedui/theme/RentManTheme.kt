@@ -9,6 +9,12 @@ internal object RentManColors {
     val Primary = Color(0xFF2747C9)
     val PrimarySoft = Color(0xFFEEF2FF)
     val OnPrimary = Color(0xFFFFFFFF)
+    /** The month card on Home: deep navy from the original design, with soft bar colours that read on it. */
+    val HeroCard = Color(0xFF1C2E8A)
+    val HeroTrack = Color(0xFF33449E)
+    val HeroReceived = Color(0xFF86EFAC)
+    val HeroDue = Color(0xFF9DB0F0)
+    val HeroLate = Color(0xFFFDA29B)
     val Text = Color(0xFF101828)
     val TextMuted = Color(0xFF475467)
     val Border = Color(0xFFE4E7EC)

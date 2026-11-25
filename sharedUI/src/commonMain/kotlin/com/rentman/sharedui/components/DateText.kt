@@ -18,3 +18,7 @@ internal fun LocalDate.label(): String = "$day ${stringArrayResource(Res.array.m
 /** "5 Dec". Used in the message sent to a renter. */
 @Composable
 internal fun LocalDate.shortLabel(): String = "$day ${stringArrayResource(Res.array.months_short)[month.ordinal]}"
+
+/** "Nov". A month on its own, for lines that name a bill. */
+@Composable
+internal fun BillingMonth.shortName(): String = stringArrayResource(Res.array.months_short)[month - 1]
