@@ -1,530 +1,508 @@
-# Graph Report - RentMan  (2026-11-24)
+# Graph Report - RentMan  (2026-11-25)
 
 ## Corpus Check
-- 99 files · ~85,093 words
+- 258 files · ~88,281 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3260 nodes · 9706 edges · 182 communities (80 shown, 102 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 558 edges (avg confidence: 0.82)
+- 3412 nodes · 9660 edges · 164 communities (75 shown, 89 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 504 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Domain rules and tests
-- Add renter screen and tests
-- Create bill screen and tests
-- Settings screen and tests
-- Outcome and Room repositories
-- Renter repository tests
-- Edit renter and validation
-- App settings storage
-- Shared UI components
-- Create bill UI steps
-- Settings and backup status
-- Backup file tests
-- App navigation and routes
-- Data module and database
-- DomainError group
-- Bill group
-- SaveRenterUseCaseTest group
-- AddRenterScreen.kt group
-- SettingsScreen.kt group
-- NotificationPermission.android.kt group
-- localdate group
-- HomeViewModelTest.kt group
-- Paise group
-- IosMeterPhotoFiles.kt group
-- FakeRenterRepository group
-- HomeScreen.kt group
-- BackupDao group
-- RoomBillRepositoryTest group
-- res group
-- RecordPaymentScreen.kt group
-- RenterDetailScreen.kt group
-- AddressPickerScreen.kt group
-- FakeRenterRepository group
-- RoomPaymentRepository.kt group
-- base group
-- BillUseCases.kt group
-- MeterPhotos.ios.kt group
-- RenterDetailViewModelTest group
-- Reminders.kt group
-- Payment group
-- RenterLeavingUseCasesTest group
-- RecordPaymentViewModelTest group
-- MeterCropper.kt group
-- Modules.kt group
-- HomeViewModel.kt group
-- GetTodayUseCase group
-- CropRect group
-- MeterPhotoFiles.kt group
-- BackupFiles.ios.kt group
-- BuildFixedChargeUseCaseTest group
-- RentChangeEntity group
-- safeCall() group
-- MeterReadingParserTest group
-- .useCase() group
-- MeterPhotos.kt group
-- Data layer (:data, Room 3, internal) group
-- Context group
-- RenterId group
-- BillContext group
-- SettingsField group
-- RenterDetailViewModel group
-- ComposeView group
-- MviViewModel.kt group
-- AddressId group
-- RentChange group
-- PaymentMode group
-- PaymentUseCases.kt group
-- AddressRepository group
-- IosReminderScheduler.kt group
-- HomeIntent group
-- RenterEntity group
-- RecordPaymentUseCaseTest group
-- AddressPickerViewModelTest group
-- BalanceText.kt group
-- BackupCodec group
-- IosDataModule.kt group
-- .pending() group
-- ObserveRenterSummariesUseCase group
-- ReminderText.kt group
-- renter table group
-- .raised() group
-- RecordPaymentViewModel group
-- ReminderNotificationDelegate.kt group
-- Backup file (JSON, BackupCodec, GoldenBackups) group
-- ReminderScheduler group
-- BillLineEntity group
-- BackupCodec.kt group
-- Pending (derived balance, PendingCalculator) group
-- SafeTest.kt group
-- PhotoFilesTest.kt group
-- BillingMonth group
-- RenterRow group
-- .of() group
-- .of() group
-- ReminderNotifications.kt group
-- bill table group
-- MeterPhotoName group
-- BillMapperTest group
-- Bill line group
-- RenterField group
-- AddressPickerViewModel group
-- ARCHITECTURE.md (engineering contract) group
-- PaymentFormTest.kt group
-- ReminderActionReceiver.kt group
-- NotificationPermission.kt group
-- RenterDetailIntent group
-- BackupDao.kt group
-- Test group
-- ReminderPlan group
-- NavigationEffect.kt group
-- AddAddressUseCaseTest group
-- BackupFiles group
-- FlowExt.kt group
-- Creating bills flow (reading, preview, send) group
-- RenterStatus group
-- ViewControllers.ios.kt group
-- RentManApplication.kt group
-- FieldProblem group
-- PaiseTest.kt group
-- RenterDetailNavEvent group
-- Non-negotiable rules group
-- RecordPaymentNavEvent group
-- GoldenBackups.kt group
-- ADR 0004 Settings in the database, not DataStore group
-- Build and test commands group
-- KMP structure with AGP 9 group
-- Schema change policy (v1 frozen after first real install) group
-- Own rate or global rate choice group
-- New address add field group
-- WhatsApp message preview group
-- Do next to-do cards group
-- Raise rent card group
-- Status pill group
-- Full amount or part payment group
-- Send receipt on WhatsApp group
-- Meter photo proof group
-- Reading calculation (1325 - 1240 = 85 units x rate) group
-- History ledger rows group
-- Settings design group
-- Backup and restore controls group
-- ADR 0005 Navigation as one-shot SharedFlow events group
+- Room Renter Repository Tests
+- Shared UI Components
+- Screen Test Helpers
+- Add Renter ViewModel
+- Renter Leaving Use Cases
+- MVI Base and Payment ViewModels
+- Renter Ledger Use Cases
+- Data Layer Errors and Backup
+- Create Bill Screen
+- Rent Increase and Billing Month
+- Renter Detail ViewModel
+- Add Renter Screen
+- Data Module and Room Repositories
+- Home Screen
+- Community 14
+- Community 15
+- Community 16
+- Community 17
+- Community 18
+- Community 19
+- Community 20
+- Community 21
+- Community 22
+- Community 23
+- Community 24
+- Community 25
+- Community 26
+- Community 27
+- Community 28
+- Community 29
+- Community 30
+- Community 31
+- Community 32
+- Community 33
+- Community 34
+- Community 35
+- Community 36
+- Community 37
+- Community 38
+- Community 39
+- Community 40
+- Community 41
+- Community 42
+- Community 43
+- Community 44
+- Community 46
+- Community 47
+- Community 48
+- Community 49
+- Community 50
+- Community 51
+- Community 52
+- Community 53
+- Community 54
+- Community 55
+- Community 56
+- Community 57
+- Community 58
+- Community 59
+- Community 60
+- Community 61
+- Community 62
+- Community 63
+- Community 64
+- Community 65
+- Community 66
+- Community 67
+- Community 68
+- Community 69
+- Community 70
+- Community 71
+- Community 72
+- Community 73
+- Community 74
+- Community 75
+- Community 76
+- Community 77
+- Community 78
+- Community 79
+- Community 80
+- Community 81
+- Community 82
+- Community 83
+- Community 84
+- Community 85
+- Community 86
+- Community 87
+- Community 88
+- Community 89
+- Community 90
+- Community 91
+- Community 92
+- Community 93
+- Community 94
+- Community 95
+- Community 96
+- Community 97
+- Community 98
+- Community 99
+- Community 100
+- Community 101
+- Community 102
+- Community 103
+- Community 104
+- Community 105
+- Community 106
+- Community 107
+- Community 108
+- Community 109
+- Community 110
+- Community 111
+- Community 112
+- Community 113
+- Community 114
+- Community 115
+- Community 116
+- Community 118
+- Community 120
+- Community 121
+- Community 122
+- Community 123
+- Community 124
+- Community 125
+- Community 128
+- Community 129
+- Community 131
+- Community 132
+- Community 133
+- Community 134
+- Community 135
+- Community 136
+- Community 137
+- Community 138
+- Community 139
+- Community 140
+- Community 141
+- Community 142
+- Community 143
+- Community 144
 
 ## God Nodes (most connected - your core abstractions)
-1. `Outcome` - 242 edges
-2. `DomainError` - 137 edges
-3. `Paise` - 120 edges
-4. `RenterId` - 94 edges
-5. `Bill` - 91 edges
-6. `FakeRenterRepository` - 61 edges
-7. `BillingMonth` - 59 edges
-8. `BillLine` - 45 edges
-9. `FakeRenterRepository` - 41 edges
-10. `FakeSettingsRepository` - 39 edges
+1. `Outcome` - 217 edges
+2. `DomainError` - 108 edges
+3. `Paise` - 104 edges
+4. `RenterId` - 82 edges
+5. `Bill` - 62 edges
+6. `BillingMonth` - 51 edges
+7. `FakeRenterRepository` - 38 edges
+8. `AddRenterViewModelTest` - 37 edges
+9. `AddressId` - 36 edges
+10. `BackupDao` - 35 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Money history is immutable` --semantically_similar_to--> `Bill snapshot principle (no recompute from current settings)`  [INFERRED] [semantically similar]
+  DATABASE.md → docs/adr/0002-bills-are-immutable-snapshots.md
 - `Error` --references--> `DomainError`  [EXTRACTED]
-  sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/address/AddressPickerContract.kt → domain/src/commonMain/kotlin/com/rentman/domain/Outcome.kt
+  sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/renter/AddRenterContract.kt → domain/src/commonMain/kotlin/com/rentman/domain/Outcome.kt
+- `AddRenterViewModelTest` --calls--> `FixedCharge`  [INFERRED]
+  sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/renter/AddRenterViewModelTest.kt → domain/src/commonMain/kotlin/com/rentman/domain/billing/Bill.kt
 - `Error` --references--> `DomainError`  [EXTRACTED]
   sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/payment/RecordPaymentContract.kt → domain/src/commonMain/kotlin/com/rentman/domain/Outcome.kt
-- `Renter ledger design` --references--> `Pending`  [INFERRED]
-  design/project/Renter.dc.html → GLOSSARY.md
-- `Address filter chips` --references--> `Address`  [INFERRED]
-  design/project/Main.dc.html → GLOSSARY.md
-- `Address picker design` --references--> `Address`  [INFERRED]
-  design/project/AddressPicker.dc.html → GLOSSARY.md
+- `formatRupees()` --references--> `Paise`  [EXTRACTED]
+  sharedUI/src/androidMain/kotlin/com/rentman/sharedui/components/CurrencyFormat.android.kt → domain/src/commonMain/kotlin/com/rentman/domain/money/Paise.kt
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **Domain, data and presentation layers form the layered architecture** — architecture_domain_layer, architecture_data_layer, architecture_presentation_layer, architecture_project_structure [EXTRACTED 0.95]
-- **Remove-a-wrong-bill decision across ADR, plan, schema and use cases** — docs_adr_0009_a_wrong_bill_is_removed_and_made_again, plan_remove_wrong_bill, database_bill, architecture_remove_bill_use_cases, architecture_undo_not_confirm [EXTRACTED 0.95]
-- **Pending derived from bill lines and payments, never stored** — database_pending_derived, database_bill_line, database_payment, glossary_pending, plan_still_to_collect [EXTRACTED 0.90]
+- **MVI screen contract: UiState, NavEvent and MviViewModel** — architecture_mviviewmodel, architecture_uistate, architecture_navevent, architecture_dumb_ui [EXTRACTED 1.00]
+- **Pending is derived from bill lines and payments, never stored** — database_pending_calculation, database_bill_line_table, database_payment_table, database_derived_not_stored, glossary_pending [EXTRACTED 1.00]
+- **Bill immutability with the remove-and-remake exception** — docs_adr_0002_bills_are_immutable_snapshots, docs_adr_0009_a_wrong_bill_is_removed_and_made_again, database_bill_table, plan_remove_wrong_bill_feature, database_money_history_immutable [EXTRACTED 1.00]
 
-## Communities (182 total, 102 thin omitted)
+## Communities (164 total, 89 thin omitted)
 
-### Community 0 - "Domain rules and tests"
-Cohesion: 0.06
-Nodes (8): MuteRemindersUseCase, BillingMonthTest, BuildBillUseCaseTest, ObserveBillTodosUseCaseTest, ObserveRenterLedgerUseCaseTest, ReminderPlannerTest, MuteRemindersUseCaseTest, ObserveRentIncreaseOffersUseCaseTest
-
-### Community 1 - "Add renter screen and tests"
-Cohesion: 0.06
-Nodes (40): ObserveRenterFormUseCase, AddRenterIntent, AddCharge, AskToRaiseChanged, Back, BillsElectricityChanged, ChargeAmountChanged, ChargeLabelChanged (+32 more)
-
-### Community 2 - "Create bill screen and tests"
-Cohesion: 0.06
-Nodes (20): MeterReadingParser, Candidate, SuggestMeterReadingUseCase, CreateBillIntent, Back, ChangeReading, ClearMeterPhoto, MeterReplacedChanged (+12 more)
-
-### Community 3 - "Settings screen and tests"
-Cohesion: 0.08
-Nodes (18): SetReminderRepeatUseCase, StepReminderTimeUseCase, ReminderSyncTest, ReminderSettingsUseCasesTest, SettingsIntent, Back, BackUpNow, BackupShared (+10 more)
-
-### Community 4 - "Outcome and Room repositories"
-Cohesion: 0.06
-Nodes (8): safeFlow(), BackupRepository, flatMap(), map(), Outcome, Success, FakeBackupRepository, FakeBackupRepository
-
-### Community 5 - "Renter repository tests"
-Cohesion: 0.10
-Nodes (5): InsertedRenter, RenterDao, RoomRenterRepository, RoomRenterRepositoryTest, FixedCharge
-
-### Community 6 - "Edit renter and validation"
-Cohesion: 0.08
-Nodes (4): UpdateRenterUseCase, UpdateRenterUseCaseTest, AddRenterViewModel, State
-
-### Community 7 - "App settings storage"
-Cohesion: 0.09
-Nodes (11): AppSettingsEntity, SettingsDao, RoomSettingsRepository, toDomain(), toEntity(), RoomSettingsRepositoryTest, AppSettings, SettingsRepository (+3 more)
-
-### Community 8 - "Shared UI components"
-Cohesion: 0.09
-Nodes (6): ActionRow(), MeterPhotoThumbnail(), MeterScanFlow(), StatusPill(), UndoBar(), RentManColors
-
-### Community 9 - "Create bill UI steps"
+### Community 0 - "Room Renter Repository Tests"
 Cohesion: 0.07
-Nodes (14): BillCard(), CreateBillRoute(), CreateBillScreen(), LineRow(), Math(), MeterPhotoRow(), MeterReplaced(), ProblemText() (+6 more)
+Nodes (7): InsertedRenter, RenterDao, RoomRenterRepository, RoomRenterRepositoryTest, FixedCharge, UpdateRenterUseCase, UpdateRenterUseCaseTest
 
-### Community 10 - "Settings and backup status"
+### Community 1 - "Shared UI Components"
+Cohesion: 0.05
+Nodes (15): ActionButton(), ActionRow(), CenteredMessage(), ErrorMessage(), CropArea(), LightButton(), MeterCropper(), MeterPhotoThumbnail() (+7 more)
+
+### Community 2 - "Screen Test Helpers"
+Cohesion: 0.10
+Nodes (8): toDomain(), BillLine, BillLineKind, Adjustment, Electricity, Rent, GetTodayUseCase, Clock
+
+### Community 3 - "Add Renter ViewModel"
+Cohesion: 0.07
+Nodes (35): AddRenterIntent, AddCharge, AskToRaiseChanged, Back, BillsElectricityChanged, ChargeAmountChanged, ChargeLabelChanged, DueDayChanged (+27 more)
+
+### Community 4 - "Renter Leaving Use Cases"
+Cohesion: 0.06
+Nodes (9): MarkRenterLeftUseCase, MoveRenterBackUseCase, ObserveLeftRentersUseCase, RenterRepository, RenterFormValidator, RenterUnits, toForm(), RenterLeavingUseCasesTest (+1 more)
+
+### Community 5 - "MVI Base and Payment ViewModels"
+Cohesion: 0.06
+Nodes (19): AddressPickerIntent, Add, Confirm, NameChanged, Retry, Select, AddressPickerNavEvent, Picked (+11 more)
+
+### Community 6 - "Renter Ledger Use Cases"
 Cohesion: 0.08
-Nodes (12): BackupExport, BackupStatus, ExportBackupUseCase, MarkBackedUpUseCase, ObserveBackupStatusUseCase, RestoreBackupUseCase, UndoRestoreUseCase, ObserveSettingsUseCase (+4 more)
+Nodes (9): MuteRemindersUseCase, ObserveRenterSummariesUseCase, BillingMonthTest, ObserveRenterLedgerUseCaseTest, FakeAddressRepository, MuteRemindersUseCaseTest, ObserveRenterSummariesUseCaseTest, ObserveRentIncreaseOffersUseCaseTest (+1 more)
 
-### Community 11 - "Backup file tests"
+### Community 7 - "Data Layer Errors and Backup"
+Cohesion: 0.07
+Nodes (15): RoomBackupRepository, safeCall(), safeFlow(), BackupExport, BackupRepository, ExportBackupUseCase, ObserveBackupStatusUseCase, RestoreBackupUseCase (+7 more)
+
+### Community 8 - "Create Bill Screen"
+Cohesion: 0.05
+Nodes (25): CreateBillIntent, Back, ChangeReading, ClearMeterPhoto, MeterReplacedChanged, MeterScanned, NewMeterStartChanged, ReadingChanged (+17 more)
+
+### Community 9 - "Rent Increase and Billing Month"
+Cohesion: 0.08
+Nodes (16): toDomain(), RentChangeMapperTest, BillingMonth, remindersMutedFor(), ApplyRentIncreaseUseCase, ObserveRentIncreaseOffersUseCase, PostponeRentIncreaseUseCase, RentChange (+8 more)
+
+### Community 10 - "Renter Detail ViewModel"
+Cohesion: 0.08
+Nodes (23): Back, Close, Content, Edit, Error, Loading, MarkLeft, MoveBack (+15 more)
+
+### Community 11 - "Add Renter Screen"
+Cohesion: 0.04
+Nodes (5): ScreenTopBar(), AddRenterRoute(), AddRenterScreen(), AddressRow(), FilledWithProblemsPreview()
+
+### Community 12 - "Data Module and Room Repositories"
+Cohesion: 0.06
+Nodes (11): RoomAddressRepository, toDomain(), dataModule(), AppDatabase, AppDatabaseConstructor, RoomAddressRepositoryTest, AddressRepository, AddAddressUseCase (+3 more)
+
+### Community 13 - "Home Screen"
+Cohesion: 0.06
+Nodes (18): amountStyle(), BillTodoCard(), Centered(), Chip(), ContentBody(), EmptyPreview(), HomeRoute(), HomeScreen() (+10 more)
+
+### Community 14 - "Community 14"
+Cohesion: 0.10
+Nodes (5): BackupStatus, MarkBackedUpUseCase, BackupUseCasesTest, FakeSettingsRepository, SettingsViewModelTest
+
+### Community 15 - "Community 15"
+Cohesion: 0.08
+Nodes (12): PendingCalculator, LedgerEntry, BillEntry, PaymentEntry, ObserveRenterLedgerUseCase, Movement, RecordPaymentUseCase, RemovePaymentUseCase (+4 more)
+
+### Community 16 - "Community 16"
 Cohesion: 0.12
 Nodes (3): BackupCodecTest, RoomBackupRepositoryTest, Clock
 
-### Community 12 - "App navigation and routes"
+### Community 17 - "Community 17"
 Cohesion: 0.06
 Nodes (14): MainActivity, App(), AppNavigation(), Navigator, AddRenterKey, AddressPickerKey, CreateBillKey, EditRenterKey (+6 more)
 
-### Community 13 - "Data module and database"
-Cohesion: 0.07
-Nodes (11): androidDataModule(), RoomAddressRepository, RoomBackupRepository, dataModule(), AppDispatchers, AddressDao, AddressEntity, AppDatabase (+3 more)
-
-### Community 14 - "DomainError group"
+### Community 18 - "Community 18"
 Cohesion: 0.05
-Nodes (37): BillField, NewMeterStart, Reading, DomainError, BackupFromNewerVersion, BillExists, BillNotRemovable, BlankName (+29 more)
+Nodes (40): BillField, NewMeterStart, Reading, DomainError, BackupFromNewerVersion, BillExists, BillNotRemovable, BlankName (+32 more)
 
-### Community 15 - "Bill group"
+### Community 19 - "Community 19"
 Cohesion: 0.10
-Nodes (14): toDomain(), Bill, BillId, BillLine, BillLineKind, Adjustment, Electricity, Rent (+6 more)
+Nodes (5): BillMessage, BillContext, BuildBillUseCase, BillMessageTest, BuildBillUseCaseTest
 
-### Community 16 - "SaveRenterUseCaseTest group"
-Cohesion: 0.10
-Nodes (6): fold(), RenterFormValidator, RenterUnits, SaveRenterUseCase, toForm(), SaveRenterUseCaseTest
-
-### Community 18 - "SettingsScreen.kt group"
-Cohesion: 0.06
-Nodes (8): ScreenTopBar(), BackedUpPreview(), Form(), rateProblem(), repeatLabel(), SettingsRoute(), SettingsScreen(), TimeStepper()
-
-### Community 19 - "NotificationPermission.android.kt group"
-Cohesion: 0.07
-Nodes (8): readText(), rememberBackupFiles(), rememberPhotoImage(), findActivity(), notificationsAllowed(), openNotificationSettings(), rememberNotificationPermission(), rememberNotificationPermission()
-
-### Community 21 - "HomeViewModelTest.kt group"
-Cohesion: 0.13
-Nodes (4): ChargeField, Amount, Label, Ravi
-
-### Community 22 - "Paise group"
-Cohesion: 0.10
-Nodes (8): BillCalculator, MoneyInput, Paise, BillCalculatorTest, MoneyInputTest, formatRupees(), formatRupees(), formatRupees()
-
-### Community 24 - "FakeRenterRepository group"
-Cohesion: 0.16
-Nodes (4): RemoveBillUseCase, ObserveHomeUseCaseTest, RemoveBillUseCaseTest, FakeRenterRepository
-
-### Community 25 - "HomeScreen.kt group"
+### Community 20 - "Community 20"
 Cohesion: 0.09
-Nodes (12): BillTodoCard(), Centered(), ContentBody(), EmptyPreview(), HomeRoute(), HomeScreen(), initials(), LeftRenterRow() (+4 more)
+Nodes (18): toDomain(), RenterMapperTest, BillCalculator, Paise, Address, AddressId, BuildFixedChargeUseCase, ChargeField (+10 more)
 
-### Community 27 - "RoomBillRepositoryTest group"
-Cohesion: 0.14
-Nodes (3): RoomBillRepository, BillDao, RoomBillRepositoryTest
-
-### Community 28 - "res group"
+### Community 21 - "Community 21"
 Cohesion: 0.07
-Nodes (7): message(), messageResource(), modeLabel(), clockDigits(), isAfternoon(), timeLabel(), TimeTextTest
-
-### Community 29 - "RecordPaymentScreen.kt group"
-Cohesion: 0.09
 Nodes (12): Divider(), Section(), SegmentButton(), Segmented(), StepButton(), TextRow(), DateStepper(), Form() (+4 more)
 
-### Community 30 - "RenterDetailScreen.kt group"
-Cohesion: 0.09
-Nodes (11): BalanceCard(), BillRow(), Body(), EntryAction, EntryCard(), LeftRow(), PaymentRow(), RemindersRow() (+3 more)
+### Community 22 - "Community 22"
+Cohesion: 0.07
+Nodes (6): ObserveSettingsUseCase, SetReminderRepeatUseCase, StepReminderTimeUseCase, ReminderSettingsUseCasesTest, inputReducers(), loadReducers()
 
-### Community 31 - "AddressPickerScreen.kt group"
+### Community 23 - "Community 23"
+Cohesion: 0.11
+Nodes (13): Back, BackUpNow, BackupShared, BackupShareFailed, RateChanged, RepeatChanged, RestoreFrom, Retry (+5 more)
+
+### Community 25 - "Community 25"
+Cohesion: 0.06
+Nodes (7): BackedUpPreview(), Form(), rateProblem(), repeatLabel(), SettingsRoute(), SettingsScreen(), TimeStepper()
+
+### Community 26 - "Community 26"
+Cohesion: 0.08
+Nodes (12): BalanceCard(), BillRow(), Body(), EntryAction, EntryCard(), entryKey(), LeftRow(), PaymentRow() (+4 more)
+
+### Community 27 - "Community 27"
 Cohesion: 0.10
-Nodes (10): ActionButton(), CenteredMessage(), ErrorMessage(), AddressPickerRoute(), AddressPickerScreen(), AddressRow(), ContentBody(), ContentPreview() (+2 more)
+Nodes (9): AppSettingsEntity, SettingsDao, RoomSettingsRepository, toDomain(), toEntity(), RoomSettingsRepositoryTest, AppSettings, SettingsRepository (+1 more)
 
-### Community 32 - "FakeRenterRepository group"
-Cohesion: 0.17
-Nodes (4): RaiseRent, UndoRaise, HomeViewModelTest, FakeRenterRepository
+### Community 28 - "Community 28"
+Cohesion: 0.12
+Nodes (9): toDomain(), RoomPaymentRepository, PaymentMapperTest, RoomPaymentRepositoryTest, Payment, PaymentId, PaymentRepository, FakePaymentRepository (+1 more)
 
-### Community 33 - "RoomPaymentRepository.kt group"
-Cohesion: 0.14
-Nodes (4): PaymentDao, PaymentEntity, RoomPaymentRepository, RoomPaymentRepositoryTest
+### Community 30 - "Community 30"
+Cohesion: 0.13
+Nodes (5): RentChangeDao, RentChangeEntity, toEntity(), RoomRentIncreaseRepository, RoomRentIncreaseRepositoryTest
 
-### Community 34 - "base group"
+### Community 31 - "Community 31"
+Cohesion: 0.08
+Nodes (7): readText(), rememberBackupFiles(), findActivity(), notificationsAllowed(), openNotificationSettings(), rememberNotificationPermission(), rememberNotificationPermission()
+
+### Community 32 - "Community 32"
+Cohesion: 0.08
+Nodes (8): AddressPickerRoute(), AddressPickerScreen(), AddressRow(), ContentBody(), ContentPreview(), NewAddress(), RadioDot(), NavigationEffect()
+
+### Community 33 - "Community 33"
+Cohesion: 0.13
+Nodes (7): BillTodo, HomeSnapshot, Lists, ObserveBillContextUseCase, ObserveBillTodosUseCase, ObserveHomeUseCase, UnbilledMonths
+
+### Community 34 - "Community 34"
+Cohesion: 0.16
+Nodes (4): RaiseRent, SelectFilter, UndoRaise, HomeViewModelTest
+
+### Community 36 - "Community 36"
 Cohesion: 0.06
 Nodes (32): ENABLE_USER_SCRIPT_SANDBOXING, EXCLUDED_ARCHS[sdk=iphonesimulator*], FRAMEWORK_SEARCH_PATHS, OTHER_LDFLAGS, PRODUCT_BUNDLE_IDENTIFIER, SWIFT_VERSION, iOS, path (+24 more)
 
-### Community 35 - "BillUseCases.kt group"
+### Community 37 - "Community 37"
 Cohesion: 0.13
-Nodes (8): BillTodo, HomeSnapshot, ObserveBillContextUseCase, ObserveBillTodosUseCase, ObserveHomeUseCase, Lists, UnbilledMonths, RenterRepository
+Nodes (4): MoneyInput, PhoneNumber, MoneyInputTest, PhoneNumberTest
 
-### Community 36 - "MeterPhotos.ios.kt group"
+### Community 38 - "Community 38"
+Cohesion: 0.14
+Nodes (5): CreateBillNavEvent, Close, Saved, CreateBillViewModel, State
+
+### Community 39 - "Community 39"
 Cohesion: 0.14
 Nodes (6): PhotoItem, PhotoPickerDelegate, PreviewSource, rememberPhotoImage(), rememberPhotoOpener(), rememberPhotoSource()
 
-### Community 37 - "RenterDetailViewModelTest group"
-Cohesion: 0.22
-Nodes (4): RemoveBill, RemovePayment, SetRemindersMuted, RenterDetailViewModelTest
+### Community 41 - "Community 41"
+Cohesion: 0.11
+Nodes (3): ObserveReminderPlanUseCase, ReminderPlanner, ReminderSync
 
-### Community 38 - "Reminders.kt group"
+### Community 42 - "Community 42"
 Cohesion: 0.10
-Nodes (7): ObserveReminderPlanUseCase, Reminder, CreateBills, RentPending, ReminderPlanner, ScheduledReminder, ReminderWorker
+Nodes (22): RenterRow, RenterStatus, Late, NoBillYet, Paid, PartPaid, Unpaid, AddRenter (+14 more)
 
-### Community 39 - "Payment group"
-Cohesion: 0.15
-Nodes (8): toDomain(), toEntity(), PaymentMapperTest, Payment, PaymentId, PaymentRepository, FakePaymentRepository, FakePaymentRepository
-
-### Community 40 - "RenterLeavingUseCasesTest group"
-Cohesion: 0.18
-Nodes (3): MoveRenterBackUseCase, ObserveLeftRentersUseCase, RenterLeavingUseCasesTest
-
-### Community 41 - "RecordPaymentViewModelTest group"
+### Community 43 - "Community 43"
 Cohesion: 0.16
 Nodes (10): RecordPaymentIntent, AmountChanged, Back, DayStepped, ModeChanged, NoteChanged, Retry, Save (+2 more)
 
-### Community 42 - "MeterCropper.kt group"
-Cohesion: 0.10
-Nodes (3): CropArea(), LightButton(), MeterCropper()
+### Community 44 - "Community 44"
+Cohesion: 0.08
+Nodes (3): message(), messageResource(), modeLabel()
 
-### Community 43 - "Modules.kt group"
-Cohesion: 0.11
-Nodes (6): RestoreBillUseCase, ObserveRenterLedgerUseCase, RemovePaymentUseCase, RestorePaymentUseCase, MarkRenterLeftUseCase, Clock
+### Community 48 - "Community 48"
+Cohesion: 0.19
+Nodes (5): MeterPhotoFiles, rememberPhotoFiles(), rememberPhotoImage(), rememberPhotoOpener(), rememberPhotoSource()
 
-### Community 45 - "GetTodayUseCase group"
-Cohesion: 0.17
-Nodes (9): ApplyRentIncreaseUseCase, ObserveRentIncreaseOffersUseCase, PostponeRentIncreaseUseCase, RentIncreaseOffer, RentIncreaseRepository, UndoRentIncreaseUseCase, GetTodayUseCase, FakeRentIncreaseRepository (+1 more)
+### Community 49 - "Community 49"
+Cohesion: 0.18
+Nodes (3): MonthSummary, Share, MonthSummaryTest
 
-### Community 46 - "CropRect group"
+### Community 50 - "Community 50"
 Cohesion: 0.13
 Nodes (11): Corner, BottomLeft, BottomRight, TopLeft, TopRight, CropRect, PixelBox, Grab (+3 more)
 
-### Community 49 - "BuildFixedChargeUseCaseTest group"
+### Community 52 - "Community 52"
+Cohesion: 0.13
+Nodes (4): ReminderPlan, ScheduledReminder, FakeReminderScheduler, IosReminderScheduler
+
+### Community 55 - "Community 55"
+Cohesion: 0.17
+Nodes (5): Bill, BillRepository, isNewestOf(), RestoreBillUseCase, FakeBillRepository
+
+### Community 56 - "Community 56"
+Cohesion: 0.12
+Nodes (18): overpayment(), PaymentField, Amount, Date, Note, PaymentForm, PaymentMode, Bank (+10 more)
+
+### Community 62 - "Community 62"
 Cohesion: 0.16
-Nodes (4): BuildFixedChargeUseCase, PhoneNumber, BuildFixedChargeUseCaseTest, PhoneNumberTest
+Nodes (6): androidDataModule(), ReminderScheduler, startRentManKoin(), AndroidReminderScheduler, sharedModules(), startRentManKoin()
 
-### Community 50 - "RentChangeEntity group"
-Cohesion: 0.20
-Nodes (3): RentChangeDao, RentChangeEntity, toEntity()
-
-### Community 51 - "safeCall() group"
-Cohesion: 0.31
-Nodes (3): RoomRentIncreaseRepository, safeCall(), RoomRentIncreaseRepositoryTest
-
-### Community 55 - "MeterPhotos.kt group"
+### Community 64 - "Community 64"
 Cohesion: 0.18
 Nodes (12): PhotoFiles, PhotoOpener, PhotoSource, readWithin(), rememberPhotoFiles(), rememberPhotoImage(), rememberPhotoOpener(), rememberPhotoSource() (+4 more)
 
-### Community 56 - "Data layer (:data, Room 3, internal) group"
-Cohesion: 0.12
-Nodes (15): ADR 0007 (errors as values), Data layer (:data, Room 3, internal), Domain layer (:domain, pure Kotlin), Koin DI wiring, MviViewModel base class (toState, Eagerly shared), Navigation 3 (NavKey, NavDisplay, NavEvent), Outcome<T> errors as values, Paise value class (money as Long) (+7 more)
+### Community 66 - "Community 66"
+Cohesion: 0.26
+Nodes (4): RemoveBillUseCase, FakeBillRepository, RemoveBillUseCaseTest, FakeRenterRepository
 
-### Community 57 - "Context group"
-Cohesion: 0.29
-Nodes (4): MeterPhotoFiles, rememberPhotoFiles(), rememberPhotoOpener(), rememberPhotoSource()
-
-### Community 58 - "RenterId group"
-Cohesion: 0.24
-Nodes (7): toDomain(), toDomain(), RenterMapperTest, FixedCharge, FixedChargeId, Renter, RenterId
-
-### Community 59 - "BillContext group"
-Cohesion: 0.23
-Nodes (4): BillMessage, BillContext, BuildBillUseCase, BillMessageTest
-
-### Community 60 - "SettingsField group"
-Cohesion: 0.13
-Nodes (16): SettingsField, Rate, Repeat, Time, SettingsForm, BackupMessage, Restored, RestoreUndone (+8 more)
-
-### Community 62 - "ComposeView group"
+### Community 67 - "Community 67"
 Cohesion: 0.14
 Nodes (7): ComposeView, ContentView, .body, iOSApp, .body, sharedUI, SwiftUI
 
-### Community 64 - "AddressId group"
+### Community 68 - "Community 68"
 Cohesion: 0.14
-Nodes (15): toDomain(), Address, AddressId, RenterForm, AddressPickerIntent, Confirm, NameChanged, Retry (+7 more)
+Nodes (14): Data layer (:data, Room 3), Domain layer (:domain), formatRupees expect/actual (Indian grouping), Koin dependency injection, AGP 9 KMP module structure (androidApp, iosApp, sharedUI, data, domain), MviViewModel base class (toState, Eagerly), NavEvent one-shot SharedFlow, Navigation 3 (NavKey, NavDisplay) (+6 more)
 
-### Community 65 - "RentChange group"
-Cohesion: 0.22
-Nodes (4): RentChangeMapperTest, RentChange, RentChangeId, FakeRentIncreaseRepository
-
-### Community 66 - "PaymentMode group"
-Cohesion: 0.14
-Nodes (15): overpayment(), PaymentField, Amount, Date, Note, PaymentForm, PaymentMode, Bank (+7 more)
-
-### Community 67 - "PaymentUseCases.kt group"
-Cohesion: 0.22
-Nodes (6): LedgerEntry, BillEntry, PaymentEntry, Movement, RenterLedger, entryKey()
-
-### Community 68 - "AddressRepository group"
-Cohesion: 0.18
-Nodes (4): AddressRepository, AddAddressUseCase, ObserveAddressesUseCase, FakeAddressRepository
-
-### Community 70 - "HomeIntent group"
+### Community 69 - "Community 69"
 Cohesion: 0.15
-Nodes (13): HomeIntent, AddRenter, CreateBill, NotNow, OpenRenter, OpenSettings, Refresh, Retry (+5 more)
+Nodes (4): MeterReadingParser, Candidate, SuggestMeterReadingUseCase, formatRupees()
 
-### Community 71 - "RenterEntity group"
+### Community 72 - "Community 72"
+Cohesion: 0.15
+Nodes (10): Platform gateways and UI-only expect/actual (photo, backup files), bill table, Ledger (bills and payments merged), payment table (voidable), ADR 0002: Bills are immutable snapshots made of lines, ADR 0009: A wrong bill is removed and made again, Adjustment (glossary term), Electricity rate and meter reading rules (+2 more)
+
+### Community 73 - "Community 73"
+Cohesion: 0.18
+Nodes (3): AmountText(), BalanceText(), formatRupees()
+
+### Community 74 - "Community 74"
+Cohesion: 0.17
+Nodes (4): CreateBill, Reminder, RentPending, ReminderWorker
+
+### Community 75 - "Community 75"
 Cohesion: 0.23
 Nodes (4): FixedChargeEntity, RenterWithCharges, RenterEntity, toEntity()
 
-### Community 78 - "ObserveRenterSummariesUseCase group"
-Cohesion: 0.26
-Nodes (3): ObserveRenterSummariesUseCase, FakeAddressRepository, ObserveRenterSummariesUseCaseTest
-
-### Community 79 - "ReminderText.kt group"
+### Community 76 - "Community 76"
 Cohesion: 0.16
-Nodes (4): label(), shortLabel(), ReminderText, text()
+Nodes (5): label(), shortLabel(), shortName(), ReminderText, text()
 
-### Community 80 - "renter table group"
-Cohesion: 0.18
-Nodes (14): address table, fixed_charge table, rent_change table, renter table, Add renter design, Address picker design, Address filter chips, Address (+6 more)
+### Community 79 - "Community 79"
+Cohesion: 0.23
+Nodes (3): PaymentDao, PaymentEntity, toEntity()
 
-### Community 82 - "RecordPaymentViewModel group"
-Cohesion: 0.41
-Nodes (3): RecordPaymentViewModel, State, Reducer
-
-### Community 84 - "Backup file (JSON, BackupCodec, GoldenBackups) group"
+### Community 82 - "Community 82"
 Cohesion: 0.15
-Nodes (13): Platform pieces (photo, backup files, notifications) as UI-only expect/actual, ReminderSync resync model (plan, scheduler), app_settings table (single row), Backup file (JSON, BackupCodec, GoldenBackups), backup_snapshot table (Undo last restore), Meter photo file name (meter_photos folder), Reminder mute (remindersMutedMonth), Stop this month button (+5 more)
+Nodes (11): Paise value class (money as Long), bill_line table, Pending / balance derivation (PendingCalculator), Renter status derivation (No bill, Paid, Late, Part paid, Unpaid), Due day (glossary term), Late (glossary term), Not due yet (glossary term), Part paid and Unpaid statuses (glossary terms) (+3 more)
 
-### Community 85 - "ReminderScheduler group"
-Cohesion: 0.27
-Nodes (6): ReminderScheduler, ReminderSync, startRentManKoin(), AndroidReminderScheduler, sharedModules(), startRentManKoin()
+### Community 83 - "Community 83"
+Cohesion: 0.21
+Nodes (3): AppDispatchers, AppDispatchers, ReminderActionReceiver
 
-### Community 86 - "BillLineEntity group"
+### Community 84 - "Community 84"
 Cohesion: 0.35
 Nodes (5): toEntity(), BillEntity, BillLineEntity, BillWithLines, sampleBackup()
 
-### Community 88 - "Pending (derived balance, PendingCalculator) group"
-Cohesion: 0.20
-Nodes (12): Ledger (bills and payments merged by date), Pending (derived balance, PendingCalculator), Renter status (No bill, Paid, Late, Part paid, Unpaid), Record payment design, Renter ledger design, ADR 0001 Pending is computed, never stored, Paid ahead, Payment (+4 more)
+### Community 85 - "Community 85"
+Cohesion: 0.17
+Nodes (12): address table, fixed_charge table, rent_change table, renter table, Unbilled months derivation, ADR 0008 The landlord creates every bill, Remade bill uses rent of its own month (RentHistory.rentFor), Rent increase (glossary term) (+4 more)
 
-### Community 92 - "RenterRow group"
-Cohesion: 0.29
-Nodes (6): RenterRow, StillToCollect, HomeUiState, Content, Error, Loading
+### Community 90 - "Community 90"
+Cohesion: 0.22
+Nodes (9): SettingsForm, BackupMessage, Restored, RestoreUndone, ShareFailed, Content, Error, Loading (+1 more)
 
-### Community 96 - "bill table group"
-Cohesion: 0.24
-Nodes (7): bill table, bill_line table, payment table (voidable), ADR 0009: A wrong bill is removed and made again, ADR 0002 (bill is a snapshot, never edited), Ideas not building now (Money page, FY statement, deposit), Remove a wrong bill (newest bill only, Undo)
-
-### Community 99 - "Bill line group"
-Cohesion: 0.27
-Nodes (10): Fixed monthly charges list, Bill preview design, Meter reading design, ADR 0002 Bills are immutable snapshots, Adjustment, Bill, Bill line, Billing month (+2 more)
-
-### Community 100 - "RenterField group"
+### Community 95 - "Community 95"
 Cohesion: 0.20
 Nodes (10): RenterField, Address, Charge, DueDay, Name, OwnRate, Phone, Rent (+2 more)
 
-### Community 102 - "ARCHITECTURE.md (engineering contract) group"
-Cohesion: 0.36
-Nodes (7): ARCHITECTURE.md (engineering contract), Workflow for every change (ponytail, review, graphify), DATABASE.md (schema v1), Home design, GLOSSARY.md (vocabulary), PLAN.md (product plan), Design mockup (design/project)
+### Community 96 - "Community 96"
+Cohesion: 0.31
+Nodes (4): clockDigits(), isAfternoon(), timeLabel(), TimeTextTest
 
-### Community 106 - "NotificationPermission.kt group"
+### Community 97 - "Community 97"
+Cohesion: 0.36
+Nodes (7): ARCHITECTURE.md (engineering contract), Workflow for every change (ponytail, review, graphify), DATABASE.md (schema v1), Home design, GLOSSARY.md (ubiquitous language), PLAN.md (product plan), Claude Design mockup (design/project)
+
+### Community 99 - "Community 99"
 Cohesion: 0.36
 Nodes (4): AskForNotificationsOnce(), NotificationPermission, rememberNotificationPermission(), rememberNotificationPermission()
 
-### Community 107 - "RenterDetailIntent group"
-Cohesion: 0.22
-Nodes (9): RenterDetailIntent, Back, Edit, MarkLeft, MoveBack, RecordPayment, Retry, UndoRemove (+1 more)
+### Community 101 - "Community 101"
+Cohesion: 0.29
+Nodes (8): Add renter design, Address picker design, Address filter chips, Address (glossary term), Left renter (glossary term), Renter (glossary term), Unit (glossary term), Renter edit and mark left feature
 
-### Community 113 - "BackupFiles group"
+### Community 107 - "Community 107"
+Cohesion: 0.29
+Nodes (7): Record payment design, Renter ledger design, ADR 0001 Pending is computed, never stored, Paid ahead (glossary term), Payment (glossary term), Pending (glossary term), WhatsApp bill message (wa.me link)
+
+### Community 109 - "Community 109"
 Cohesion: 0.43
 Nodes (3): BackupFiles, rememberBackupFiles(), rememberBackupFiles()
 
-### Community 116 - "Creating bills flow (reading, preview, send) group"
+### Community 111 - "Community 111"
 Cohesion: 0.40
-Nodes (5): Unbilled months, ADR 0008 The landlord creates every bill, Unbilled month, Creating bills flow (reading, preview, send), WhatsApp bill (wa.me link, text only)
+Nodes (6): Fixed monthly charges list, Bill preview design, Meter reading design, Bill (glossary term), Bill line (glossary term), Fixed charge (glossary term)
 
-### Community 117 - "RenterStatus group"
-Cohesion: 0.33
-Nodes (6): RenterStatus, Late, NoBillYet, Paid, PartPaid, Unpaid
-
-### Community 120 - "FieldProblem group"
-Cohesion: 0.40
-Nodes (4): FieldProblem, Duplicate, Invalid, Required
-
-### Community 124 - "RenterDetailNavEvent group"
+### Community 115 - "Community 115"
 Cohesion: 0.50
-Nodes (4): RenterDetailNavEvent, Close, OpenEdit, OpenRecordPayment
+Nodes (5): ReminderSync and ReminderScheduler (resync, not timer), Reminder mute (remindersMutedMonth), Stop this month button, Reminder mute (glossary term), Reminders feature (ReminderPlanner, WorkManager, UNUserNotificationCenter)
 
-### Community 126 - "RecordPaymentNavEvent group"
+### Community 116 - "Community 116"
+Cohesion: 0.40
+Nodes (5): app_settings table (single row), Backup file JSON and restore transaction (BackupCodec), backup_snapshot table, Schema changes: version 1 frozen from first real install, Backup and restore feature (share sheet, Undo last restore)
+
+### Community 121 - "Community 121"
 Cohesion: 0.67
-Nodes (3): RecordPaymentNavEvent, Close, Saved
+Nodes (3): Close, SettingsNavEvent, ShareBackup
 
 ## Knowledge Gaps
-- **151 isolated node(s):** `Back`, `Retry`, `UseFullAmount`, `Retry`, `Close` (+146 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 621 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **102 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **139 isolated node(s):** `Back`, `PickAddress`, `Retry`, `Close`, `PickAddress` (+134 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 656 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **89 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Outcome` connect `Outcome and Room repositories` to `Domain rules and tests`, `Create bill screen and tests`, `Settings screen and tests`, `Renter repository tests`, `Edit renter and validation`, `App settings storage`, `Create bill UI steps`, `Settings and backup status`, `Data module and database`, `DomainError group`, `Bill group`, `SaveRenterUseCaseTest group`, `localdate group`, `HomeViewModelTest.kt group`, `Paise group`, `FakeRenterRepository group`, `BackupDao group`, `RoomBillRepositoryTest group`, `FakeRenterRepository group`, `RoomPaymentRepository.kt group`, `BillUseCases.kt group`, `Reminders.kt group`, `Payment group`, `GetTodayUseCase group`, `BuildFixedChargeUseCaseTest group`, `safeCall() group`, `RecordPaymentViewModel.kt group`, `RentChange group`, `PaymentUseCases.kt group`, `AddressRepository group`, `IosReminderScheduler.kt group`, `RecordPaymentUseCaseTest group`, `BackupCodec group`, `ObserveRenterSummariesUseCase group`, `BackupCodec.kt group`, `SafeTest.kt group`, `BillingMonth group`, `.invoke() group`, `ReminderPlan group`, `AndroidReminderScheduler.kt group`, `FieldProblem group`?**
-  _High betweenness centrality (0.188) - this node is a cross-community bridge._
+- **Why does `Outcome` connect `Data Layer Errors and Backup` to `Room Renter Repository Tests`, `Screen Test Helpers`, `Renter Leaving Use Cases`, `Create Bill Screen`, `Rent Increase and Billing Month`, `Data Module and Room Repositories`, `Community 14`, `Community 15`, `Community 18`, `Community 20`, `Community 27`, `Community 28`, `Community 30`, `Community 35`, `Community 38`, `Community 47`, `Community 52`, `Community 53`, `Community 55`, `Community 56`, `Community 58`, `Community 59`, `Community 62`, `Community 65`, `Community 66`, `Community 78`, `Community 86`, `Community 92`, `Community 98`?**
+  _High betweenness centrality (0.187) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `Paise` (e.g. with `.aRateIsAtMostNinetyNineRupeesSoAMissingDecimalPointIsCaught()` and `.parsesAPaymentWithUpToTwoDecimals()`) actually correct?**
   _`Paise` has 6 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Back`, `Retry`, `UseFullAmount` to the rest of the system?**
-  _151 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Domain rules and tests` be split into smaller, more focused modules?**
-  _Cohesion score 0.06000643500643501 - nodes in this community are weakly interconnected._
-- **Why does `DomainError` connect `DomainError group` to `Add renter screen and tests`, `Create bill screen and tests`, `Outcome and Room repositories`, `Edit renter and validation`, `Create bill UI steps`, `Settings and backup status`, `Bill group`, `SaveRenterUseCaseTest group`, `AddRenterScreen.kt group`, `SettingsScreen.kt group`, `localdate group`, `HomeViewModelTest.kt group`, `HomeScreen.kt group`, `res group`, `RecordPaymentScreen.kt group`, `RenterDetailScreen.kt group`, `AddressPickerScreen.kt group`, `BillUseCases.kt group`, `Payment group`, `Modules.kt group`, `HomeViewModel.kt group`, `GetTodayUseCase group`, `RecordPaymentViewModel.kt group`, `SettingsField group`, `RenterDetailViewModel group`, `AddressId group`, `RentChange group`, `PaymentMode group`, `PaymentUseCases.kt group`, `IosReminderScheduler.kt group`, `RecordPaymentViewModel group`, `BackupCodec.kt group`, `SafeTest.kt group`, `RenterRow group`, `AddressPickerViewModel group`, `AndroidReminderScheduler.kt group`, `FieldProblem group`?**
-  _High betweenness centrality (0.153) - this node is a cross-community bridge._
+- **What connects `Back`, `PickAddress`, `Retry` to the rest of the system?**
+  _139 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Room Renter Repository Tests` be split into smaller, more focused modules?**
+  _Cohesion score 0.07484629778134189 - nodes in this community are weakly interconnected._
+- **Why does `DomainError` connect `Community 18` to `Shared UI Components`, `Screen Test Helpers`, `Add Renter ViewModel`, `MVI Base and Payment ViewModels`, `Data Layer Errors and Backup`, `Create Bill Screen`, `Rent Increase and Billing Month`, `Add Renter Screen`, `Data Module and Room Repositories`, `Community 15`, `Community 20`, `Community 21`, `Community 25`, `Community 28`, `Community 32`, `Community 35`, `Community 38`, `Community 44`, `Community 47`, `Community 52`, `Community 55`, `Community 56`, `Community 61`, `Community 62`, `Community 86`, `Community 92`?**
+  _High betweenness centrality (0.105) - this node is a cross-community bridge._
 - **Are the 13 inferred relationships involving `RenterId` (e.g. with `.aRenterWithNoBillHasNothingToMuteAndNothingChanges()` and `.aStorageFailureIsReported()`) actually correct?**
   _`RenterId` has 13 INFERRED edges - model-reasoned connections that need verification._
-- **Should `Add renter screen and tests` be split into smaller, more focused modules?**
-  _Cohesion score 0.055593685655456415 - nodes in this community are weakly interconnected._
+- **Should `Shared UI Components` be split into smaller, more focused modules?**
+  _Cohesion score 0.05126050420168067 - nodes in this community are weakly interconnected._
