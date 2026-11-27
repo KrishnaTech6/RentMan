@@ -22,6 +22,9 @@ interface BackupRepository {
     /** Everything on the phone as one JSON text. Meter photos are not included yet. */
     suspend fun export(): Outcome<String>
 
+    /** A short code that changes whenever anything that goes into a backup changes, and only then. */
+    suspend fun fingerprint(): Outcome<String>
+
     /**
      * Replaces everything with the backup in [json], in one transaction: if anything is wrong nothing changes.
      * The current data is kept as a snapshot first (see [restoreSnapshot]). Fails with `InvalidBackup` or

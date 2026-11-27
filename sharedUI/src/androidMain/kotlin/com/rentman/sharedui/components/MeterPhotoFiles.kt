@@ -48,6 +48,18 @@ internal object MeterPhotoFiles {
 
     fun exists(context: Context, name: String): Boolean = fileOf(context, name)?.exists() == true
 
+    /** The saved photo's file, for a Drive backup, or null if it isn't on the phone. */
+    suspend fun bytes(context: Context, name: String): ByteArray? = onIo { fileOf(context, name)?.takeIf { it.exists() }?.readBytes() }
+
+    /** Saves a photo brought back from Drive under its own name. False for a name that isn't a meter photo's. */
+    suspend fun write(context: Context, name: String, bytes: ByteArray): Boolean = onIo {
+        fileOf(context, name)?.let { file ->
+            file.parentFile?.mkdirs()
+            file.writeBytes(bytes)
+            true
+        } ?: false
+    }
+
     fun delete(context: Context, name: String) {
         fileOf(context, name)?.delete()
     }

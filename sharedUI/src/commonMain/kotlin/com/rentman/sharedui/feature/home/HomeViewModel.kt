@@ -28,6 +28,7 @@ import com.rentman.sharedui.mvi.Reducer
 import com.rentman.sharedui.mvi.flatMapFirst
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import com.rentman.domain.drive.AutoBackUpToDriveUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -45,6 +46,7 @@ internal class HomeViewModel(
     private val applyRentIncrease: ApplyRentIncreaseUseCase,
     private val postponeRentIncrease: PostponeRentIncreaseUseCase,
     private val undoRentIncrease: UndoRentIncreaseUseCase,
+    private val autoBackUp: AutoBackUpToDriveUseCase,
 ) : MviViewModel<HomeIntent, State, HomeNavEvent>() {
 
     private val unchanged: Reducer<State> = { it }
@@ -55,6 +57,7 @@ internal class HomeViewModel(
         filterReducers(),
         undoExpiryReducers(),
         navigationReducers(),
+        driveBackupReducers(),
     ).toState(Loading)
 
     /**
@@ -103,6 +106,15 @@ internal class HomeViewModel(
             }
         },
     )
+
+    /**
+     * The automatic Drive backup, checked whenever Home opens or comes back (the iPhone has no reliable background run): it sends
+     * the data only if something changed since the last backup. It is quiet: it changes nothing on screen, and no change, no Drive,
+     * no internet or an empty phone all just mean "not now".
+     */
+    private fun driveBackupReducers(): Flow<Reducer<State>> =
+        intents.filterIsInstance<Refresh>().map { }.onStart { emit(Unit) }
+            .flatMapFirst { flow<Reducer<State>> { autoBackUp() } }
 
     private fun filterReducers(): Flow<Reducer<State>> =
         intents.filterIsInstance<SelectFilter>().map { select -> content { it.copy(filter = select.status) } }

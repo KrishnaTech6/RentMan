@@ -55,7 +55,10 @@ sealed interface DomainError {
     /** Google Drive isn't connected, or the landlord took the access back: Connect again. */
     data object DriveNotConnected : DomainError
 
-    /** Google Drive couldn't be reached (no internet, or Google is having trouble). Nothing changed. */
+    /** This phone has no renters, so there is nothing to back up: on a new phone, restore from Drive first. */
+    data object NothingToBackUp : DomainError
+
+    /** Google Drive couldn't be reached (no internet, or Google is having trouble). Trying again is safe. */
     data object DriveUnavailable : DomainError
 
     /** A WhatsApp message uses variables the app doesn't fill in, most likely typos. */

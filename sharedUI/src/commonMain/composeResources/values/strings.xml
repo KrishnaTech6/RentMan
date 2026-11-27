@@ -7,7 +7,8 @@
     <string name="error_blank_name">Type an address first.</string>
     <string name="error_duplicate_name">This address is already in the list.</string>
     <string name="error_drive_not_connected">Google Drive isn't connected any more. Connect it again.</string>
-    <string name="error_drive_unavailable">Couldn't reach Google Drive. Check the internet and try again. Nothing changed.</string>
+    <string name="error_drive_unavailable">Couldn't reach Google Drive. Check the internet and try again.</string>
+    <string name="error_nothing_to_back_up">This phone has no renters yet, so there's nothing to back up. Restore from Drive instead.</string>
     <string name="error_storage">Couldn't read your data. Try again.</string>
     <string name="error_bill_exists">This month's bill was already created.</string>
     <string name="error_offer_outdated">That rent raise was already handled.</string>
@@ -241,6 +242,8 @@
     <string name="drive_android_soon">Google Drive backup is coming to Android soon.</string>
     <string name="drive_last">Last Drive backup: %1$s</string>
     <string name="drive_never">No backup in Drive yet</string>
+    <string name="drive_found_backup">Your Drive has a backup from %1$s. Restore it to this phone?</string>
+    <string name="drive_empty_phone">Add your renters first. Backups start once this phone has them.</string>
     <string name="drive_back_up">Back up now</string>
     <string name="drive_restore">Restore from Drive</string>
     <string name="drive_restore_hint">Replaces the data on this phone with the Drive backup. You can undo it.</string>

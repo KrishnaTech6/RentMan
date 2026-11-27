@@ -20,6 +20,7 @@ mlkit-text = "16.0.1"
 exifinterface = "1.4.2"
 turbine = "1.2.1"
 ktor = "3.6.2"
+play-services-auth = "22.0.0"
 kover = "0.9.11"
 android-compileSdk = "37"
 android-minSdk = "26"
@@ -33,6 +34,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }

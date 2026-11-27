@@ -19,6 +19,7 @@ internal class FakeBackupRepository(
     var restoredSettings: AppSettings? = null,
     var failRestore: DomainError? = null,
     var failExport: Boolean = false,
+    var fingerprint: String = "fp-1",
 ) : BackupRepository {
     private val snapshot = MutableStateFlow<Instant?>(null)
     private var before: AppSettings? = null
@@ -26,6 +27,9 @@ internal class FakeBackupRepository(
 
     override suspend fun export(): Outcome<String> =
         if (failExport) Outcome.Failure(DomainError.Storage("disk")) else Outcome.Success("""{"schemaVersion":1}""")
+
+    override suspend fun fingerprint(): Outcome<String> =
+        if (failExport) Outcome.Failure(DomainError.Storage("disk")) else Outcome.Success(fingerprint)
 
     override suspend fun restore(json: String): Outcome<Unit> {
         failRestore?.let { return Outcome.Failure(it) }

@@ -27,7 +27,7 @@ internal sealed interface DriveBackupUiState {
         /** Connecting, backing up, restoring or undoing is running: the buttons wait. */
         val isWorking: Boolean = false,
         val message: DriveMessage? = null,
-        /** What went wrong with the last action. Nothing changed. */
+        /** What went wrong with the last action. Trying again is safe. */
         val error: DomainError? = null,
     ) : DriveBackupUiState
 }

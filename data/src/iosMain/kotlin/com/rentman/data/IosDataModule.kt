@@ -2,7 +2,9 @@ package com.rentman.data
 
 import androidx.room3.Room
 import com.rentman.data.db.AppDatabase
+import com.rentman.data.drive.DefaultsUploadLog
 import com.rentman.data.drive.KeychainTokenStore
+import com.rentman.data.drive.RefreshTokenAuth
 import com.rentman.domain.drive.GoogleClient
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
@@ -26,10 +28,11 @@ fun iosDataModule(google: GoogleClient): Module {
         ),
     ) { "Application Support directory is unavailable" }
     val path = checkNotNull(directory.path) { "Application Support path is unavailable" }
+    val http = HttpClient(Darwin) { expectSuccess = true }
     return dataModule(
         Room.databaseBuilder<AppDatabase>(name = "$path/$DATABASE_NAME"),
-        HttpClient(Darwin) { expectSuccess = true },
-        KeychainTokenStore(),
-        google,
+        http,
+        RefreshTokenAuth(http, KeychainTokenStore(), google),
+        DefaultsUploadLog(),
     )
 }

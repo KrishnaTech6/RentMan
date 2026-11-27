@@ -1,5 +1,11 @@
 package com.rentman.sharedui.feature.home
 
+import com.rentman.domain.drive.AutoBackUpToDriveUseCase
+import com.rentman.domain.drive.BackUpToDriveUseCase
+import com.rentman.sharedui.feature.bill.FakeSettingsRepository
+import com.rentman.sharedui.feature.drive.FakeDriveBackupRepository
+import com.rentman.sharedui.feature.drive.NoPhotos
+import com.rentman.sharedui.feature.settings.FakeBackupRepository
 import app.cash.turbine.test
 import com.rentman.domain.billing.Bill
 import com.rentman.domain.billing.BillLine
@@ -99,6 +105,8 @@ class HomeViewModelTest {
         bills: FakeBillRepository = FakeBillRepository(),
         payments: FakePaymentRepository = FakePaymentRepository(),
         rentChanges: FakeRentIncreaseRepository = FakeRentIncreaseRepository(renters),
+        drive: FakeDriveBackupRepository = FakeDriveBackupRepository(),
+        backups: FakeBackupRepository = FakeBackupRepository(FakeSettingsRepository()),
     ): HomeViewModel {
         val today = GetTodayUseCase(clock, TimeZone.UTC)
         return HomeViewModel(
@@ -114,6 +122,7 @@ class HomeViewModelTest {
             ApplyRentIncreaseUseCase(rentChanges, today),
             PostponeRentIncreaseUseCase(rentChanges, today),
             UndoRentIncreaseUseCase(rentChanges),
+            AutoBackUpToDriveUseCase(drive, backups, BackUpToDriveUseCase(backups, drive, renters, bills, NoPhotos)),
         )
     }
 
@@ -479,5 +488,25 @@ class HomeViewModelTest {
         payments.setVoided(PaymentId(1), true) // Neha's payment is taken back: both are Unpaid now
 
         assertEquals(null, (vm.uiState.value as Content).filter)
+    }
+
+    @Test
+    fun openingTheAppBacksUpToDriveWhenSomethingChanged() = runTest {
+        val drive = FakeDriveBackupRepository(connected = true, file = "older", synced = "fp-before")
+
+        viewModel(FakeRenterRepository(listOf(ravi)), drive = drive, backups = FakeBackupRepository(FakeSettingsRepository(), fingerprint = "fp-after"))
+
+        assertEquals("""{"schemaVersion":1}""", drive.file)
+        assertEquals("fp-after", drive.synced)
+    }
+
+    @Test
+    fun comingBackToHomeWithNothingChangedSendsNothing() = runTest {
+        val drive = FakeDriveBackupRepository(connected = true, file = "same", synced = "fp-1")
+        val vm = viewModel(FakeRenterRepository(listOf(ravi)), drive = drive)
+
+        vm.onIntent(HomeIntent.Refresh)
+
+        assertEquals("same", drive.file)
     }
 }

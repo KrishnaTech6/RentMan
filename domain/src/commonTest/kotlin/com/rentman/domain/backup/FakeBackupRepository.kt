@@ -13,6 +13,8 @@ class FakeBackupRepository(
     snapshotTakenAt: Instant? = null,
     var failExport: Boolean = false,
     var failRestore: DomainError? = null,
+    /** The fingerprint of what is on the pretend phone. Change it to pretend the data changed. */
+    var fingerprint: String = "fp-1",
 ) : BackupRepository {
     private val snapshot = MutableStateFlow(snapshotTakenAt)
     val restored = mutableListOf<String>()
@@ -21,6 +23,9 @@ class FakeBackupRepository(
 
     override suspend fun export(): Outcome<String> =
         if (failExport) Outcome.Failure(DomainError.Storage("disk")) else Outcome.Success(exportJson)
+
+    override suspend fun fingerprint(): Outcome<String> =
+        if (failExport) Outcome.Failure(DomainError.Storage("disk")) else Outcome.Success(fingerprint)
 
     override suspend fun restore(json: String): Outcome<Unit> {
         failRestore?.let { return Outcome.Failure(it) }

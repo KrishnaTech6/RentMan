@@ -8,6 +8,7 @@ import com.rentman.sharedui.resources.error_bill_not_removable
 import com.rentman.sharedui.resources.error_backup_newer
 import com.rentman.sharedui.resources.error_drive_not_connected
 import com.rentman.sharedui.resources.error_drive_unavailable
+import com.rentman.sharedui.resources.error_nothing_to_back_up
 import com.rentman.sharedui.resources.error_bill_exists
 import com.rentman.sharedui.resources.error_blank_name
 import com.rentman.sharedui.resources.error_duplicate_name
@@ -42,6 +43,7 @@ private fun DomainError.messageResource() = when (this) {
     is DomainError.BackupFromNewerVersion -> Res.string.error_backup_newer
     DomainError.DriveNotConnected -> Res.string.error_drive_not_connected
     DomainError.DriveUnavailable -> Res.string.error_drive_unavailable
+    DomainError.NothingToBackUp -> Res.string.error_nothing_to_back_up
     // Form problems are shown next to each field, so this is only a fallback.
     is DomainError.InvalidRenter, is DomainError.InvalidCharge, is DomainError.InvalidBill, is DomainError.InvalidPayment,
     is DomainError.InvalidSettings, is DomainError.InvalidMessage,

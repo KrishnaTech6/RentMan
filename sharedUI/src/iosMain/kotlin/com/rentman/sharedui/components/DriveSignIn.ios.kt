@@ -28,9 +28,6 @@ import kotlin.io.encoding.Base64
 
 private const val AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 
-/** Only the files the app makes itself; nothing else in the landlord's Drive. */
-private const val DRIVE_FILE_SCOPE = "https://www.googleapis.com/auth/drive.file"
-
 /** The app's iPhone key with Google (made once in Google Cloud for bundle com.rentmanager.landlord.dev). Not a secret. */
 internal val IosGoogleClient = GoogleClient("896399803306-vgj57dcgje0hc86cjumoj14bgvl9jjof.apps.googleusercontent.com")
 
@@ -60,7 +57,7 @@ private class GoogleSignIn(private val client: GoogleClient) : NSObject(), ASWeb
                 NSURLQueryItem(name = "client_id", value = client.clientId),
                 NSURLQueryItem(name = "redirect_uri", value = client.redirectUri),
                 NSURLQueryItem(name = "response_type", value = "code"),
-                NSURLQueryItem(name = "scope", value = DRIVE_FILE_SCOPE),
+                NSURLQueryItem(name = "scope", value = GoogleClient.DRIVE_FILE_SCOPE),
                 NSURLQueryItem(name = "code_challenge", value = challengeOf(verifier)),
                 NSURLQueryItem(name = "code_challenge_method", value = "S256"),
                 NSURLQueryItem(name = "state", value = state),
@@ -72,7 +69,7 @@ private class GoogleSignIn(private val client: GoogleClient) : NSObject(), ASWeb
                 val answer = callback?.let { NSURLComponents(uRL = it, resolvingAgainstBaseURL = false).queryItems.orEmpty() }
                     .orEmpty().mapNotNull { it as? NSURLQueryItem }.associate { it.name to it.value }
                 val code = answer["code"]
-                if (code != null && answer["state"] == state) onSignedIn(DriveSignIn(code, verifier)) else onFailed()
+                if (code != null && answer["state"] == state) onSignedIn(DriveSignIn.Code(code, verifier)) else onFailed()
             }
         }
         opened.presentationContextProvider = this

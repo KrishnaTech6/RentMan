@@ -10,6 +10,7 @@ import com.rentman.domain.billing.ObserveHomeUseCase
 import com.rentman.domain.billing.ObserveMonthDetailUseCase
 import com.rentman.domain.billing.ObserveMonthsUseCase
 import com.rentman.domain.AppDispatchers
+import com.rentman.domain.drive.AutoBackUpToDriveUseCase
 import com.rentman.domain.drive.BackUpToDriveUseCase
 import com.rentman.domain.drive.ConnectDriveUseCase
 import com.rentman.domain.drive.DisconnectDriveUseCase
@@ -74,10 +75,11 @@ import org.koin.dsl.module
 private val domainModule = module {
     factory { GetTodayUseCase(get(), get()) }
     factory { ObserveMessageUseCase(get()) }
-    factory { GetDriveStatusUseCase(get(), get()) }
+    factory { GetDriveStatusUseCase(get(), get(), get()) }
     factory { ConnectDriveUseCase(get()) }
-    factory { BackUpToDriveUseCase(get(), get()) }
-    factory { RestoreFromDriveUseCase(get(), get()) }
+    factory { BackUpToDriveUseCase(get(), get(), get(), get(), get()) }
+    factory { RestoreFromDriveUseCase(get(), get(), get(), get()) }
+    factory { AutoBackUpToDriveUseCase(get(), get(), get()) }
     factory { DisconnectDriveUseCase(get()) }
     factory { SaveMessageUseCase(get()) }
     factory { ObserveAddressesUseCase(get()) }
@@ -129,7 +131,7 @@ private val reminderModule = module {
 private val uiModule = module {
     single { AddressSelection() }
     viewModel { AddressPickerViewModel(get(), get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
     viewModel { MonthsViewModel(get()) }
     viewModel { DriveBackupViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { params -> MessageEditViewModel(MessageKind.valueOf(params.get<String>(0)), get(), get()) }

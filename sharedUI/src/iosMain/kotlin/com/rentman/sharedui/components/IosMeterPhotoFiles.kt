@@ -6,6 +6,7 @@ import com.rentman.domain.billing.MeterPhotoName
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.useContents
 import org.jetbrains.skia.Image
@@ -20,6 +21,7 @@ import platform.Foundation.dataWithContentsOfFile
 import platform.posix.memcpy
 import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSData
+import platform.Foundation.create
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
@@ -94,10 +96,24 @@ internal object IosMeterPhotoFiles {
 
     /** The saved photo as a picture, or null if it isn't there or can't be decoded. */
     fun image(name: String): ImageBitmap? {
+        val bytes = bytes(name) ?: return null
+        return runCatching { Image.makeFromEncoded(bytes).toComposeImageBitmap() }.getOrNull()
+    }
+
+    /** The saved photo's file, for a Drive backup, or null if it isn't on the phone. */
+    fun bytes(name: String): ByteArray? {
         val data = pathOf(name)?.let { NSData.dataWithContentsOfFile(it) } ?: return null
         val bytes = ByteArray(data.length.toInt())
-        bytes.usePinned { memcpy(it.addressOf(0), data.bytes, data.length) }
-        return runCatching { Image.makeFromEncoded(bytes).toComposeImageBitmap() }.getOrNull()
+        if (bytes.isNotEmpty()) bytes.usePinned { memcpy(it.addressOf(0), data.bytes, data.length) }
+        return bytes
+    }
+
+    /** Saves a photo brought back from Drive under its own name. False for a name that isn't a meter photo's. */
+    fun write(name: String, bytes: ByteArray): Boolean {
+        val path = pathOf(name) ?: return false
+        NSFileManager.defaultManager.createDirectoryAtPath(path.substringBeforeLast('/'), withIntermediateDirectories = true, attributes = null, error = null)
+        val data = bytes.usePinned { NSData.create(bytes = it.addressOf(0), length = bytes.size.convert()) }
+        return data.writeToFile(path, atomically = true)
     }
 
     /**

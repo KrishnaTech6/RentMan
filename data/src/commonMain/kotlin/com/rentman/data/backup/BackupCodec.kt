@@ -129,4 +129,14 @@ internal object BackupCodec {
      * because neither means the data was changed.
      */
     fun comparable(file: BackupFile): String = encode(file.copy(exportedAt = 0, settings = file.settings?.copy(lastBackupAt = null)))
+
+    /**
+     * A short code for the data in [file]: the same while nothing that matters changes, different after any change. Made from
+     * [comparable], so the export time and the last backup time don't count. 64-bit FNV-1a: a change going unnoticed is about as
+     * likely as guessing one number in 18 billion billion.
+     */
+    fun fingerprint(file: BackupFile): String =
+        comparable(file).encodeToByteArray()
+            .fold(0xcbf29ce484222325uL) { hash, byte -> (hash xor byte.toUByte().toULong()) * 0x100000001b3uL }
+            .toString(16)
 }

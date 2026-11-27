@@ -5,6 +5,7 @@ import com.rentman.domain.Outcome
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 class BackupCodecTest {
     private fun decode(text: String) = BackupCodec.decode(text)
@@ -163,6 +164,16 @@ class BackupCodecTest {
 
         assertEquals("9f3a1c-2b.jpg", withPhoto.decodedAgain().bill.single().meterPhotoPath)
         assertEquals(null, s.decodedAgain().bill.single().meterPhotoPath)
+    }
+
+    @Test
+    fun theFingerprintStaysTheSameUntilTheDataChanges() {
+        val s = sampleBackup()
+        val sameData = s.copy(exportedAt = 999_999, settings = s.settings!!.copy(lastBackupAt = 42))
+        val newRent = s.copy(renter = listOf(s.renter.single().copy(monthlyRentPaise = 800_000)))
+
+        assertEquals(BackupCodec.fingerprint(s), BackupCodec.fingerprint(sameData)) // exporting again or backing up changes nothing
+        assertTrue(BackupCodec.fingerprint(s) != BackupCodec.fingerprint(newRent))
     }
 
     @Test

@@ -50,6 +50,8 @@ import com.rentman.sharedui.resources.drive_connect
 import com.rentman.sharedui.resources.drive_connected
 import com.rentman.sharedui.resources.drive_disconnect
 import com.rentman.sharedui.resources.drive_disconnect_hint
+import com.rentman.sharedui.resources.drive_empty_phone
+import com.rentman.sharedui.resources.drive_found_backup
 import com.rentman.sharedui.resources.drive_hint
 import com.rentman.sharedui.resources.drive_last
 import com.rentman.sharedui.resources.drive_never
@@ -102,6 +104,16 @@ private fun Body(state: Content, onSignIn: (() -> Unit)?, onIntent: (DriveBackup
             } else {
                 ActionButton(stringResource(Res.string.drive_connect), enabled = !state.isWorking, onClick = onSignIn, modifier = Modifier.fillMaxWidth())
             }
+        } else if (!state.status.phoneHasRenters) {
+            // A new phone: restore first. Backing up now would replace the good copy in Drive with an empty one.
+            val found = state.status.lastBackupOn
+            if (found != null && state.message != DriveMessage.Restored) {
+                Text(stringResource(Res.string.drive_found_backup, found.label()), RentManColors.Text)
+                ActionButton(stringResource(Res.string.drive_restore), enabled = !state.isWorking, onClick = { onIntent(Restore) }, modifier = Modifier.fillMaxWidth())
+            } else {
+                Text(stringResource(Res.string.drive_empty_phone), RentManColors.Text)
+            }
+            DisconnectRow(state, onIntent)
         } else {
             Section(stringResource(Res.string.drive_title)) {
                 BasicText(
@@ -122,17 +134,22 @@ private fun Body(state: Content, onSignIn: (() -> Unit)?, onIntent: (DriveBackup
                     ActionRow(stringResource(Res.string.drive_undo), onClick = { onIntent(UndoRestore) }, enabled = !state.isWorking)
                 }
                 Divider()
-                ActionRow(
-                    stringResource(Res.string.drive_disconnect),
-                    onClick = { onIntent(Disconnect) },
-                    hint = stringResource(Res.string.drive_disconnect_hint),
-                    enabled = !state.isWorking,
-                )
+                DisconnectRow(state, onIntent)
             }
         }
         state.message?.let { Text(it.text(), if (it == DriveMessage.SignInFailed || it == DriveMessage.NothingInDrive) RentManColors.Danger else RentManColors.Success) }
         state.error?.let { Text(it.message(), RentManColors.Danger) }
     }
+}
+
+@Composable
+private fun DisconnectRow(state: Content, onIntent: (DriveBackupIntent) -> Unit) {
+    ActionRow(
+        stringResource(Res.string.drive_disconnect),
+        onClick = { onIntent(Disconnect) },
+        hint = stringResource(Res.string.drive_disconnect_hint),
+        enabled = !state.isWorking,
+    )
 }
 
 @Composable
@@ -162,9 +179,9 @@ private fun ErrorPreview() = DriveBackupScreen(Error(DomainError.DriveUnavailabl
 
 @Preview
 @Composable
-private fun NotConnectedPreview() = DriveBackupScreen(Content(DriveBackupStatus(false, null)), onSignIn = {}) {}
+private fun NotConnectedPreview() = DriveBackupScreen(Content(DriveBackupStatus(false, null, true)), onSignIn = {}) {}
 
 @Preview
 @Composable
 private fun ConnectedPreview() =
-    DriveBackupScreen(Content(DriveBackupStatus(true, LocalDate(2026, 11, 27)), message = DriveMessage.BackedUp), onSignIn = {}) {}
+    DriveBackupScreen(Content(DriveBackupStatus(true, LocalDate(2026, 11, 27), true), message = DriveMessage.BackedUp), onSignIn = {}) {}

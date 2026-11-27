@@ -39,6 +39,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.play.services.auth) // Drive sign-in on Android
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

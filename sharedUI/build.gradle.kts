@@ -52,6 +52,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.androidx.work.runtime) // reminders, ARCHITECTURE.md section 7
+            implementation(libs.play.services.auth) // Drive sign-in, ADR 0010
             implementation(libs.androidx.activity.compose) // the notification permission prompt
             implementation(libs.mlkit.text.recognition) // reads the meter photo on the phone, bundled so it works offline
             implementation(libs.androidx.exifinterface) // turns a photo the right way up

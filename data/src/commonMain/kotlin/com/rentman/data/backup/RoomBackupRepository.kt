@@ -20,6 +20,8 @@ internal class RoomBackupRepository(
     override suspend fun export(): Outcome<String> =
         safeCall { BackupCodec.encode(dao.readAll(exportedAt = clock.now().toEpochMilliseconds())) }
 
+    override suspend fun fingerprint(): Outcome<String> = safeCall { BackupCodec.fingerprint(dao.readAll(exportedAt = 0)) }
+
     override suspend fun restore(json: String): Outcome<Unit> =
         BackupCodec.decode(json).flatMap { file ->
             safeCall { dao.replaceAll(file, takenAt = clock.now().toEpochMilliseconds(), takeSnapshot = true) }

@@ -10,7 +10,10 @@ import com.rentman.domain.drive.DriveSignIn
 import com.rentman.domain.drive.DriveBackupStatus
 import com.rentman.domain.drive.GetDriveStatusUseCase
 import com.rentman.domain.drive.RestoreFromDriveUseCase
+import com.rentman.sharedui.feature.bill.FakeBillRepository
 import com.rentman.sharedui.feature.bill.FakeSettingsRepository
+import com.rentman.sharedui.feature.bill.Ravi
+import com.rentman.sharedui.feature.renter.FakeRenterRepository
 import com.rentman.sharedui.feature.drive.DriveBackupIntent.Back
 import com.rentman.sharedui.feature.drive.DriveBackupIntent.BackUpNow
 import com.rentman.sharedui.feature.drive.DriveBackupIntent.Disconnect
@@ -43,12 +46,13 @@ class DriveBackupViewModelTest {
     fun resetMain() = Dispatchers.resetMain()
 
     private val backups = FakeBackupRepository(FakeSettingsRepository())
+    private val bills = FakeBillRepository()
 
-    private fun viewModel(drive: FakeDriveBackupRepository) = DriveBackupViewModel(
-        getStatus = GetDriveStatusUseCase(drive, TimeZone.UTC),
+    private fun viewModel(drive: FakeDriveBackupRepository, renters: FakeRenterRepository = FakeRenterRepository(listOf(Ravi.renter()))) = DriveBackupViewModel(
+        getStatus = GetDriveStatusUseCase(drive, renters, TimeZone.UTC),
         connect = ConnectDriveUseCase(drive),
-        backUp = BackUpToDriveUseCase(backups, drive),
-        restore = RestoreFromDriveUseCase(drive, backups),
+        backUp = BackUpToDriveUseCase(backups, drive, renters, bills, NoPhotos),
+        restore = RestoreFromDriveUseCase(drive, backups, bills, NoPhotos),
         undoRestore = UndoRestoreUseCase(backups),
         disconnect = DisconnectDriveUseCase(drive),
     )
@@ -57,17 +61,17 @@ class DriveBackupViewModelTest {
 
     @Test
     fun showsWhetherDriveIsConnectedAndWhenItWasLastBackedUp() = runTest {
-        assertEquals(DriveBackupStatus(false, null), viewModel(FakeDriveBackupRepository()).content().status)
+        assertEquals(DriveBackupStatus(false, null, true), viewModel(FakeDriveBackupRepository()).content().status)
 
         val at = Instant.parse("2026-11-27T09:00:00Z")
-        assertEquals(DriveBackupStatus(true, LocalDate(2026, 11, 27)), viewModel(FakeDriveBackupRepository(connected = true, lastBackupAt = at)).content().status)
+        assertEquals(DriveBackupStatus(true, LocalDate(2026, 11, 27), true), viewModel(FakeDriveBackupRepository(connected = true, lastBackupAt = at)).content().status)
     }
 
     @Test
     fun aFinishedSignInConnectsDrive() = runTest {
         val vm = viewModel(FakeDriveBackupRepository())
 
-        vm.onIntent(SignedIn(DriveSignIn("4/code", "verifier")))
+        vm.onIntent(SignedIn(DriveSignIn.Code("4/code", "verifier")))
 
         assertEquals(true, vm.content().status.connected)
         assertEquals(DriveMessage.Connected, vm.content().message)
@@ -117,6 +121,24 @@ class DriveBackupViewModelTest {
         assertEquals(DriveMessage.NothingInDrive, vm.content().message)
         assertEquals(null, vm.content().error)
         assertEquals(emptyList(), backups.restored)
+    }
+
+    @Test
+    fun onANewPhoneTheStatusSaysThereAreNoRentersSoRestoreComesFirst() = runTest {
+        val vm = viewModel(FakeDriveBackupRepository(connected = true, lastBackupAt = Instant.parse("2026-11-27T09:00:00Z")), FakeRenterRepository())
+
+        assertEquals(DriveBackupStatus(true, LocalDate(2026, 11, 27), phoneHasRenters = false), vm.content().status)
+    }
+
+    @Test
+    fun backingUpAPhoneWithNoRentersIsRefusedAndDriveKeepsItsCopy() = runTest {
+        val drive = FakeDriveBackupRepository(connected = true, file = "the good copy")
+        val vm = viewModel(drive, FakeRenterRepository())
+
+        vm.onIntent(BackUpNow)
+
+        assertEquals(DomainError.NothingToBackUp, vm.content().error)
+        assertEquals("the good copy", drive.file)
     }
 
     @Test
