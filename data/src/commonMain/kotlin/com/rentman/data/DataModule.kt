@@ -4,6 +4,11 @@ import androidx.room3.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.rentman.data.address.RoomAddressRepository
 import com.rentman.data.db.AppDatabase
+import com.rentman.data.drive.GoogleDriveRepository
+import com.rentman.data.drive.TokenStore
+import com.rentman.domain.drive.DriveBackupRepository
+import com.rentman.domain.drive.GoogleClient
+import io.ktor.client.HttpClient
 import com.rentman.data.db.Migration1To2
 import com.rentman.data.backup.RoomBackupRepository
 import com.rentman.data.bill.RoomBillRepository
@@ -28,7 +33,13 @@ import kotlin.time.Clock
 internal const val DATABASE_NAME = "rentman.db"
 
 /** The only public entry into `:data` besides the platform factories (`androidDataModule`, `iosDataModule`). */
-internal fun dataModule(databaseBuilder: RoomDatabase.Builder<AppDatabase>): Module = module {
+/** [http], [tokens] and [google] are each phone's own: its network engine, where the Drive access is kept, and its key with Google. */
+internal fun dataModule(
+    databaseBuilder: RoomDatabase.Builder<AppDatabase>,
+    http: HttpClient,
+    tokens: TokenStore,
+    google: GoogleClient,
+): Module = module {
     single<Clock> { Clock.System }
     single<AppDispatchers> {
         object : AppDispatchers {
@@ -53,4 +64,5 @@ internal fun dataModule(databaseBuilder: RoomDatabase.Builder<AppDatabase>): Mod
     single<RentIncreaseRepository> { RoomRentIncreaseRepository(get<AppDatabase>().rentChangeDao(), get()) }
     single<BackupRepository> { RoomBackupRepository(get<AppDatabase>().backupDao(), get()) }
     single<SettingsRepository> { RoomSettingsRepository(get<AppDatabase>().settingsDao()) }
+    single<DriveBackupRepository> { GoogleDriveRepository(http, tokens, google) }
 }

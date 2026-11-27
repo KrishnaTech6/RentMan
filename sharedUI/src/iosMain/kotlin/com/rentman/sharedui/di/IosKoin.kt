@@ -1,6 +1,7 @@
 package com.rentman.sharedui.di
 
 import com.rentman.data.iosDataModule
+import com.rentman.sharedui.components.IosGoogleClient
 import com.rentman.domain.reminders.ReminderScheduler
 import com.rentman.domain.reminders.ReminderSync
 import com.rentman.sharedui.reminders.IosReminderScheduler
@@ -16,6 +17,6 @@ private val notificationDelegate = ReminderNotificationDelegate()
 fun startRentManKoin() {
     val iosReminders = module { single<ReminderScheduler> { IosReminderScheduler(get()) } }
     UNUserNotificationCenter.currentNotificationCenter().delegate = notificationDelegate
-    startKoin { modules(listOf(iosDataModule(), iosReminders) + sharedModules()) }
+    startKoin { modules(listOf(iosDataModule(IosGoogleClient), iosReminders) + sharedModules()) }
         .koin.get<ReminderSync>().start()
 }

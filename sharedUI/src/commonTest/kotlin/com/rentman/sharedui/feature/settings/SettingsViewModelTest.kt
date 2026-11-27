@@ -374,4 +374,15 @@ class SettingsViewModelTest {
             assertEquals(SettingsNavEvent.OpenMessage(MessageKind.MonthReview), awaitItem())
         }
     }
+
+    @Test
+    fun tappingGoogleDriveBackupOpensItsScreen() = runTest {
+        val vm = viewModel()
+
+        vm.navigation.test {
+            vm.onIntent(SettingsIntent.OpenDrive)
+
+            assertEquals(SettingsNavEvent.OpenDrive, awaitItem())
+        }
+    }
 }

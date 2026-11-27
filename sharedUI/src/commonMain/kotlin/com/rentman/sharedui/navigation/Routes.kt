@@ -34,6 +34,10 @@ internal data class EditRenterKey(val renterId: Long) : NavKey
 @Serializable
 internal data object MonthsKey : NavKey
 
+/** Backing up to the landlord's own Google Drive. */
+@Serializable
+internal data object DriveKey : NavKey
+
 /** The landlord's own wording for one WhatsApp message. [kind] is the MessageKind's name. */
 @Serializable
 internal data class MessageEditKey(val kind: String) : NavKey

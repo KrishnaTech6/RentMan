@@ -24,6 +24,7 @@ internal sealed interface SettingsIntent {
     data class RestoreFrom(val json: String) : SettingsIntent
     data object UndoRestore : SettingsIntent
     data class OpenMessage(val kind: MessageKind) : SettingsIntent
+    data object OpenDrive : SettingsIntent
     data object Back : SettingsIntent
     data object Retry : SettingsIntent
 }
@@ -61,6 +62,7 @@ internal enum class BackupMessage { Restored, RestoreUndone, ShareFailed }
 internal sealed interface SettingsNavEvent {
     data object Close : SettingsNavEvent
     data class OpenMessage(val kind: MessageKind) : SettingsNavEvent
+    data object OpenDrive : SettingsNavEvent
     /** The backup is made: hand [json] to the phone's share sheet. */
     data class ShareBackup(val fileName: String, val json: String) : SettingsNavEvent
 }

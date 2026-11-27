@@ -153,6 +153,7 @@ Rate per unit (global ₹8, future bills only) · reminder time · repeat interv
 3. Backup/restore
 4. WhatsApp bill image/PDF (**not built yet**; the bill goes as text only)
 5. Meter photo OCR (ML Kit / Apple Vision), user always confirms the number (built)
+6. Google Drive backup (ADR 0010). Settings → Google Drive backup: Connect (Google's sign-in, only "files this app makes"), Back up now, Restore from Drive (with Undo), Disconnect, "Last Drive backup". Built so far: iPhone, data only (milestone 1). Next: meter photos, then automatically once a day (iPhone: the first time the app is opened after a day; Android: a daily job), never uploading an empty phone over a good Drive copy. Android sign-in comes as its own step. Google Cloud project "Rent Manager" (made 2026-11-27, In production): iPhone key `896399803306-vgj57dcgje0hc86cjumoj14bgvl9jjof`, Android key `896399803306-8k2labbkje32535j65l6bkb5vdf9ogl6` (package `com.rentman.app`, debug SHA-1 of this Mac). Home page and privacy policy: https://krishnatech6.github.io/RentMan/.
 
 ## Ideas (not building now)
 Looked at together with a real backup (a handful of renters at a few addresses, some billed electricity). Most of these need a few months of data to be worth looking at, so they are ranked by what helps from day one.

@@ -48,6 +48,7 @@ import com.rentman.sharedui.components.timeLabel
 import com.rentman.sharedui.feature.settings.SettingsIntent.Back
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackUpNow
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShareFailed
+import com.rentman.sharedui.feature.settings.SettingsIntent.OpenDrive
 import com.rentman.sharedui.feature.settings.SettingsIntent.OpenMessage
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShared
 import com.rentman.sharedui.feature.settings.SettingsIntent.RateChanged
@@ -63,6 +64,8 @@ import com.rentman.sharedui.feature.settings.SettingsUiState.Loading
 import com.rentman.sharedui.mvi.NavigationEffect
 import com.rentman.sharedui.resources.Res
 import com.rentman.sharedui.resources.messages_title
+import com.rentman.sharedui.resources.drive_hint
+import com.rentman.sharedui.resources.drive_title
 import com.rentman.sharedui.resources.backup_last
 import com.rentman.sharedui.resources.backup_never
 import com.rentman.sharedui.resources.backup_now
@@ -100,13 +103,19 @@ private const val TIME_STEP_MINUTES = 30
 
 /** The only composable that knows the ViewModel (ARCHITECTURE.md §5). */
 @Composable
-internal fun SettingsRoute(onOpenMessage: (MessageKind) -> Unit, onDone: () -> Unit, viewModel: SettingsViewModel = koinViewModel()) {
+internal fun SettingsRoute(
+    onOpenMessage: (MessageKind) -> Unit,
+    onOpenDrive: () -> Unit,
+    onDone: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val files = rememberBackupFiles(onPicked = { viewModel.onIntent(RestoreFrom(it)) })
     NavigationEffect(viewModel.navigation) { event ->
         when (event) {
             SettingsNavEvent.Close -> onDone()
             is SettingsNavEvent.OpenMessage -> onOpenMessage(event.kind)
+            SettingsNavEvent.OpenDrive -> onOpenDrive()
             is SettingsNavEvent.ShareBackup ->
                 viewModel.onIntent(if (files.share(event.fileName, event.json)) BackupShared else BackupShareFailed)
         }
@@ -166,6 +175,9 @@ private fun Form(state: Content, onIntent: (SettingsIntent) -> Unit, onPickBacku
                     if (index > 0) Divider()
                     ActionRow(kind.kindLabel(), onClick = { onIntent(OpenMessage(kind)) })
                 }
+            }
+            Section(stringResource(Res.string.drive_title)) {
+                ActionRow(stringResource(Res.string.drive_title), onClick = { onIntent(OpenDrive) }, hint = stringResource(Res.string.drive_hint))
             }
             Section(stringResource(Res.string.backup_title)) {
                 BasicText(

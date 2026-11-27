@@ -52,6 +52,12 @@ sealed interface DomainError {
     /** The rate, reminder time or repeat interval on the Settings screen is missing or wrong. */
     data class InvalidSettings(val problems: Map<SettingsField, FieldProblem>) : DomainError
 
+    /** Google Drive isn't connected, or the landlord took the access back: Connect again. */
+    data object DriveNotConnected : DomainError
+
+    /** Google Drive couldn't be reached (no internet, or Google is having trouble). Nothing changed. */
+    data object DriveUnavailable : DomainError
+
     /** A WhatsApp message uses variables the app doesn't fill in, most likely typos. */
     data class InvalidMessage(val unknownVariables: List<String>) : DomainError
 

@@ -35,9 +35,17 @@ kotlin {
             implementation(libs.sqlite.bundled)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json) // the backup file
+            implementation(libs.ktor.client.core) // Google Drive (ADR 0010)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.ktor.client.mock)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
         }

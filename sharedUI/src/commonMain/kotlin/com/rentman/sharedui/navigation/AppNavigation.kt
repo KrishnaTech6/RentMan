@@ -21,6 +21,7 @@ import com.rentman.sharedui.feature.renter.AddRenterRoute
 import com.rentman.sharedui.feature.renter.RenterDetailRoute
 import com.rentman.sharedui.feature.settings.SettingsRoute
 import com.rentman.sharedui.feature.messages.MessageEditRoute
+import com.rentman.sharedui.feature.drive.DriveBackupRoute
 import com.rentman.domain.messages.MessageKind
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -42,6 +43,7 @@ private val navigationState = SavedStateConfiguration {
             subclass(MonthsKey::class)
             subclass(MonthKey::class)
             subclass(MessageEditKey::class)
+            subclass(DriveKey::class)
         }
     }
 }
@@ -93,7 +95,14 @@ internal fun AppNavigation() {
             entry<RecordPaymentKey> { key ->
                 RecordPaymentRoute(renterId = RenterId(key.renterId), onDone = navigator::back)
             }
-            entry<SettingsKey> { SettingsRoute(onOpenMessage = { kind -> navigator.open(MessageEditKey(kind.name)) }, onDone = navigator::back) }
+            entry<SettingsKey> {
+                SettingsRoute(
+                    onOpenMessage = { kind -> navigator.open(MessageEditKey(kind.name)) },
+                    onOpenDrive = { navigator.open(DriveKey) },
+                    onDone = navigator::back,
+                )
+            }
+            entry<DriveKey> { DriveBackupRoute(onDone = navigator::back) }
             entry<MessageEditKey> { key -> MessageEditRoute(kind = MessageKind.valueOf(key.kind), onDone = navigator::back) }
             entry<MonthsKey> { MonthsRoute(onOpenMonth = { month -> navigator.open(MonthKey(month.value)) }, onBack = navigator::back) }
             entry<MonthKey> { key ->
