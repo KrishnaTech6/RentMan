@@ -10,8 +10,11 @@ import com.rentman.domain.billing.BuildBillUseCase
 import com.rentman.domain.billing.CreateBillUseCase
 import com.rentman.domain.billing.SuggestMeterReadingUseCase
 import com.rentman.domain.billing.ObserveBillContextUseCase
+import com.rentman.domain.flatMap
 import com.rentman.domain.fold
 import com.rentman.domain.map
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
 import com.rentman.domain.tenancy.RenterId
 import com.rentman.sharedui.feature.bill.CreateBillIntent.Back
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ChangeReading
@@ -33,6 +36,7 @@ import com.rentman.sharedui.mvi.flatMapFirst
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -47,6 +51,7 @@ internal class CreateBillViewModel(
     renterId: RenterId,
     month: BillingMonth,
     observeContext: ObserveBillContextUseCase,
+    observeMessage: ObserveMessageUseCase,
     private val buildBill: BuildBillUseCase,
     private val suggestReading: SuggestMeterReadingUseCase,
     private val createBill: CreateBillUseCase,
@@ -55,17 +60,24 @@ internal class CreateBillViewModel(
     private val unchanged: Reducer<State> = { it }
 
     override val uiState: StateFlow<State> = merge(
-        loadReducers(observeContext, renterId, month),
+        loadReducers(observeContext, observeMessage, renterId, month),
         inputReducers(),
         saveReducers(),
         navigationReducers(),
     ).toState(Loading)
 
-    private fun loadReducers(observeContext: ObserveBillContextUseCase, renterId: RenterId, month: BillingMonth): Flow<Reducer<State>> =
+    private fun loadReducers(
+        observeContext: ObserveBillContextUseCase,
+        observeMessage: ObserveMessageUseCase,
+        renterId: RenterId,
+        month: BillingMonth,
+    ): Flow<Reducer<State>> =
         intents.filterIsInstance<Retry>().map { }.onStart { emit(Unit) }
             .flatMapLatest {
-                observeContext(renterId, month)
-                    .map { outcome -> outcome.fold(onSuccess = ::withContext, onFailure = ::toError) }
+                combine(observeContext(renterId, month), observeMessage(MessageKind.Bill)) { context, message ->
+                    context.flatMap { c -> message.map { c to it } }
+                }
+                    .map { outcome -> outcome.fold(onSuccess = { (context, message) -> withContext(context, message) }, onFailure = ::toError) }
                     .onStart { emit { Loading } }
             }
 
@@ -110,12 +122,13 @@ internal class CreateBillViewModel(
         .map { unchanged }
 
     /** The context can arrive again while the user types (a bill saved elsewhere): keep what they typed. */
-    private fun withContext(context: BillContext): Reducer<State> = { state ->
+    private fun withContext(context: BillContext, message: String): Reducer<State> = { state ->
         if (state is Content) {
-            state.copy(context = context).withPreview()
+            state.copy(context = context, message = message).withPreview()
         } else {
             val first = Content(
                 context = context,
+                message = message,
                 // A renter who pays electricity directly has nothing to type, so they start at the bill.
                 step = if (context.summary.renter.billsElectricity) BillStep.Reading else BillStep.Review,
                 preview = Outcome.Failure(DomainError.InvalidBill(emptyMap())),

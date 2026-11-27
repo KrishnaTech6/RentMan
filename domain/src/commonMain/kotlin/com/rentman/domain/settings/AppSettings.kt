@@ -1,6 +1,7 @@
 package com.rentman.domain.settings
 
 import com.rentman.domain.Outcome
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.money.Paise
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
@@ -14,7 +15,25 @@ data class AppSettings(
     /** 2 or 3 days between reminders, 0 for only once. */
     val reminderRepeatDays: Int = 3,
     val lastBackupAt: Instant? = null,
+    /** The landlord's own wording for each WhatsApp message, or null for ours ([MessageKind.default]). */
+    val billMessage: String? = null,
+    val paymentMessage: String? = null,
+    val monthReviewMessage: String? = null,
 ) {
+    /** The wording to use for [kind]: the landlord's own, or ours. */
+    fun messageFor(kind: MessageKind): String = when (kind) {
+        MessageKind.Bill -> billMessage
+        MessageKind.PaymentReceived -> paymentMessage
+        MessageKind.MonthReview -> monthReviewMessage
+    } ?: kind.default
+
+    /** These settings with [text] as the wording for [kind]; null goes back to ours. */
+    fun withMessage(kind: MessageKind, text: String?): AppSettings = when (kind) {
+        MessageKind.Bill -> copy(billMessage = text)
+        MessageKind.PaymentReceived -> copy(paymentMessage = text)
+        MessageKind.MonthReview -> copy(monthReviewMessage = text)
+    }
+
     companion object {
         /** The reminder intervals the landlord can pick: every 2 days, every 3 days, or only once (0). */
         val REPEAT_CHOICES = listOf(2, 3, 0)

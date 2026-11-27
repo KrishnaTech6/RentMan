@@ -32,6 +32,7 @@ import com.rentman.domain.billing.WhatsAppLink
 import com.rentman.domain.money.Paise
 import com.rentman.domain.money.rupees
 import com.rentman.domain.payments.PaymentField
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.payments.PaymentMessage
 import com.rentman.domain.payments.PaymentMode
 import com.rentman.domain.tenancy.Address
@@ -83,7 +84,7 @@ import com.rentman.sharedui.resources.problem_date
 import com.rentman.sharedui.resources.problem_note
 import com.rentman.sharedui.resources.problem_required
 import com.rentman.sharedui.resources.record_payment
-import com.rentman.sharedui.resources.save_and_post
+import com.rentman.sharedui.resources.save_and_send
 import com.rentman.sharedui.resources.save_only
 import com.rentman.sharedui.resources.section_note
 import com.rentman.sharedui.theme.RentManColors
@@ -104,7 +105,8 @@ internal fun RecordPaymentRoute(
     NavigationEffect(viewModel.navigation) { event ->
         if (event is RecordPaymentNavEvent.Saved && event.post != null) {
             // The payment is already stored. No number: WhatsApp asks which chat, so the landlord picks the group.
-            val message = PaymentMessage.text(event.post.summary, event.post.amount, money = ::formatRupees)
+            val post = event.post
+            val message = PaymentMessage.text(post.summary, post.amount, money = ::formatRupees, pending = post.pending, template = post.message)
             runCatching { uriHandler.openUri(WhatsAppLink.of("", message)) }
         }
         onDone()
@@ -180,9 +182,9 @@ private fun Form(state: Content, onIntent: (RecordPaymentIntent) -> Unit) {
         }
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             ActionButton(
-                text = stringResource(Res.string.save_and_post),
+                text = stringResource(Res.string.save_and_send),
                 enabled = !state.isSaving,
-                onClick = { onIntent(Save(state.toForm(), post = state.summary)) },
+                onClick = { onIntent(Save(state.toForm(), post = state.postTo())) },
                 modifier = Modifier.fillMaxWidth(),
                 color = RentManColors.WhatsApp,
             )
@@ -238,6 +240,7 @@ private val previewRenter = Renter(
 private val previewContent = Content(
     summary = RenterSummary(previewRenter, previewAddress),
     pending = 3_380L.rupees,
+    message = MessageKind.PaymentReceived.default,
     today = LocalDate(2026, 11, 23),
 )
 

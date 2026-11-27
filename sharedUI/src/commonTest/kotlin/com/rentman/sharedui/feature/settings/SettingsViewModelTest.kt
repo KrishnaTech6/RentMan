@@ -2,6 +2,7 @@ package com.rentman.sharedui.feature.settings
 
 import app.cash.turbine.test
 import com.rentman.domain.DomainError
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.money.Paise
 import com.rentman.domain.settings.AppSettings
 import com.rentman.domain.settings.ObserveSettingsUseCase
@@ -361,5 +362,16 @@ class SettingsViewModelTest {
         vm.onIntent(BackUpNow)
 
         assertEquals(null, vm.content().backupMessage)
+    }
+
+    @Test
+    fun tappingAMessageOpensItsEditor() = runTest {
+        val vm = viewModel()
+
+        vm.navigation.test {
+            vm.onIntent(SettingsIntent.OpenMessage(MessageKind.MonthReview))
+
+            assertEquals(SettingsNavEvent.OpenMessage(MessageKind.MonthReview), awaitItem())
+        }
     }
 }

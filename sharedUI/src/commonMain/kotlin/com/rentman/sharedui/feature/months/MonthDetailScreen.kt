@@ -37,6 +37,7 @@ import com.rentman.domain.billing.MonthReviewMessage
 import com.rentman.domain.billing.MonthSummary
 import com.rentman.domain.billing.RenterMonth
 import com.rentman.domain.billing.WhatsAppLink
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.money.Paise
 import com.rentman.domain.money.rupees
 import com.rentman.domain.tenancy.Address
@@ -93,7 +94,7 @@ internal fun MonthDetailRoute(
             MonthDetailNavEvent.Close -> onBack()
             // No number: WhatsApp asks which chat, so the landlord picks the group. If no app opens it, nothing is lost.
             is MonthDetailNavEvent.Share -> runCatching {
-                uriHandler.openUri(WhatsAppLink.of("", MonthReviewMessage.text(event.detail, monthLabel, money = ::formatRupees)))
+                uriHandler.openUri(WhatsAppLink.of("", MonthReviewMessage.text(event.detail, monthLabel, money = ::formatRupees, template = event.message)))
             }
         }
     }
@@ -106,7 +107,7 @@ internal fun MonthDetailScreen(month: BillingMonth, state: MonthDetailUiState, o
         ScreenTopBar(
             title = month.label(),
             onBack = { onIntent(Back) },
-            action = (state as? Content)?.let { content -> stringResource(Res.string.share_action) to { onIntent(Share(content.detail)) } },
+            action = (state as? Content)?.let { content -> stringResource(Res.string.share_action) to { onIntent(Share(content.detail, content.message)) } },
         )
         when (state) {
             Loading -> CenteredMessage(stringResource(Res.string.loading))
@@ -222,4 +223,4 @@ private fun ErrorPreview() = MonthDetailScreen(previewMonth, Error(DomainError.S
 
 @Preview
 @Composable
-private fun ContentPreview() = MonthDetailScreen(previewMonth, Content(previewDetail)) {}
+private fun ContentPreview() = MonthDetailScreen(previewMonth, Content(previewDetail, MessageKind.MonthReview.default)) {}

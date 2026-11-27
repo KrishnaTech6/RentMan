@@ -166,6 +166,18 @@ class BackupCodecTest {
     }
 
     @Test
+    fun theLandlordsOwnMessagesSurviveTheRoundTripAndAnOlderFileWithoutThemMeansOurs() {
+        val s = sampleBackup()
+        val own = s.copy(settings = s.settings!!.copy(billMessage = "Namaste {first_name}", monthReviewMessage = "{month}: {received}"))
+
+        assertEquals(own.settings, own.decodedAgain().settings)
+        // A file from before version 2 has no such fields at all.
+        val older = BackupCodec.encode(s).replace(Regex(""","(billMessage|paymentMessage|monthReviewMessage)":null"""), "")
+        assertEquals(false, "billMessage" in older)
+        assertEquals(null, (decode(older) as Outcome.Success).value.settings!!.billMessage)
+    }
+
+    @Test
     fun aMeterPhotoNameThatCouldReachOutsideThePhotoFolderIsInvalid() {
         val s = sampleBackup()
         // The name is joined to the app's photo folder to open it, so it must be a plain file name.

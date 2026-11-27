@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rentman.domain.DomainError
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.settings.AppSettings
 import com.rentman.domain.settings.SettingsField
 import com.rentman.domain.tenancy.FieldProblem
 import com.rentman.sharedui.components.ActionButton
 import com.rentman.sharedui.components.ActionRow
 import com.rentman.sharedui.components.CenteredMessage
+import com.rentman.sharedui.components.kindLabel
 import com.rentman.sharedui.components.Divider
 import com.rentman.sharedui.components.ErrorMessage
 import com.rentman.sharedui.components.ScreenTopBar
@@ -46,6 +48,7 @@ import com.rentman.sharedui.components.timeLabel
 import com.rentman.sharedui.feature.settings.SettingsIntent.Back
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackUpNow
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShareFailed
+import com.rentman.sharedui.feature.settings.SettingsIntent.OpenMessage
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShared
 import com.rentman.sharedui.feature.settings.SettingsIntent.RateChanged
 import com.rentman.sharedui.feature.settings.SettingsIntent.RepeatChanged
@@ -59,6 +62,7 @@ import com.rentman.sharedui.feature.settings.SettingsUiState.Error
 import com.rentman.sharedui.feature.settings.SettingsUiState.Loading
 import com.rentman.sharedui.mvi.NavigationEffect
 import com.rentman.sharedui.resources.Res
+import com.rentman.sharedui.resources.messages_title
 import com.rentman.sharedui.resources.backup_last
 import com.rentman.sharedui.resources.backup_never
 import com.rentman.sharedui.resources.backup_now
@@ -96,12 +100,13 @@ private const val TIME_STEP_MINUTES = 30
 
 /** The only composable that knows the ViewModel (ARCHITECTURE.md §5). */
 @Composable
-internal fun SettingsRoute(onDone: () -> Unit, viewModel: SettingsViewModel = koinViewModel()) {
+internal fun SettingsRoute(onOpenMessage: (MessageKind) -> Unit, onDone: () -> Unit, viewModel: SettingsViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val files = rememberBackupFiles(onPicked = { viewModel.onIntent(RestoreFrom(it)) })
     NavigationEffect(viewModel.navigation) { event ->
         when (event) {
             SettingsNavEvent.Close -> onDone()
+            is SettingsNavEvent.OpenMessage -> onOpenMessage(event.kind)
             is SettingsNavEvent.ShareBackup ->
                 viewModel.onIntent(if (files.share(event.fileName, event.json)) BackupShared else BackupShareFailed)
         }
@@ -155,6 +160,12 @@ private fun Form(state: Content, onIntent: (SettingsIntent) -> Unit, onPickBacku
                     selectedIndex = AppSettings.REPEAT_CHOICES.indexOf(state.reminderRepeatDays),
                     onSelect = { onIntent(RepeatChanged(AppSettings.REPEAT_CHOICES[it])) },
                 )
+            }
+            Section(stringResource(Res.string.messages_title)) {
+                MessageKind.entries.forEachIndexed { index, kind ->
+                    if (index > 0) Divider()
+                    ActionRow(kind.kindLabel(), onClick = { onIntent(OpenMessage(kind)) })
+                }
             }
             Section(stringResource(Res.string.backup_title)) {
                 BasicText(

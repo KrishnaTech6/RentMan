@@ -4,6 +4,7 @@ import androidx.room3.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.rentman.data.address.RoomAddressRepository
 import com.rentman.data.db.AppDatabase
+import com.rentman.data.db.Migration1To2
 import com.rentman.data.backup.RoomBackupRepository
 import com.rentman.data.bill.RoomBillRepository
 import com.rentman.data.payment.RoomPaymentRepository
@@ -40,6 +41,7 @@ internal fun dataModule(databaseBuilder: RoomDatabase.Builder<AppDatabase>): Mod
         databaseBuilder
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(get<AppDispatchers>().io)
+            .addMigrations(Migration1To2)
             .build()
     }
     // A factory, so a phone that changes time zone is picked up without restarting the app.

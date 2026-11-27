@@ -146,7 +146,6 @@
     <string name="next_day">Next day</string>
     <string name="payment_pending_hint">%1$s pending</string>
     <string name="share_action">Share</string>
-    <string name="save_and_post">Save &amp; post on WhatsApp</string>
     <string name="problem_amount">Enter an amount like 3,380 or 3,380.50</string>
     <string name="problem_date">Pick today or an earlier day</string>
     <string name="problem_note">Keep the note under 100 characters</string>
@@ -233,6 +232,16 @@
     <string name="crop_hint">The box starts on this renter's meter. Drag it, or its corners, to fit. This part is kept as proof.</string>
     <string name="crop_use">Use this part</string>
     <string name="next_meter">Next meter</string>
+    <string name="messages_title">WhatsApp messages</string>
+    <string name="messages_hint">Your own wording is used every time. Words in { } are filled in for you.</string>
+    <string name="message_bill">Bill to renter</string>
+    <string name="message_payment_received">Payment received</string>
+    <string name="message_month_review">Month review</string>
+    <string name="message_variables">Tap to add</string>
+    <string name="message_preview">Preview</string>
+    <string name="message_use_ours">Use our wording</string>
+    <string name="message_save">Save message</string>
+    <string name="message_unknown">The app can't fill in %1$s. Tap a name above instead.</string>
     <string name="finding_meter">Finding the meter…</string>
     <string name="crop_whole">Use whole photo</string>
     <string name="crop_cancel">Cancel</string>

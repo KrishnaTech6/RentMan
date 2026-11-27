@@ -30,4 +30,16 @@ class PaymentMessageTest {
 
         assertEquals("Paid: Ravi Kumar (Ground floor · 338 A) - ₹100", PaymentMessage.text(summary, 100L.rupees, money))
     }
+
+    @Test
+    fun theLandlordsOwnWordingIsUsedWithWhatIsLeftAfterThePayment() {
+        val summary = RenterSummary(TestData.renter(), TestData.address)
+
+        assertEquals(
+            "Ravi Kumar ne ₹4000 diya, baaki ₹3500",
+            PaymentMessage.text(summary, 4_000L.rupees, money, pending = 3_500L.rupees, template = "{name} ne {amount} diya, baaki {pending}"),
+        )
+        // Paid ahead: nothing is left, never a negative amount.
+        assertEquals("baaki ₹0", PaymentMessage.text(summary, 4_000L.rupees, money, pending = Paise(-50_000), template = "baaki {pending}"))
+    }
 }

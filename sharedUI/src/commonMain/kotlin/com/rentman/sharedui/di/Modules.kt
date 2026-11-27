@@ -10,6 +10,10 @@ import com.rentman.domain.billing.ObserveHomeUseCase
 import com.rentman.domain.billing.ObserveMonthDetailUseCase
 import com.rentman.domain.billing.ObserveMonthsUseCase
 import com.rentman.domain.AppDispatchers
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
+import com.rentman.domain.messages.SaveMessageUseCase
+import com.rentman.sharedui.feature.messages.MessageEditViewModel
 import com.rentman.domain.backup.ExportBackupUseCase
 import com.rentman.domain.backup.MarkBackedUpUseCase
 import com.rentman.domain.backup.ObserveBackupStatusUseCase
@@ -63,6 +67,8 @@ import org.koin.dsl.module
 /** Use cases. `:domain` stays free of Koin, so its wiring lives here. */
 private val domainModule = module {
     factory { GetTodayUseCase(get(), get()) }
+    factory { ObserveMessageUseCase(get()) }
+    factory { SaveMessageUseCase(get()) }
     factory { ObserveAddressesUseCase(get()) }
     factory { AddAddressUseCase(get()) }
     factory { ObserveRenterSummariesUseCase(get(), get()) }
@@ -114,12 +120,14 @@ private val uiModule = module {
     viewModel { AddressPickerViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { MonthsViewModel(get()) }
-    viewModel { params -> MonthDetailViewModel(BillingMonth.fromValue(params.get<Int>(0)), get()) }
+    viewModel { params -> MessageEditViewModel(MessageKind.valueOf(params.get<String>(0)), get(), get()) }
+    viewModel { params -> MonthDetailViewModel(BillingMonth.fromValue(params.get<Int>(0)), get(), get()) }
     viewModel { params ->
         CreateBillViewModel(
             renterId = RenterId(params.get<Long>(0)),
             month = BillingMonth.fromValue(params.get<Int>(1)),
             observeContext = get(),
+            observeMessage = get(),
             buildBill = get(),
             suggestReading = get(),
             createBill = get(),
@@ -155,6 +163,7 @@ private val uiModule = module {
         RecordPaymentViewModel(
             renterId = RenterId(params.get<Long>(0)),
             observeLedger = get(),
+            observeMessage = get(),
             recordPayment = get(),
             getToday = get(),
         )

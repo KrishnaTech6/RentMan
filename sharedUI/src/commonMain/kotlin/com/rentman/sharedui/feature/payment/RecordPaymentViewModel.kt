@@ -4,7 +4,11 @@ package com.rentman.sharedui.feature.payment
 
 import com.rentman.domain.DomainError
 import com.rentman.domain.Outcome
+import com.rentman.domain.flatMap
 import com.rentman.domain.fold
+import com.rentman.domain.map
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
 import com.rentman.domain.money.MoneyInput
 import com.rentman.domain.payments.ObserveRenterLedgerUseCase
 import com.rentman.domain.payments.PaymentField
@@ -29,6 +33,7 @@ import com.rentman.sharedui.mvi.flatMapFirst
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -44,6 +49,7 @@ private typealias State = RecordPaymentUiState
 internal class RecordPaymentViewModel(
     renterId: RenterId,
     observeLedger: ObserveRenterLedgerUseCase,
+    observeMessage: ObserveMessageUseCase,
     private val recordPayment: RecordPaymentUseCase,
     private val getToday: GetTodayUseCase,
 ) : MviViewModel<RecordPaymentIntent, State, RecordPaymentNavEvent>() {
@@ -51,17 +57,19 @@ internal class RecordPaymentViewModel(
     private val unchanged: Reducer<State> = { it }
 
     override val uiState: StateFlow<State> = merge(
-        loadReducers(observeLedger, renterId),
+        loadReducers(observeLedger, observeMessage, renterId),
         inputReducers(),
         saveReducers(),
         navigationReducers(),
     ).toState(Loading)
 
-    private fun loadReducers(observeLedger: ObserveRenterLedgerUseCase, renterId: RenterId): Flow<Reducer<State>> =
+    private fun loadReducers(observeLedger: ObserveRenterLedgerUseCase, observeMessage: ObserveMessageUseCase, renterId: RenterId): Flow<Reducer<State>> =
         intents.filterIsInstance<Retry>().map { }.onStart { emit(Unit) }
             .flatMapLatest {
-                observeLedger(renterId)
-                    .map { outcome -> outcome.fold(onSuccess = ::withLedger, onFailure = ::toError) }
+                combine(observeLedger(renterId), observeMessage(MessageKind.PaymentReceived)) { ledger, message ->
+                    ledger.flatMap { l -> message.map { l to it } }
+                }
+                    .map { outcome -> outcome.fold(onSuccess = { (ledger, message) -> withLedger(ledger, message) }, onFailure = ::toError) }
                     .onStart { emit { Loading } }
             }
 
@@ -89,7 +97,8 @@ internal class RecordPaymentViewModel(
                 ),
             )
             if (outcome is Outcome.Success) {
-                navigate(RecordPaymentNavEvent.Saved(save.post?.let { PaymentPost(it, outcome.value.amount) }))
+                val paid = outcome.value.amount
+                navigate(RecordPaymentNavEvent.Saved(save.post?.let { PaymentPost(it.summary, paid, it.pendingBefore - paid, it.message) }))
             }
         }
     }
@@ -99,11 +108,11 @@ internal class RecordPaymentViewModel(
         .map { unchanged }
 
     /** The ledger can arrive again while the user types: keep what they typed. */
-    private fun withLedger(ledger: RenterLedger): Reducer<State> = { state ->
+    private fun withLedger(ledger: RenterLedger, message: String): Reducer<State> = { state ->
         if (state is Content) {
-            state.copy(summary = ledger.summary, pending = ledger.pending)
+            state.copy(summary = ledger.summary, pending = ledger.pending, message = message)
         } else {
-            Content(summary = ledger.summary, pending = ledger.pending, today = getToday())
+            Content(summary = ledger.summary, pending = ledger.pending, message = message, today = getToday())
         }
     }
 

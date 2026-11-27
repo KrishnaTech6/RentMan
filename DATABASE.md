@@ -2,7 +2,7 @@
 
 Room 3 (`androidx.room3`) over SQLite with `BundledSQLiteDriver`. The tables below are Room entities in `:data` (`AddressEntity`, `RenterEntity`, and so on), mapped to the domain models by internal mapper functions. Entities hold only primitives (`Long`, `Int`, `String`), so no type converters are needed. See `ARCHITECTURE.md` §4.
 
-**Built so far:** `address`, `renter`, `fixed_charge`, `bill` (without `sentAt`), `bill_line`, `payment`, `rent_change`, `backup_snapshot` and `app_settings` (written by the Settings screen: rate, reminder time and repeat. `lastBackupAt` is kept as it is until backup exists). Everything else below is designed but not built yet. The schema is still version 1 (see "Schema changes").
+**Built so far:** `address`, `renter`, `fixed_charge`, `bill` (without `sentAt`), `bill_line`, `payment`, `rent_change`, `backup_snapshot` and `app_settings` (written by the Settings screen: rate, reminder time and repeat. `lastBackupAt` is kept as it is until backup exists). Everything else below is designed but not built yet. The schema is version 2 (see "Schema changes").
 
 ## Principles
 1. **Money is `INTEGER` paise.** Electricity is `units × ratePaise`, both integers, so there is no rounding anywhere.
@@ -107,7 +107,7 @@ Payments aren't linked to a bill. They reduce the renter's running balance, whic
 `id`, `json` (the whole database as backup JSON), `takenAt` (epoch millis), `afterRestore` (what the data looked like right after the restore, for the "restoring twice" rule below). Written in the same transaction as a restore and used up by "Undo last restore". It is never part of a backup file.
 
 ### `app_settings` (single row, `id = 1`)
-`id`, `globalRatePaise` (default 800), `reminderMinuteOfDay` (default 540 = 9:00 AM), `reminderRepeatDays` (`2`, `3`, or `0` = once), `lastBackupAt`.
+`id`, `globalRatePaise` (default 800), `reminderMinuteOfDay` (default 540 = 9:00 AM), `reminderRepeatDays` (`2`, `3`, or `0` = once), `lastBackupAt`, and since version 2 `billMessage`, `paymentMessage`, `monthReviewMessage` (the landlord's own WhatsApp wording, `null` = ours).
 There's no seeding. The repository maps a missing row to defaults and upserts on the first change.
 
 ## Derived queries (never stored)
@@ -144,7 +144,7 @@ There's no seeding. The repository maps a missing row to defaults and upserts on
 Room refuses to open a database whose schema differs from the one the file was created with ("cannot verify the data integrity"), and the app crashes at launch.
 - **Until the app holds data you care about** (today: emulators and simulators only), the schema stays at version 1 and a change means uninstalling the app so the old file is deleted. The saved schema file in `data/schemas/` is overwritten.
 - **From the first install on your own phone, version 1 is frozen.** Every schema change then bumps the version, adds a migration (auto-migration for added columns and tables, a hand-written one for anything else) and a migration test that opens a database created at the old version.
-- When that day comes, write the date and the first frozen version here.
+- **Version 1 was frozen on 2026-11-27**, the first schema change after real data on the landlord's iPhone. Version 2 adds the three nullable message columns to `app_settings` with a hand-written `Migration1To2` (`ALTER TABLE … ADD COLUMN … TEXT`). `MigrationTest` builds a version 1 database from `data/schemas/…/1.json`, migrates it and checks nothing is lost. It was also run on a copy of the real phone database, and on the phone itself (7 renters, 7 bills, 13 payments kept).
 
 ## Open assumptions
 - Meter readings are whole numbers. If a meter shows decimals, change `prevReading`/`currReading` to tenths-of-a-unit integers.

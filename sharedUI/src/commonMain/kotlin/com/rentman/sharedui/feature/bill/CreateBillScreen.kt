@@ -46,6 +46,7 @@ import com.rentman.domain.billing.BillLineKind
 import com.rentman.domain.billing.BillMessage
 import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.WhatsAppLink
+import com.rentman.domain.messages.MessageKind
 import com.rentman.domain.money.Paise
 import com.rentman.domain.money.rupees
 import com.rentman.domain.tenancy.Address
@@ -399,7 +400,7 @@ private fun ColumnScope.ReviewStep(state: Content, onOpenPhoto: (photo: String) 
                 text = stringResource(Res.string.save_and_send),
                 enabled = !state.isSaving,
                 onClick = {
-                    val message = BillMessage.text(state.context, bill, monthLabel, dueLabel, money = ::formatRupees)
+                    val message = BillMessage.text(state.context, bill, monthLabel, dueLabel, money = ::formatRupees, template = state.message)
                     onIntent(Save(bill, whatsAppUrl = WhatsAppLink.of(renter.phone, message)))
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -516,7 +517,7 @@ private fun ErrorPreview() = CreateBillScreen(previewMonth, Error(DomainError.St
 @Composable
 private fun ReadingPreview() = CreateBillScreen(
     previewMonth,
-    Content(previewContext, BillStep.Reading, reading = "1325", preview = Outcome.Success(previewBill)),
+    Content(previewContext, MessageKind.Bill.default, BillStep.Reading, reading = "1325", preview = Outcome.Success(previewBill)),
 ) {}
 
 @Preview
@@ -525,6 +526,7 @@ private fun ReadingTooLowPreview() = CreateBillScreen(
     previewMonth,
     Content(
         previewContext,
+        MessageKind.Bill.default,
         BillStep.Reading,
         reading = "120",
         preview = Outcome.Failure(DomainError.ReadingBelowPrevious(1240, 120)),
@@ -536,5 +538,5 @@ private fun ReadingTooLowPreview() = CreateBillScreen(
 @Composable
 private fun ReviewPreview() = CreateBillScreen(
     previewMonth,
-    Content(previewContext, BillStep.Review, reading = "1325", preview = Outcome.Success(previewBill)),
+    Content(previewContext, MessageKind.Bill.default, BillStep.Review, reading = "1325", preview = Outcome.Success(previewBill)),
 ) {}

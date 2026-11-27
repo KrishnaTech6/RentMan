@@ -9,7 +9,7 @@ internal sealed interface MonthDetailIntent {
     data object Back : MonthDetailIntent
 
     /** Post the month review on WhatsApp. */
-    data class Share(val detail: MonthDetail) : MonthDetailIntent
+    data class Share(val detail: MonthDetail, val message: String) : MonthDetailIntent
 
     /** The screen came back to the foreground: look again. */
     data object Refresh : MonthDetailIntent
@@ -22,11 +22,12 @@ internal sealed interface MonthDetailUiState {
 
     data class Error(val error: DomainError) : MonthDetailUiState
 
-    data class Content(val detail: MonthDetail) : MonthDetailUiState
+    /** [message] is the wording of the month review: the landlord's own, or ours. */
+    data class Content(val detail: MonthDetail, val message: String) : MonthDetailUiState
 }
 
 internal sealed interface MonthDetailNavEvent {
     data class OpenRenter(val renterId: RenterId) : MonthDetailNavEvent
     data object Close : MonthDetailNavEvent
-    data class Share(val detail: MonthDetail) : MonthDetailNavEvent
+    data class Share(val detail: MonthDetail, val message: String) : MonthDetailNavEvent
 }

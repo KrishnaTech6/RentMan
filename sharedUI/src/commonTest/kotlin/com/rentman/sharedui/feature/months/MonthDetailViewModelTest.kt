@@ -1,5 +1,9 @@
 package com.rentman.sharedui.feature.months
 
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
+import com.rentman.domain.settings.AppSettings
+import com.rentman.sharedui.feature.bill.FakeSettingsRepository
 import app.cash.turbine.test
 import com.rentman.domain.billing.Bill
 import com.rentman.domain.billing.BillLine
@@ -75,6 +79,7 @@ class MonthDetailViewModelTest {
         renters: FakeRenterRepository,
         bills: FakeBillRepository = FakeBillRepository(),
         payments: FakePaymentRepository = FakePaymentRepository(),
+        settings: FakeSettingsRepository = FakeSettingsRepository(),
     ): MonthDetailViewModel {
         val addresses = FakeAddressRepository(listOf(home))
         return MonthDetailViewModel(
@@ -84,6 +89,7 @@ class MonthDetailViewModelTest {
                 ObserveLeftRentersUseCase(renters, addresses),
                 bills, payments, GetTodayUseCase(clock, TimeZone.UTC),
             ),
+            ObserveMessageUseCase(settings),
         )
     }
 
@@ -143,9 +149,9 @@ class MonthDetailViewModelTest {
         val detail = (vm.uiState.value as MonthDetailUiState.Content).detail
 
         vm.navigation.test {
-            vm.onIntent(Share(detail))
+            vm.onIntent(Share(detail, "{month}: {received}"))
 
-            assertEquals(MonthDetailNavEvent.Share(detail), awaitItem())
+            assertEquals(MonthDetailNavEvent.Share(detail, "{month}: {received}"), awaitItem())
         }
     }
 
@@ -158,5 +164,14 @@ class MonthDetailViewModelTest {
 
             assertEquals(MonthDetailNavEvent.Close, awaitItem())
         }
+    }
+
+    @Test
+    fun theMonthReviewUsesTheLandlordsOwnWordingOrOurs() = runTest {
+        val ours = viewModel(FakeRenterRepository(listOf(ravi)))
+        assertEquals(MessageKind.MonthReview.default, (ours.uiState.value as MonthDetailUiState.Content).message)
+
+        val own = viewModel(FakeRenterRepository(listOf(ravi)), settings = FakeSettingsRepository(AppSettings(monthReviewMessage = "{month}: {received}")))
+        assertEquals("{month}: {received}", (own.uiState.value as MonthDetailUiState.Content).message)
     }
 }

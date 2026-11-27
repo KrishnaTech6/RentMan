@@ -18,6 +18,10 @@ internal data class AppSettingsEntity(
     val reminderMinuteOfDay: Int,
     val reminderRepeatDays: Int,
     val lastBackupAt: Long?,
+    /** The landlord's own WhatsApp wording, or null for ours. Added in version 2 ([Migration1To2]); missing in older backups. */
+    val billMessage: String? = null,
+    val paymentMessage: String? = null,
+    val monthReviewMessage: String? = null,
 ) {
     companion object {
         const val SINGLE_ROW = 1

@@ -1,0 +1,696 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "0b4722548ebedc5f7ea9111426b5fef0",
+    "entities": [
+      {
+        "tableName": "address",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `archived` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_address_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_address_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ]
+      },
+      {
+        "tableName": "renter",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `addressId` INTEGER NOT NULL, `unit` TEXT, `name` TEXT NOT NULL, `phone` TEXT NOT NULL, `monthlyRentPaise` INTEGER NOT NULL, `dueDay` INTEGER NOT NULL, `agreementStart` INTEGER NOT NULL, `raisePercent` INTEGER NOT NULL, `raiseEveryMonths` INTEGER NOT NULL, `raiseSnoozedUntil` INTEGER, `billsElectricity` INTEGER NOT NULL, `customRatePaise` INTEGER, `startingReading` INTEGER, `firstBillMonth` INTEGER NOT NULL, `remindersMutedMonth` INTEGER, `active` INTEGER NOT NULL, `leftOn` INTEGER, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`addressId`) REFERENCES `address`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addressId",
+            "columnName": "addressId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unit",
+            "columnName": "unit",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monthlyRentPaise",
+            "columnName": "monthlyRentPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDay",
+            "columnName": "dueDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "agreementStart",
+            "columnName": "agreementStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "raisePercent",
+            "columnName": "raisePercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "raiseEveryMonths",
+            "columnName": "raiseEveryMonths",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "raiseSnoozedUntil",
+            "columnName": "raiseSnoozedUntil",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "billsElectricity",
+            "columnName": "billsElectricity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customRatePaise",
+            "columnName": "customRatePaise",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "startingReading",
+            "columnName": "startingReading",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "firstBillMonth",
+            "columnName": "firstBillMonth",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remindersMutedMonth",
+            "columnName": "remindersMutedMonth",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "leftOn",
+            "columnName": "leftOn",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_renter_addressId",
+            "unique": false,
+            "columnNames": [
+              "addressId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_renter_addressId` ON `${TABLE_NAME}` (`addressId`)"
+          },
+          {
+            "name": "index_renter_active",
+            "unique": false,
+            "columnNames": [
+              "active"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_renter_active` ON `${TABLE_NAME}` (`active`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "address",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "addressId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "fixed_charge",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `renterId` INTEGER NOT NULL, `label` TEXT NOT NULL, `amountPaise` INTEGER NOT NULL, `active` INTEGER NOT NULL, FOREIGN KEY(`renterId`) REFERENCES `renter`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "renterId",
+            "columnName": "renterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountPaise",
+            "columnName": "amountPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_fixed_charge_renterId",
+            "unique": false,
+            "columnNames": [
+              "renterId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_fixed_charge_renterId` ON `${TABLE_NAME}` (`renterId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "renter",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "renterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "bill",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `renterId` INTEGER NOT NULL, `month` INTEGER NOT NULL, `dueOn` INTEGER NOT NULL, `previousReading` INTEGER, `currentReading` INTEGER, `ratePaise` INTEGER, `meterReset` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `meterPhotoPath` TEXT, FOREIGN KEY(`renterId`) REFERENCES `renter`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "renterId",
+            "columnName": "renterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueOn",
+            "columnName": "dueOn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "previousReading",
+            "columnName": "previousReading",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "currentReading",
+            "columnName": "currentReading",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ratePaise",
+            "columnName": "ratePaise",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "meterReset",
+            "columnName": "meterReset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meterPhotoPath",
+            "columnName": "meterPhotoPath",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_bill_renterId_month",
+            "unique": true,
+            "columnNames": [
+              "renterId",
+              "month"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_bill_renterId_month` ON `${TABLE_NAME}` (`renterId`, `month`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "renter",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "renterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "bill_line",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `billId` INTEGER NOT NULL, `kind` TEXT NOT NULL, `label` TEXT NOT NULL, `amountPaise` INTEGER NOT NULL, `sortOrder` INTEGER NOT NULL, FOREIGN KEY(`billId`) REFERENCES `bill`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "billId",
+            "columnName": "billId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountPaise",
+            "columnName": "amountPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_bill_line_billId",
+            "unique": false,
+            "columnNames": [
+              "billId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bill_line_billId` ON `${TABLE_NAME}` (`billId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "bill",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "billId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "app_settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `globalRatePaise` INTEGER NOT NULL, `reminderMinuteOfDay` INTEGER NOT NULL, `reminderRepeatDays` INTEGER NOT NULL, `lastBackupAt` INTEGER, `billMessage` TEXT, `paymentMessage` TEXT, `monthReviewMessage` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "globalRatePaise",
+            "columnName": "globalRatePaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reminderMinuteOfDay",
+            "columnName": "reminderMinuteOfDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reminderRepeatDays",
+            "columnName": "reminderRepeatDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastBackupAt",
+            "columnName": "lastBackupAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "billMessage",
+            "columnName": "billMessage",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "paymentMessage",
+            "columnName": "paymentMessage",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "monthReviewMessage",
+            "columnName": "monthReviewMessage",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "payment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `renterId` INTEGER NOT NULL, `amountPaise` INTEGER NOT NULL, `paidOn` INTEGER NOT NULL, `mode` TEXT NOT NULL, `note` TEXT, `voidedAt` INTEGER, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`renterId`) REFERENCES `renter`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "renterId",
+            "columnName": "renterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountPaise",
+            "columnName": "amountPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paidOn",
+            "columnName": "paidOn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mode",
+            "columnName": "mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "voidedAt",
+            "columnName": "voidedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_payment_renterId_paidOn",
+            "unique": false,
+            "columnNames": [
+              "renterId",
+              "paidOn"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_payment_renterId_paidOn` ON `${TABLE_NAME}` (`renterId`, `paidOn`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "renter",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "renterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "rent_change",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `renterId` INTEGER NOT NULL, `oldRentPaise` INTEGER NOT NULL, `newRentPaise` INTEGER NOT NULL, `effectiveMonth` INTEGER NOT NULL, `decidedOn` INTEGER NOT NULL, `voidedAt` INTEGER, FOREIGN KEY(`renterId`) REFERENCES `renter`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "renterId",
+            "columnName": "renterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "oldRentPaise",
+            "columnName": "oldRentPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "newRentPaise",
+            "columnName": "newRentPaise",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "effectiveMonth",
+            "columnName": "effectiveMonth",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "decidedOn",
+            "columnName": "decidedOn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "voidedAt",
+            "columnName": "voidedAt",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_rent_change_renterId",
+            "unique": false,
+            "columnNames": [
+              "renterId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_rent_change_renterId` ON `${TABLE_NAME}` (`renterId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "renter",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "renterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "backup_snapshot",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `json` TEXT NOT NULL, `takenAt` INTEGER NOT NULL, `afterRestore` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "json",
+            "columnName": "json",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "takenAt",
+            "columnName": "takenAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "afterRestore",
+            "columnName": "afterRestore",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b4722548ebedc5f7ea9111426b5fef0')"
+    ]
+  }
+}

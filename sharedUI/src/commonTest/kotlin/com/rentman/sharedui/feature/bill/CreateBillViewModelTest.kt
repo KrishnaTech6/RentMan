@@ -19,6 +19,9 @@ import com.rentman.sharedui.feature.payment.FakePaymentRepository
 import com.rentman.domain.tenancy.RenterId
 import com.rentman.sharedui.feature.address.FakeAddressRepository
 import com.rentman.domain.billing.SuggestMeterReadingUseCase
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
+import com.rentman.domain.settings.AppSettings
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterScanned
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingPicked
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ClearMeterPhoto
@@ -63,10 +66,12 @@ class CreateBillViewModelTest {
         renterId: Long = 1,
         renters: FakeRenterRepository = FakeRenterRepository(listOf(Ravi.renter(electric))),
         payments: FakePaymentRepository = FakePaymentRepository(),
+        settings: FakeSettingsRepository = FakeSettingsRepository(),
     ) = CreateBillViewModel(
         renterId = RenterId(renterId),
         month = november,
-        observeContext = ObserveBillContextUseCase(renters, FakeAddressRepository(listOf(Ravi.address)), bills, FakeSettingsRepository(), payments, FakeRentIncreaseRepository(renters)),
+        observeContext = ObserveBillContextUseCase(renters, FakeAddressRepository(listOf(Ravi.address)), bills, settings, payments, FakeRentIncreaseRepository(renters)),
+        observeMessage = ObserveMessageUseCase(settings),
         buildBill = BuildBillUseCase(),
         suggestReading = SuggestMeterReadingUseCase(),
         createBill = CreateBillUseCase(bills),
@@ -259,6 +264,14 @@ class CreateBillViewModelTest {
         vm.onIntent(Retry)
 
         assertIs<Content>(vm.uiState.value)
+    }
+
+    @Test
+    fun theWhatsAppBillUsesTheLandlordsOwnWordingOrOurs() = runTest {
+        assertEquals(MessageKind.Bill.default, viewModel().content().message)
+
+        val own = "Namaste {first_name}, {month} ka bill: {total}"
+        assertEquals(own, viewModel(settings = FakeSettingsRepository(AppSettings(billMessage = own))).content().message)
     }
 
     // ---- the meter photo

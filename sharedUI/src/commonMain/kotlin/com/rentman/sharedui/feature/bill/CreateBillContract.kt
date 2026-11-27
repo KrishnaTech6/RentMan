@@ -34,6 +34,8 @@ internal sealed interface CreateBillUiState {
 
     data class Content(
         val context: BillContext,
+        /** The wording of the WhatsApp bill: the landlord's own, or ours. */
+        val message: String,
         val step: BillStep,
         val reading: String = "",
         val newMeterStart: String = "",

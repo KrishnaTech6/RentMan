@@ -22,6 +22,7 @@ import com.rentman.domain.settings.StepReminderTimeUseCase
 import com.rentman.domain.settings.SettingsField
 import com.rentman.domain.settings.SettingsForm
 import com.rentman.sharedui.feature.settings.SettingsIntent.Back
+import com.rentman.sharedui.feature.settings.SettingsIntent.OpenMessage
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackUpNow
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShareFailed
 import com.rentman.sharedui.feature.settings.SettingsIntent.BackupShared
@@ -91,7 +92,8 @@ internal class SettingsViewModel(
         when (intent) {
             is RateChanged -> content { it.copy(rate = intent.text, problems = it.problems - SettingsField.Rate, saveError = null) }
             // The reminder time and interval are saved at once (see reminderReducers) and the form follows what was saved.
-            is TimeStepped, is RepeatChanged, is Save, BackUpNow, BackupShared, BackupShareFailed, is RestoreFrom, UndoRestore, Back, Retry -> unchanged
+            is TimeStepped, is RepeatChanged, is Save, BackUpNow, BackupShared, BackupShareFailed, is RestoreFrom, UndoRestore, is OpenMessage, Back, Retry ->
+                unchanged
         }
     }
 
@@ -170,7 +172,13 @@ internal class SettingsViewModel(
     )
 
     private fun navigationReducers(): Flow<Reducer<SettingsState>> = intents
-        .onEach { if (it == Back) navigate(SettingsNavEvent.Close) }
+        .onEach { intent ->
+            when (intent) {
+                Back -> navigate(SettingsNavEvent.Close)
+                is OpenMessage -> navigate(SettingsNavEvent.OpenMessage(intent.kind))
+                else -> Unit
+            }
+        }
         .map { unchanged }
 
     /**

@@ -17,7 +17,7 @@ import androidx.room3.RoomDatabaseConstructor
         RentChangeEntity::class,
         BackupSnapshotEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 @ConstructedBy(AppDatabaseConstructor::class)

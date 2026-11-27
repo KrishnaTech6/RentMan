@@ -1,26 +1,38 @@
 package com.rentman.domain.billing
 
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.MessageTemplate
 import com.rentman.domain.money.Paise
 
 /**
- * The text sent to a renter, as in PLAN.md. Amounts are formatted by [money] (the ₹ formatter is a platform
- * feature), and the month and due date arrive already written out.
- *
- * shortcut: English only. When a second language is needed, the wording moves into a templates object.
+ * The text sent to a renter: [template] (the landlord's own, or ours) with the bill filled in. Amounts are formatted by [money]
+ * (the ₹ formatter is a platform feature), and the month and due date arrive already written out.
  */
 object BillMessage {
-    fun text(context: BillContext, bill: Bill, monthLabel: String, dueLabel: String, money: (Paise) -> String): String {
-        val firstName = context.summary.renter.name.trim().substringBefore(' ')
-        val lines = buildList {
-            add("Hi $firstName, your bill for $monthLabel:")
-            bill.lines.forEach { add(lineText(it, bill, money)) }
-            if (context.pendingBefore > Paise.Zero) add("Previous pending: ${money(context.pendingBefore)}")
-            // Paid ahead: shown as a credit that lowers the total, never as a negative "pending".
-            if (context.pendingBefore < Paise.Zero) add("Credit from earlier payments: ${money(Paise.Zero - context.pendingBefore)}")
-            add("Total due: ${money(context.totalDue(bill))}")
-            add("Please pay by $dueLabel. Thanks!")
-        }
-        return lines.joinToString("\n")
+    fun text(
+        context: BillContext,
+        bill: Bill,
+        monthLabel: String,
+        dueLabel: String,
+        money: (Paise) -> String,
+        template: String = MessageKind.Bill.default,
+    ): String {
+        val name = context.summary.renter.name.trim()
+        val pending = context.pendingBefore
+        return MessageTemplate.fill(
+            template,
+            mapOf(
+                "first_name" to name.substringBefore(' '),
+                "name" to name,
+                "month" to monthLabel,
+                "bill_lines" to bill.lines.joinToString("\n") { lineText(it, bill, money) },
+                "previous_pending" to if (pending > Paise.Zero) money(pending) else "",
+                // Paid ahead: shown as a credit that lowers the total, never as a negative "pending".
+                "paid_ahead" to if (pending < Paise.Zero) money(Paise.Zero - pending) else "",
+                "total" to money(context.totalDue(bill)),
+                "due_date" to dueLabel,
+            ),
+        )
     }
 
     private fun lineText(line: BillLine, bill: Bill, money: (Paise) -> String): String {

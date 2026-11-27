@@ -52,6 +52,9 @@ sealed interface DomainError {
     /** The rate, reminder time or repeat interval on the Settings screen is missing or wrong. */
     data class InvalidSettings(val problems: Map<SettingsField, FieldProblem>) : DomainError
 
+    /** A WhatsApp message uses variables the app doesn't fill in, most likely typos. */
+    data class InvalidMessage(val unknownVariables: List<String>) : DomainError
+
     /** The amount, date or note of a payment is missing or wrong. */
     data class InvalidPayment(val problems: Map<PaymentField, FieldProblem>) : DomainError
 

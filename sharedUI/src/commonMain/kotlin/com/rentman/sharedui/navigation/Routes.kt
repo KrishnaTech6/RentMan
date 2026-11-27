@@ -34,6 +34,10 @@ internal data class EditRenterKey(val renterId: Long) : NavKey
 @Serializable
 internal data object MonthsKey : NavKey
 
+/** The landlord's own wording for one WhatsApp message. [kind] is the MessageKind's name. */
+@Serializable
+internal data class MessageEditKey(val kind: String) : NavKey
+
 /** One month and every renter in it. [month] is the BillingMonth value (YYYYMM). */
 @Serializable
 internal data class MonthKey(val month: Int) : NavKey

@@ -31,6 +31,9 @@ private fun AppSettings.toEntity() = AppSettingsEntity(
     reminderMinuteOfDay = reminderMinuteOfDay,
     reminderRepeatDays = reminderRepeatDays,
     lastBackupAt = lastBackupAt?.toEpochMilliseconds(),
+    billMessage = billMessage,
+    paymentMessage = paymentMessage,
+    monthReviewMessage = monthReviewMessage,
 )
 
 private fun AppSettingsEntity.toDomain() = AppSettings(
@@ -38,4 +41,7 @@ private fun AppSettingsEntity.toDomain() = AppSettings(
     reminderMinuteOfDay = reminderMinuteOfDay,
     reminderRepeatDays = reminderRepeatDays,
     lastBackupAt = lastBackupAt?.let(Instant::fromEpochMilliseconds),
+    billMessage = billMessage,
+    paymentMessage = paymentMessage,
+    monthReviewMessage = monthReviewMessage,
 )

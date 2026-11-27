@@ -40,6 +40,6 @@ private fun DomainError.messageResource() = when (this) {
     is DomainError.BackupFromNewerVersion -> Res.string.error_backup_newer
     // Form problems are shown next to each field, so this is only a fallback.
     is DomainError.InvalidRenter, is DomainError.InvalidCharge, is DomainError.InvalidBill, is DomainError.InvalidPayment,
-    is DomainError.InvalidSettings,
+    is DomainError.InvalidSettings, is DomainError.InvalidMessage,
     is DomainError.ReadingBelowPrevious -> Res.string.error_generic
 }

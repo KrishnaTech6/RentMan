@@ -18,8 +18,8 @@ internal sealed interface RecordPaymentIntent {
     /** Moves the date by [days], never past today. */
     data class DayStepped(val days: Int) : RecordPaymentIntent
     data class NoteChanged(val text: String) : RecordPaymentIntent
-    /** [post] is set for "Save & post on WhatsApp": the screen opens WhatsApp once the payment is stored. */
-    data class Save(val form: PaymentForm, val post: RenterSummary? = null) : RecordPaymentIntent
+    /** [post] is set for "Save & send on WhatsApp": the screen opens WhatsApp once the payment is stored. */
+    data class Save(val form: PaymentForm, val post: PostTo? = null) : RecordPaymentIntent
     data object Back : RecordPaymentIntent
     data object Retry : RecordPaymentIntent
 }
@@ -32,6 +32,8 @@ internal sealed interface RecordPaymentUiState {
     data class Content(
         val summary: RenterSummary,
         val pending: Paise,
+        /** The wording of the group post: the landlord's own, or ours. */
+        val message: String,
         val today: LocalDate,
         val amount: String = "",
         val paidOn: LocalDate = today,
@@ -44,13 +46,18 @@ internal sealed interface RecordPaymentUiState {
     ) : RecordPaymentUiState {
         fun toForm() = PaymentForm(summary.renter.id, amount, paidOn, mode, note)
 
+        fun postTo() = PostTo(summary, pending, message)
+
         /** Set while the typed amount is more than what is pending: a warning against a typo, not a block. */
         val overpayment: Paise? get() = toForm().overpayment(pending)
     }
 }
 
-/** What the group is told: the stored amount, not the typed text. */
-internal data class PaymentPost(val summary: RenterSummary, val amount: Paise)
+/** Who the group post is about, what was pending before this payment, and the wording to use. */
+internal data class PostTo(val summary: RenterSummary, val pendingBefore: Paise, val message: String)
+
+/** What the group is told: the stored amount (not the typed text) and what is left after it. */
+internal data class PaymentPost(val summary: RenterSummary, val amount: Paise, val pending: Paise, val message: String)
 
 internal sealed interface RecordPaymentNavEvent {
     data class Saved(val post: PaymentPost?) : RecordPaymentNavEvent

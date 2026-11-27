@@ -12,6 +12,10 @@ import com.rentman.domain.payments.ObserveRenterLedgerUseCase
 import com.rentman.domain.payments.PaymentField
 import com.rentman.domain.payments.PaymentMode
 import com.rentman.domain.payments.RecordPaymentUseCase
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
+import com.rentman.domain.settings.AppSettings
+import com.rentman.sharedui.feature.bill.FakeSettingsRepository
 import com.rentman.domain.tenancy.FieldProblem
 import com.rentman.domain.tenancy.RenterId
 import com.rentman.domain.time.GetTodayUseCase
@@ -72,12 +76,14 @@ class RecordPaymentViewModelTest {
         payments: FakePaymentRepository = FakePaymentRepository(),
         renters: FakeRenterRepository = FakeRenterRepository(listOf(Ravi.renter(billsElectricity = false))),
         renterId: Long = 1,
+        settings: FakeSettingsRepository = FakeSettingsRepository(),
     ): RecordPaymentViewModel {
         val addresses = FakeAddressRepository(listOf(Ravi.address))
         val bills = FakeBillRepository(listOf(novemberBill))
         return RecordPaymentViewModel(
             renterId = RenterId(renterId),
             observeLedger = ObserveRenterLedgerUseCase(renters, addresses, bills, payments),
+            observeMessage = ObserveMessageUseCase(settings),
             recordPayment = RecordPaymentUseCase(payments, GetTodayUseCase(clock, TimeZone.UTC)),
             getToday = GetTodayUseCase(clock, TimeZone.UTC),
         )
@@ -180,11 +186,28 @@ class RecordPaymentViewModelTest {
         vm.onIntent(AmountChanged("7,500"))
 
         vm.navigation.test {
-            vm.onIntent(Save(vm.content().toForm(), post = vm.content().summary))
+            vm.onIntent(Save(vm.content().toForm(), post = vm.content().postTo()))
 
-            assertEquals(RecordPaymentNavEvent.Saved(PaymentPost(vm.content().summary, 7_500L.rupees)), awaitItem())
+            // ₹8,380.50 was pending, so ₹880.50 is left; the wording is ours until the landlord writes their own.
+            assertEquals(
+                RecordPaymentNavEvent.Saved(PaymentPost(vm.content().summary, 7_500L.rupees, Paise(88_050), MessageKind.PaymentReceived.default)),
+                awaitItem(),
+            )
         }
         assertEquals(1, payments.saved.size)
+    }
+
+    @Test
+    fun theGroupPostUsesTheLandlordsOwnWording() = runTest {
+        val own = "{name} ne {amount} diya, baaki {pending}"
+        val vm = viewModel(settings = FakeSettingsRepository(AppSettings(paymentMessage = own)))
+        vm.onIntent(AmountChanged("7,500"))
+
+        vm.navigation.test {
+            vm.onIntent(Save(vm.content().toForm(), post = vm.content().postTo()))
+
+            assertEquals(own, (awaitItem() as RecordPaymentNavEvent.Saved).post?.message)
+        }
     }
 
     @Test
@@ -193,7 +216,7 @@ class RecordPaymentViewModelTest {
         vm.onIntent(AmountChanged("abc"))
 
         vm.navigation.test {
-            vm.onIntent(Save(vm.content().toForm(), post = vm.content().summary))
+            vm.onIntent(Save(vm.content().toForm(), post = vm.content().postTo()))
 
             expectNoEvents()
         }

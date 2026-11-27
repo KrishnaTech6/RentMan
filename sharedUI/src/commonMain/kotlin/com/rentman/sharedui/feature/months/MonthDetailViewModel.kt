@@ -6,7 +6,11 @@ import com.rentman.domain.DomainError
 import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.MonthDetail
 import com.rentman.domain.billing.ObserveMonthDetailUseCase
+import com.rentman.domain.flatMap
 import com.rentman.domain.fold
+import com.rentman.domain.map
+import com.rentman.domain.messages.MessageKind
+import com.rentman.domain.messages.ObserveMessageUseCase
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Back
 import com.rentman.sharedui.feature.months.MonthDetailIntent.OpenRenter
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Refresh
@@ -20,6 +24,7 @@ import com.rentman.sharedui.mvi.Reducer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -32,18 +37,19 @@ private typealias MonthDetailState = MonthDetailUiState
 internal class MonthDetailViewModel(
     month: BillingMonth,
     observeDetail: ObserveMonthDetailUseCase,
+    observeMessage: ObserveMessageUseCase,
 ) : MviViewModel<MonthDetailIntent, MonthDetailState, MonthDetailNavEvent>() {
     private val unchanged: Reducer<MonthDetailState> = { it }
 
-    override val uiState: StateFlow<MonthDetailState> = merge(loadReducers(month, observeDetail), navigationReducers()).toState(Loading)
+    override val uiState: StateFlow<MonthDetailState> = merge(loadReducers(month, observeDetail, observeMessage), navigationReducers()).toState(Loading)
 
-    private fun loadReducers(month: BillingMonth, observeDetail: ObserveMonthDetailUseCase): Flow<Reducer<MonthDetailState>> =
+    private fun loadReducers(month: BillingMonth, observeDetail: ObserveMonthDetailUseCase, observeMessage: ObserveMessageUseCase): Flow<Reducer<MonthDetailState>> =
         merge(
             intents.filterIsInstance<Retry>().map { true }.onStart { emit(true) },
             intents.filterIsInstance<Refresh>().map { false },
         ).flatMapLatest { showLoading ->
-            observeDetail(month)
-                .map { outcome -> outcome.fold(onSuccess = ::withDetail, onFailure = ::toError) }
+            combine(observeDetail(month), observeMessage(MessageKind.MonthReview)) { detail, message -> detail.flatMap { d -> message.map { d to it } } }
+                .map { outcome -> outcome.fold(onSuccess = { (detail, message) -> withDetail(detail, message) }, onFailure = ::toError) }
                 .let { reducers -> if (showLoading) reducers.onStart { emit { Loading } } else reducers }
         }
 
@@ -52,13 +58,13 @@ internal class MonthDetailViewModel(
             when (intent) {
                 is OpenRenter -> navigate(MonthDetailNavEvent.OpenRenter(intent.renterId))
                 Back -> navigate(MonthDetailNavEvent.Close)
-                is Share -> navigate(MonthDetailNavEvent.Share(intent.detail))
+                is Share -> navigate(MonthDetailNavEvent.Share(intent.detail, intent.message))
                 Retry, Refresh -> Unit
             }
         }
         .map { unchanged }
 
-    private fun withDetail(detail: MonthDetail): Reducer<MonthDetailState> = { Content(detail) }
+    private fun withDetail(detail: MonthDetail, message: String): Reducer<MonthDetailState> = { Content(detail, message) }
 
     private fun toError(error: DomainError): Reducer<MonthDetailState> = { Error(error) }
 }
