@@ -2,9 +2,9 @@ package com.rentman.sharedui.feature.bill
 
 import com.rentman.sharedui.components.CenteredMessage
 import com.rentman.sharedui.components.ErrorMessage
+import com.rentman.sharedui.components.TextAction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -427,16 +426,6 @@ private fun LineRow(label: String, amount: Paise, detail: String?, muted: Boolea
             amount,
             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = if (muted) RentManColors.TextMuted else RentManColors.Text),
         )
-    }
-}
-
-@Composable
-private fun TextAction(text: String, onClick: () -> Unit) {
-    Box(
-        Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable(role = Role.Button, onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        BasicText(text, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = RentManColors.Primary))
     }
 }
 

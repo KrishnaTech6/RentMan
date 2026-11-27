@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,9 +28,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rentman.domain.DomainError
 import com.rentman.domain.billing.BillingMonth
+import com.rentman.domain.billing.WhatsAppLink
 import com.rentman.domain.money.Paise
 import com.rentman.domain.money.rupees
 import com.rentman.domain.payments.PaymentField
+import com.rentman.domain.payments.PaymentMessage
 import com.rentman.domain.payments.PaymentMode
 import com.rentman.domain.tenancy.Address
 import com.rentman.domain.tenancy.AddressId
@@ -46,6 +49,7 @@ import com.rentman.sharedui.components.ScreenTopBar
 import com.rentman.sharedui.components.Section
 import com.rentman.sharedui.components.Segmented
 import com.rentman.sharedui.components.StepButton
+import com.rentman.sharedui.components.TextAction
 import com.rentman.sharedui.components.TextRow
 import com.rentman.sharedui.components.formatRupees
 import com.rentman.sharedui.components.label
@@ -79,7 +83,8 @@ import com.rentman.sharedui.resources.problem_date
 import com.rentman.sharedui.resources.problem_note
 import com.rentman.sharedui.resources.problem_required
 import com.rentman.sharedui.resources.record_payment
-import com.rentman.sharedui.resources.save_payment
+import com.rentman.sharedui.resources.save_and_post
+import com.rentman.sharedui.resources.save_only
 import com.rentman.sharedui.resources.section_note
 import com.rentman.sharedui.theme.RentManColors
 import kotlinx.datetime.LocalDate
@@ -95,7 +100,15 @@ internal fun RecordPaymentRoute(
     viewModel: RecordPaymentViewModel = koinViewModel { parametersOf(renterId.value) },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    NavigationEffect(viewModel.navigation) { onDone() }
+    val uriHandler = LocalUriHandler.current
+    NavigationEffect(viewModel.navigation) { event ->
+        if (event is RecordPaymentNavEvent.Saved && event.post != null) {
+            // The payment is already stored. No number: WhatsApp asks which chat, so the landlord picks the group.
+            val message = PaymentMessage.text(event.post.summary, event.post.amount, money = ::formatRupees)
+            runCatching { uriHandler.openUri(WhatsAppLink.of("", message)) }
+        }
+        onDone()
+    }
     RecordPaymentScreen(state, viewModel::onIntent)
 }
 
@@ -165,12 +178,16 @@ private fun Form(state: Content, onIntent: (RecordPaymentIntent) -> Unit) {
                 BasicText(it.message(), style = TextStyle(fontSize = 14.sp, color = RentManColors.Danger), modifier = Modifier.padding(4.dp))
             }
         }
-        ActionButton(
-            text = stringResource(Res.string.save_payment),
-            enabled = !state.isSaving,
-            onClick = { onIntent(Save(state.toForm())) },
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-        )
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            ActionButton(
+                text = stringResource(Res.string.save_and_post),
+                enabled = !state.isSaving,
+                onClick = { onIntent(Save(state.toForm(), post = state.summary)) },
+                modifier = Modifier.fillMaxWidth(),
+                color = RentManColors.WhatsApp,
+            )
+            TextAction(stringResource(Res.string.save_only)) { if (!state.isSaving) onIntent(Save(state.toForm())) }
+        }
     }
 }
 

@@ -11,6 +11,7 @@ import com.rentman.sharedui.feature.months.MonthDetailIntent.Back
 import com.rentman.sharedui.feature.months.MonthDetailIntent.OpenRenter
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Refresh
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Retry
+import com.rentman.sharedui.feature.months.MonthDetailIntent.Share
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Content
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Error
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Loading
@@ -51,6 +52,7 @@ internal class MonthDetailViewModel(
             when (intent) {
                 is OpenRenter -> navigate(MonthDetailNavEvent.OpenRenter(intent.renterId))
                 Back -> navigate(MonthDetailNavEvent.Close)
+                is Share -> navigate(MonthDetailNavEvent.Share(intent.detail))
                 Retry, Refresh -> Unit
             }
         }

@@ -88,7 +88,9 @@ internal class RecordPaymentViewModel(
                     onFailure = { error -> content { it.copy(isSaving = false).withError(error) } },
                 ),
             )
-            if (outcome is Outcome.Success) navigate(RecordPaymentNavEvent.Saved)
+            if (outcome is Outcome.Success) {
+                navigate(RecordPaymentNavEvent.Saved(save.post?.let { PaymentPost(it, outcome.value.amount) }))
+            }
         }
     }
 

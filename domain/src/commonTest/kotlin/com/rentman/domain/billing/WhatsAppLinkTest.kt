@@ -25,6 +25,11 @@ class WhatsAppLinkTest {
     }
 
     @Test
+    fun withNoPhoneTheLinkOpensTheChatPicker() {
+        assertEquals("https://wa.me/?text=Hi", WhatsAppLink.of("", "Hi"))
+    }
+
+    @Test
     fun anEmptyMessageStillGivesAValidLink() {
         assertEquals("https://wa.me/1?text=", WhatsAppLink.of("1", ""))
     }

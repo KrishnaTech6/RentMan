@@ -8,6 +8,9 @@ internal sealed interface MonthDetailIntent {
     data class OpenRenter(val renterId: RenterId) : MonthDetailIntent
     data object Back : MonthDetailIntent
 
+    /** Post the month review on WhatsApp. */
+    data class Share(val detail: MonthDetail) : MonthDetailIntent
+
     /** The screen came back to the foreground: look again. */
     data object Refresh : MonthDetailIntent
 
@@ -25,4 +28,5 @@ internal sealed interface MonthDetailUiState {
 internal sealed interface MonthDetailNavEvent {
     data class OpenRenter(val renterId: RenterId) : MonthDetailNavEvent
     data object Close : MonthDetailNavEvent
+    data class Share(val detail: MonthDetail) : MonthDetailNavEvent
 }

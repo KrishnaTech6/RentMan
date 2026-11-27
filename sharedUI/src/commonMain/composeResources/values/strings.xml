@@ -145,7 +145,8 @@
     <string name="previous_day">Previous day</string>
     <string name="next_day">Next day</string>
     <string name="payment_pending_hint">%1$s pending</string>
-    <string name="save_payment">Save payment</string>
+    <string name="share_action">Share</string>
+    <string name="save_and_post">Save &amp; post on WhatsApp</string>
     <string name="problem_amount">Enter an amount like 3,380 or 3,380.50</string>
     <string name="problem_date">Pick today or an earlier day</string>
     <string name="problem_note">Keep the note under 100 characters</string>

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -32,8 +33,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rentman.domain.DomainError
 import com.rentman.domain.billing.BillingMonth
 import com.rentman.domain.billing.MonthDetail
+import com.rentman.domain.billing.MonthReviewMessage
 import com.rentman.domain.billing.MonthSummary
 import com.rentman.domain.billing.RenterMonth
+import com.rentman.domain.billing.WhatsAppLink
 import com.rentman.domain.money.Paise
 import com.rentman.domain.money.rupees
 import com.rentman.domain.tenancy.Address
@@ -55,6 +58,7 @@ import com.rentman.sharedui.feature.months.MonthDetailIntent.Back
 import com.rentman.sharedui.feature.months.MonthDetailIntent.OpenRenter
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Refresh
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Retry
+import com.rentman.sharedui.feature.months.MonthDetailIntent.Share
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Content
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Error
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Loading
@@ -62,6 +66,7 @@ import com.rentman.sharedui.mvi.NavigationEffect
 import com.rentman.sharedui.resources.Res
 import com.rentman.sharedui.resources.cash_in
 import com.rentman.sharedui.resources.loading
+import com.rentman.sharedui.resources.share_action
 import com.rentman.sharedui.resources.paid_of
 import com.rentman.sharedui.resources.renters_in_month
 import com.rentman.sharedui.theme.RentManColors
@@ -80,10 +85,16 @@ internal fun MonthDetailRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.onIntent(Refresh) }
+    val uriHandler = LocalUriHandler.current
+    val monthLabel = month.label()
     NavigationEffect(viewModel.navigation) { event ->
         when (event) {
             is MonthDetailNavEvent.OpenRenter -> onOpenRenter(event.renterId)
             MonthDetailNavEvent.Close -> onBack()
+            // No number: WhatsApp asks which chat, so the landlord picks the group. If no app opens it, nothing is lost.
+            is MonthDetailNavEvent.Share -> runCatching {
+                uriHandler.openUri(WhatsAppLink.of("", MonthReviewMessage.text(event.detail, monthLabel, money = ::formatRupees)))
+            }
         }
     }
     MonthDetailScreen(month, state, viewModel::onIntent)
@@ -92,7 +103,11 @@ internal fun MonthDetailRoute(
 @Composable
 internal fun MonthDetailScreen(month: BillingMonth, state: MonthDetailUiState, onIntent: (MonthDetailIntent) -> Unit) {
     Column(Modifier.fillMaxSize().background(RentManColors.Background)) {
-        ScreenTopBar(title = month.label(), onBack = { onIntent(Back) })
+        ScreenTopBar(
+            title = month.label(),
+            onBack = { onIntent(Back) },
+            action = (state as? Content)?.let { content -> stringResource(Res.string.share_action) to { onIntent(Share(content.detail)) } },
+        )
         when (state) {
             Loading -> CenteredMessage(stringResource(Res.string.loading))
             is Error -> ErrorMessage(state.error, onRetry = { onIntent(Retry) })

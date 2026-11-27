@@ -18,7 +18,8 @@ internal sealed interface RecordPaymentIntent {
     /** Moves the date by [days], never past today. */
     data class DayStepped(val days: Int) : RecordPaymentIntent
     data class NoteChanged(val text: String) : RecordPaymentIntent
-    data class Save(val form: PaymentForm) : RecordPaymentIntent
+    /** [post] is set for "Save & post on WhatsApp": the screen opens WhatsApp once the payment is stored. */
+    data class Save(val form: PaymentForm, val post: RenterSummary? = null) : RecordPaymentIntent
     data object Back : RecordPaymentIntent
     data object Retry : RecordPaymentIntent
 }
@@ -48,7 +49,10 @@ internal sealed interface RecordPaymentUiState {
     }
 }
 
+/** What the group is told: the stored amount, not the typed text. */
+internal data class PaymentPost(val summary: RenterSummary, val amount: Paise)
+
 internal sealed interface RecordPaymentNavEvent {
-    data object Saved : RecordPaymentNavEvent
+    data class Saved(val post: PaymentPost?) : RecordPaymentNavEvent
     data object Close : RecordPaymentNavEvent
 }

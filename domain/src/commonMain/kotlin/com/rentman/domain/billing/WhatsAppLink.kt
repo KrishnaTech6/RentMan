@@ -4,7 +4,7 @@ package com.rentman.domain.billing
 object WhatsAppLink {
     private const val HEX = "0123456789ABCDEF"
 
-    /** [phone] is digits with country code (e.g. "919876543210"). */
+    /** [phone] is digits with country code (e.g. "919876543210"). An empty [phone] lets the landlord pick the chat, e.g. a group. */
     fun of(phone: String, message: String): String = "https://wa.me/$phone?text=${encode(message)}"
 
     /** Percent-encodes UTF-8 bytes, leaving only the characters a URL allows unescaped (RFC 3986). */

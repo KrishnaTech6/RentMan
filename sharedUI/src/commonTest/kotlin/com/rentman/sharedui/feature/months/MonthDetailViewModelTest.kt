@@ -21,6 +21,7 @@ import com.rentman.sharedui.feature.address.FakeAddressRepository
 import com.rentman.sharedui.feature.bill.FakeBillRepository
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Back
 import com.rentman.sharedui.feature.months.MonthDetailIntent.OpenRenter
+import com.rentman.sharedui.feature.months.MonthDetailIntent.Share
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Refresh
 import com.rentman.sharedui.feature.months.MonthDetailIntent.Retry
 import com.rentman.sharedui.feature.months.MonthDetailUiState.Content
@@ -133,6 +134,18 @@ class MonthDetailViewModelTest {
             vm.onIntent(OpenRenter(ravi.id))
 
             assertEquals(MonthDetailNavEvent.OpenRenter(ravi.id), awaitItem())
+        }
+    }
+
+    @Test
+    fun shareAsksTheScreenToPostTheMonthOnWhatsApp() = runTest {
+        val vm = viewModel(FakeRenterRepository(listOf(ravi)))
+        val detail = (vm.uiState.value as MonthDetailUiState.Content).detail
+
+        vm.navigation.test {
+            vm.onIntent(Share(detail))
+
+            assertEquals(MonthDetailNavEvent.Share(detail), awaitItem())
         }
     }
 

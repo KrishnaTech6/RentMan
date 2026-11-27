@@ -130,7 +130,7 @@ class RecordPaymentViewModelTest {
 
         vm.navigation.test {
             vm.onIntent(Save(vm.content().toForm()))
-            assertEquals(RecordPaymentNavEvent.Saved, awaitItem())
+            assertEquals(RecordPaymentNavEvent.Saved(post = null), awaitItem())
         }
         assertEquals(1, payments.saved.size)
 
@@ -164,13 +164,39 @@ class RecordPaymentViewModelTest {
         vm.navigation.test {
             vm.onIntent(Save(vm.content().toForm()))
 
-            assertEquals(RecordPaymentNavEvent.Saved, awaitItem())
+            assertEquals(RecordPaymentNavEvent.Saved(post = null), awaitItem())
         }
         val saved = payments.saved.single()
         assertEquals(5_000L.rupees, saved.amount)
         assertEquals(PaymentMode.Cash, saved.mode)
         assertEquals(LocalDate(2026, 11, 21), saved.paidOn)
         assertEquals(RenterId(1), saved.renterId)
+    }
+
+    @Test
+    fun saveAndPostHandsTheStoredAmountToTheScreenForWhatsApp() = runTest {
+        val payments = FakePaymentRepository()
+        val vm = viewModel(payments)
+        vm.onIntent(AmountChanged("7,500"))
+
+        vm.navigation.test {
+            vm.onIntent(Save(vm.content().toForm(), post = vm.content().summary))
+
+            assertEquals(RecordPaymentNavEvent.Saved(PaymentPost(vm.content().summary, 7_500L.rupees)), awaitItem())
+        }
+        assertEquals(1, payments.saved.size)
+    }
+
+    @Test
+    fun aWrongFormIsNotPostedOnWhatsApp() = runTest {
+        val vm = viewModel()
+        vm.onIntent(AmountChanged("abc"))
+
+        vm.navigation.test {
+            vm.onIntent(Save(vm.content().toForm(), post = vm.content().summary))
+
+            expectNoEvents()
+        }
     }
 
     @Test

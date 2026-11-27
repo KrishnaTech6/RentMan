@@ -118,6 +118,10 @@ UX: undo instead of confirm dialogs (do it now, show Undo for a few seconds), bi
 ## WhatsApp
 `https://wa.me/<number>?text=<encoded>` opens the renter's chat with the bill typed in (built: opened with the platform's URL handler, so no platform code). The "Previous pending" line is left out when nothing is owed. The number is stored with country code. One expect/actual launcher. Text only. An image or PDF needs the share sheet, where the user picks the contact, so that's later.
 
+Recording a payment can post it to the landlord's group: "Save & post on WhatsApp" opens `https://wa.me/?text=<encoded>` (no number, so WhatsApp asks which chat) with `Paid: <name> (<unit · address>) - ₹<amount>`. The landlord picks the group and presses send: WhatsApp lets no app post into a group by itself. "Save only" posts nothing. A post stays in the group even if the payment is later removed.
+
+The month screen's **Share** posts the month review the same way: the month, `Total` (this month's bills), `Received` and, if anything is left, `Pending` with one `Name - ₹amount` line per renter who still owes. Renters with no bill and earlier months' dues are not in it.
+
 ```
 Hi Ravi, your bill for Nov 2026:
 Rent: ₹7,500

@@ -3,6 +3,7 @@ package com.rentman.sharedui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,5 +39,16 @@ internal fun ActionButton(
         contentAlignment = Alignment.Center,
     ) {
         BasicText(text, style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = RentManColors.OnPrimary))
+    }
+}
+
+/** A secondary action under the [ActionButton], shown as text. */
+@Composable
+internal fun TextAction(text: String, onClick: () -> Unit) {
+    Box(
+        Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        BasicText(text, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = RentManColors.Primary))
     }
 }
