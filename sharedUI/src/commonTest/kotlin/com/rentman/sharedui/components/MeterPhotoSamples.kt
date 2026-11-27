@@ -295,3 +295,70 @@ internal val amtlMeterPhotos = listOf(
         ),
     ),
 )
+
+/** The whole photo of three AMTL meters side by side (1600 x 1200, enlarged 2x): 9913 on the left, 6566 in the middle, the right one not read. */
+internal val threeMetersPhoto = listOf(
+    TextPiece("An ISO 9001 & 14001 Certified Co.", 0.135f, 0.246f, 0.269f, 0.271f),
+    TextPiece("9", 0.160f, 0.300f, 0.173f, 0.324f),
+    TextPiece("9", 0.185f, 0.302f, 0.196f, 0.324f),
+    TextPiece("13", 0.208f, 0.306f, 0.243f, 0.328f),
+    TextPiece("0.1", 0.253f, 0.343f, 0.266f, 0.353f),
+    TextPiece("СМ/-8815388", 0.074f, 0.328f, 0.124f, 0.339f),
+    TextPiece("24OV, 50Hz,", 0.073f, 0.341f, 0.119f, 0.355f),
+    TextPiece("Plt Tomp. | 27*\$2°C", 0.072f, 0.352f, 0.154f, 0.382f),
+    TextPiece("Cines - 1", 0.074f, 0.364f, 0.110f, 0.376f),
+    TextPiece("TYPE-SM1P4", 0.081f, 0.388f, 0.147f, 0.401f),
+    TextPiece("10-40A", 0.093f, 0.401f, 0.132f, 0.413f),
+    TextPiece("Gusrantee Period: 1 Year", 0.077f, 0.428f, 0.173f, 0.442f),
+    TextPiece("3200", 0.283f, 0.436f, 0.302f, 0.448f),
+    TextPiece("09/2019", 0.263f, 0.527f, 0.298f, 0.537f),
+    TextPiece("г0605C", 0.205f, 0.537f, 0.250f, 0.543f),
+    TextPiece("IS: 13779", 0.426f, 0.322f, 0.456f, 0.331f),
+    TextPiece("CM/L-8815388", 0.419f, 0.359f, 0.461f, 0.368f),
+    TextPiece("240V, 50Hz,", 0.418f, 0.372f, 0.457f, 0.385f),
+    TextPiece("Ref Temp. : 27*+ 2°C", 0.419f, 0.382f, 0.484f, 0.395f),
+    TextPiece("Class - 1", 0.419f, 0.393f, 0.448f, 0.403f),
+    TextPiece("TYPE-SM1P4", 0.427f, 0.413f, 0.480f, 0.424f),
+    TextPiece("10-40A", 0.436f, 0.424f, 0.470f, 0.436f),
+    TextPiece("Guarantee Period: 1 Year", 0.419f, 0.450f, 0.497f, 0.461f),
+    TextPiece("An ISO 9001 & 14001 Certified Co.", 0.471f, 0.285f, 0.580f, 0.306f),
+    TextPiece("656", 0.485f, 0.335f, 0.535f, 0.357f),
+    TextPiece("6", 0.542f, 0.339f, 0.554f, 0.360f),
+    TextPiece("0.1", 0.564f, 0.370f, 0.574f, 0.380f),
+    TextPiece("3200", 0.586f, 0.453f, 0.603f, 0.463f),
+    TextPiece("09/20191", 0.562f, 0.533f, 0.592f, 0.543f),
+    TextPiece("706047", 0.515f, 0.541f, 0.552f, 0.550f),
+    TextPiece("An ISO 9001 & 14001 Certified Co.", 0.754f, 0.309f, 0.841f, 0.327f),
+    TextPiece("CM/L-8815388", 0.708f, 0.378f, 0.744f, 0.388f),
+    TextPiece("240V, 50Hz.", 0.706f, 0.403f, 0.738f, 0.413f),
+    TextPiece("Ref Temp. : 27* 42°C", 0.706f, 0.413f, 0.760f, 0.425f),
+    TextPiece("Class - 1", 0.706f, 0.420f, 0.731f, 0.430f),
+    TextPiece("TYPE-SM1P4", 0.711f, 0.436f, 0.759f, 0.448f),
+    TextPiece("10-40A", 0.719f, 0.446f, 0.749f, 0.457f),
+    TextPiece("Guarantee Period: 1 Year", 0.703f, 0.461f, 0.769f, 0.473f),
+    TextPiece("17/2021", 0.830f, 0.517f, 0.852f, 0.531f),
+)
+
+/** [threeMetersPhoto] cropped to its first box for last reading 6504 (the middle meter), enlarged 5x. */
+internal val middleMeterCrop = listOf(
+    TextPiece(": 13779", -0.001f, 0.293f, 0.131f, 0.369f),
+    TextPiece("An ISO 9001 & 14001 Certified Co.", 0.221f, 0.014f, 0.854f, 0.165f),
+    TextPiece("065661", 0.183f, 0.360f, 0.757f, 0.597f),
+    TextPiece("-8815388", 0.000f, 0.596f, 0.151f, 0.668f),
+    TextPiece("/, 50Hz,", 0.000f, 0.711f, 0.138f, 0.800f),
+    TextPiece("Temp. : 27*+2°C", -0.000f, 0.784f, 0.282f, 0.882f),
+    TextPiece("8 - 1", -0.000f, 0.879f, 0.071f, 0.942f),
+    TextPiece("0.1", 0.757f, 0.687f, 0.811f, 0.759f),
+)
+
+/** [threeMetersPhoto] cropped to its first box for last reading 9815 (the left meter), enlarged 5x. */
+internal val leftMeterCrop = listOf(
+    TextPiece("3779", -0.002f, 0.299f, 0.096f, 0.379f),
+    TextPiece("An ISO 9001 & 14001 Certified Co.", 0.182f, 0.019f, 0.833f, 0.195f),
+    TextPiece("9", 0.308f, 0.393f, 0.358f, 0.541f),
+    TextPiece("913", 0.343f, 0.402f, 0.712f, 0.597f),
+    TextPiece("815388", -0.002f, 0.599f, 0.125f, 0.680f),
+    TextPiece("50Hz,", 0.000f, 0.713f, 0.106f, 0.793f),
+    TextPiece("-р. ]27*+2°C", -0.000f, 0.798f, 0.265f, 0.963f),
+    TextPiece("0.1", 0.750f, 0.713f, 0.802f, 0.787f),
+)

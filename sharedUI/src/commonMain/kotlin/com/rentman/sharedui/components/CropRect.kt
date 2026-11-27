@@ -8,8 +8,6 @@ internal enum class Corner { TopLeft, TopRight, BottomLeft, BottomRight }
 
 /** A box on a photo in fractions of its width and height (0 is the left or top edge, 1 the right or bottom edge). */
 internal data class CropRect(val left: Float, val top: Float, val right: Float, val bottom: Float) {
-    val isWhole: Boolean get() = this == Whole
-
     /** The same box moved by [dx] and [dy] (fractions), kept the same size and inside the photo. */
     fun moved(dx: Float, dy: Float): CropRect {
         val x = (left + dx).coerceIn(0f, 1f - (right - left))
@@ -27,6 +25,16 @@ internal data class CropRect(val left: Float, val top: Float, val right: Float, 
             right = if (!movesLeft) (right + dx).coerceIn(left + MIN_SIZE, 1f) else right,
             bottom = if (!movesTop) (bottom + dy).coerceIn(top + MIN_SIZE, 1f) else bottom,
         )
+    }
+
+    /** Whether the middle of [other] is inside this box. */
+    fun holds(other: CropRect): Boolean = (other.left + other.right) / 2 in left..right && (other.top + other.bottom) / 2 in top..bottom
+
+    /** This box in fractions of [outer] instead of the whole photo, cut at [outer]'s edges: where it is once the photo is cut to [outer]. */
+    fun within(outer: CropRect): CropRect {
+        fun x(value: Float) = ((value - outer.left) / (outer.right - outer.left)).coerceIn(0f, 1f)
+        fun y(value: Float) = ((value - outer.top) / (outer.bottom - outer.top)).coerceIn(0f, 1f)
+        return CropRect(x(left), y(top), x(right), y(bottom))
     }
 
     /** The box on a photo that is [width] by [height] pixels: at least one pixel, and always inside the photo. */

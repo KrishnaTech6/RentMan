@@ -100,11 +100,20 @@ internal object IosMeterPhotoFiles {
         return runCatching { Image.makeFromEncoded(bytes).toComposeImageBitmap() }.getOrNull()
     }
 
-    /** The lines of text Apple's Vision finds on the saved photo, with a counter's digit pieces joined ([readingLines]), or none. */
-    fun recognize(name: String): List<String> {
+    /**
+     * The pieces of text Apple's Vision finds in [part] of the saved photo, with where they are in that part, or none if it can't
+     * be read. Only the part is read; the file is not changed.
+     */
+    fun recognize(name: String, part: CropRect): List<TextPiece> {
         val path = pathOf(name) ?: return emptyList()
-        val saved = UIImage.imageWithContentsOfFile(path) ?: return emptyList()
-        // A small crop is enlarged first, or Vision misses digits. The file is not changed.
+        val whole = UIImage.imageWithContentsOfFile(path)?.CGImage ?: return emptyList()
+        // The photo was saved upright, so its pixels are what the person saw when placing the box.
+        val box = part.inPixels(CGImageGetWidth(whole).toInt(), CGImageGetHeight(whole).toInt())
+        val cut = CGImageCreateWithImageInRect(whole, CGRectMake(box.left.toDouble(), box.top.toDouble(), box.width.toDouble(), box.height.toDouble()))
+            ?: return emptyList()
+        val saved = UIImage.imageWithCGImage(cut)
+        CGImageRelease(cut) // the UIImage holds on to it
+        // A small part is enlarged first, or Vision misses digits.
         val (width, height) = saved.size.useContents { width to height }
         val scale = readScale(width.toInt(), height.toInt()).toDouble()
         val image = if (scale > 1.0) {
@@ -122,12 +131,11 @@ internal object IosMeterPhotoFiles {
             usesLanguageCorrection = false // numbers, not words
         }
         VNImageRequestHandler(cgImage, emptyMap<Any?, Any?>()).performRequests(listOf(request), null)
-        val pieces = request.results.orEmpty().mapNotNull { result ->
+        return request.results.orEmpty().mapNotNull { result ->
             val observation = result as? VNRecognizedTextObservation ?: return@mapNotNull null
             val text = (observation.topCandidates(1u).firstOrNull() as? VNRecognizedText)?.string ?: return@mapNotNull null
             // Vision's box is in fractions with its origin at the bottom left; TextPiece counts from the top.
             observation.boundingBox.useContents { TextPiece(text, origin.x.toFloat(), (1 - origin.y - size.height).toFloat(), (origin.x + size.width).toFloat(), (1 - origin.y).toFloat()) }
         }
-        return readingLines(pieces)
     }
 }

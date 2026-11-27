@@ -132,9 +132,7 @@ internal class CreateBillViewModel(
 
     /** A photo is kept even if no number could be read from it. A believable number replaces the reading; all can be tapped. */
     private fun Content.scanned(scan: MeterScanned): Content {
-        // After a meter replacement the new meter's first reading is what the number has to be compared with.
-        val last = if (meterReplaced) newMeterStart.trim().toIntOrNull() else context.previousReading
-        val suggestion = suggestReading(scan.lines, last)
+        val suggestion = suggestReading(scan.lines, lastReading)
         return copy(
             meterPhoto = scan.photo,
             reading = suggestion.reading?.toString() ?: reading,

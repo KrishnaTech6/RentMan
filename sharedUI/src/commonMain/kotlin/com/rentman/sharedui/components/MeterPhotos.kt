@@ -18,10 +18,10 @@ internal expect fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): Photo
 
 /** What is done to a photo that is in the meter photo folder. They work off the main thread. */
 internal class PhotoFiles(
-    /** Keeps only [CropRect] of the photo, saved over the photo. */
+    /** Keeps only [CropRect] of the photo, saved over the photo: the part the landlord boxed is the proof. */
     val crop: suspend (photo: String, part: CropRect) -> Unit,
-    /** The lines of text the phone can read on the photo. Empty if it can't read any. */
-    val read: suspend (photo: String) -> List<String>,
+    /** The pieces of text the phone can read in [CropRect] of the photo, with where they are in that part. Empty if it can't read any. */
+    val read: suspend (photo: String, part: CropRect) -> List<TextPiece>,
     val discard: (photo: String) -> Unit,
 )
 
@@ -29,8 +29,8 @@ internal class PhotoFiles(
 private val READ_LIMIT = 15.seconds
 
 /** The lines of text on [photo], or none if reading takes longer than [limit], so a stuck reader can never freeze the screen. */
-internal suspend fun PhotoFiles.readWithin(photo: String, limit: Duration = READ_LIMIT): List<String> =
-    withTimeoutOrNull(limit) { read(photo) } ?: emptyList()
+internal suspend fun PhotoFiles.readWithin(photo: String, part: CropRect = CropRect.Whole, limit: Duration = READ_LIMIT): List<TextPiece> =
+    withTimeoutOrNull(limit) { read(photo, part) } ?: emptyList()
 
 /** The longer side, in pixels, a photo is enlarged to before its text is read. Text on a small crop comes out in pieces without it. */
 private const val READ_SIDE = 2_000

@@ -90,7 +90,7 @@ internal actual fun rememberPhotoFiles(): PhotoFiles = remember {
     val io = KoinPlatform.getKoin().get<AppDispatchers>().io
     PhotoFiles(
         crop = { photo, part -> withContext(io) { IosMeterPhotoFiles.crop(photo, part) } },
-        read = { photo -> withContext(io) { IosMeterPhotoFiles.recognize(photo) } },
+        read = { photo, part -> withContext(io) { IosMeterPhotoFiles.recognize(photo, part) } },
         discard = IosMeterPhotoFiles::delete,
     )
 }

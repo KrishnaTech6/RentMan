@@ -10,7 +10,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PhotoFilesTest {
-    private fun files(read: suspend (String) -> List<String>) = PhotoFiles(crop = { _, _ -> }, read = read, discard = {})
+    private fun files(read: suspend (String) -> List<TextPiece>) = PhotoFiles(crop = { _, _ -> }, read = { photo, _ -> read(photo) }, discard = {})
 
     @Test
     fun aSmallCropIsEnlargedBeforeReadingButNeverMoreThanFiveTimes() {
@@ -23,7 +23,8 @@ class PhotoFilesTest {
 
     @Test
     fun readingThatFinishesGivesItsLines() = runTest {
-        assertEquals(listOf("01325", "kWh"), files { listOf("01325", "kWh") }.readWithin("a.jpg"))
+        val pieces = listOf(TextPiece("01325", 0.1f, 0.1f, 0.5f, 0.2f))
+        assertEquals(pieces, files { pieces }.readWithin("a.jpg"))
     }
 
     @Test

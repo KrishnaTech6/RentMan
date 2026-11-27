@@ -141,7 +141,10 @@ internal fun CreateBillRoute(
         }
     }
     val photoOpener = rememberPhotoOpener()
-    MeterScanFlow(onScanned = { photo, lines -> viewModel.onIntent(MeterScanned(photo, lines)) }) { camera, gallery ->
+    MeterScanFlow(
+        lastReading = (state as? Content)?.lastReading,
+        onScanned = { photo, lines -> viewModel.onIntent(MeterScanned(photo, lines)) },
+    ) { camera, gallery ->
         CreateBillScreen(month, state, onScan = camera, onPick = gallery, onOpenPhoto = photoOpener.open, onIntent = viewModel::onIntent)
     }
 }

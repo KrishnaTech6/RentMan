@@ -43,4 +43,44 @@ class MeterTextTest {
             assertTrue(suggest(readingLines(photo.asIs), previousReading = 6504).reading in setOf(6566, null), photo.name)
         }
     }
+
+    private fun CropRect.holds(x: Float, y: Float) = x in left..right && y in top..bottom
+
+    @Test
+    fun onAPhotoOfThreeMetersTheBoxStartsOnTheMeterThatFitsTheLastReading() {
+        val meters = findMeters(threeMetersPhoto, lastReading = 6504)
+        assertEquals(2, meters.size) // the right meter's display was not read
+        val middle = meters.first()
+        assertTrue(middle.display.holds(0.52f, 0.35f)) // 6566, the middle meter's display
+        assertTrue(!middle.display.holds(0.53f, 0.545f)) // the reading is not looked for in the serial number
+        // The kept box is the whole middle meter, with its serial number, and none of the meters next to it.
+        assertTrue(middle.body.holds(0.52f, 0.35f) && middle.body.holds(0.53f, 0.545f))
+        assertTrue(!middle.body.holds(0.20f, 0.31f) && !middle.body.holds(0.78f, 0.33f))
+
+        assertTrue(findMeters(threeMetersPhoto, lastReading = 9815).first().display.holds(0.20f, 0.31f)) // 9913, left meter
+    }
+
+    @Test
+    fun withNoLastReadingTheBoxStartsOnTheLeftMostMeter() {
+        assertTrue(findMeters(threeMetersPhoto, lastReading = null).first().display.holds(0.20f, 0.31f))
+    }
+
+    @Test
+    fun aPhotoWithNoDisplayFindsNoMeter() {
+        assertEquals(emptyList(), findMeters(listOf(TextPiece("Sr No 706047", 0.1f, 0.1f, 0.3f, 0.12f), TextPiece("3200", 0.5f, 0.5f, 0.6f, 0.52f)), lastReading = 6504))
+    }
+
+    @Test
+    fun aDisplayReadAsOneNumberThatFitsTheLastReadingIsAMeter() {
+        val meters = findMeters(listOf(TextPiece("06566", 0.4f, 0.3f, 0.6f, 0.35f), TextPiece("13779", 0.1f, 0.2f, 0.2f, 0.22f)), lastReading = 6504)
+        assertEquals(1, meters.size)
+        assertTrue(meters.single().display.holds(0.5f, 0.32f))
+    }
+
+    @Test
+    fun theCropOfEachAutoBoxReadsThatMetersReading() {
+        val suggest = SuggestMeterReadingUseCase()
+        assertEquals(6566, suggest(readingLines(middleMeterCrop), previousReading = 6504).reading)
+        assertEquals(9913, suggest(readingLines(leftMeterCrop), previousReading = 9815).reading)
+    }
 }

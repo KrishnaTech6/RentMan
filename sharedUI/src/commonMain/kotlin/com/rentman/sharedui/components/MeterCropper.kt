@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -47,6 +48,7 @@ import com.rentman.sharedui.resources.crop_image_description
 import com.rentman.sharedui.resources.crop_title
 import com.rentman.sharedui.resources.crop_use
 import com.rentman.sharedui.resources.crop_whole
+import com.rentman.sharedui.resources.next_meter
 import com.rentman.sharedui.theme.RentManColors
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
@@ -58,13 +60,15 @@ private sealed interface Grab {
 }
 
 /**
- * A full-screen view of a new photo with a box on it. The person drags the box, or its corners, around the meter's number and taps
- * "Use this part", or keeps the whole photo, or cancels. It only picks a [CropRect]: the photo is cut somewhere else.
+ * A full-screen view of a new photo with a box on it. The box starts on the first of the meters found ([meters]); "Next meter"
+ * moves it to the next one. The person can drag the box, or its corners, and taps "Use this part", or keeps the whole photo, or
+ * cancels. It only picks a [CropRect]: the photo is cut somewhere else.
  */
 @Composable
-internal fun MeterCropper(photo: String, onUse: (CropRect) -> Unit, onCancel: () -> Unit) {
-    // Centred, the size the landlord picked for a whole meter on a real phone (about 40% of the photo each way). They drag it to fit.
-    var box by remember { mutableStateOf(CropRect(left = 0.3f, top = 0.3f, right = 0.7f, bottom = 0.7f)) }
+internal fun MeterCropper(photo: String, meters: List<CropRect>, onUse: (CropRect) -> Unit, onCancel: () -> Unit) {
+    var meter by remember { mutableIntStateOf(0) }
+    // No display found: centred, the size the landlord picked for a whole meter on a real phone (about 40% of the photo each way).
+    var box by remember { mutableStateOf(meters.firstOrNull() ?: CropRect(left = 0.3f, top = 0.3f, right = 0.7f, bottom = 0.7f)) }
     val image = rememberPhotoImage(photo)
     Dialog(onDismissRequest = onCancel, properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = false)) {
         Column(
@@ -75,6 +79,12 @@ internal fun MeterCropper(photo: String, onUse: (CropRect) -> Unit, onCancel: ()
             BasicText(stringResource(Res.string.crop_hint), style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f)))
             Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 if (image != null) CropArea(image, box, onBox = { box = it }, Modifier.fillMaxSize())
+            }
+            if (meters.size > 1) {
+                LightButton(stringResource(Res.string.next_meter), enabled = true, onClick = {
+                    meter = (meter + 1) % meters.size
+                    box = meters[meter]
+                }, Modifier.fillMaxWidth())
             }
             ActionButton(stringResource(Res.string.crop_use), enabled = image != null, onClick = { onUse(box) }, modifier = Modifier.fillMaxWidth())
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {

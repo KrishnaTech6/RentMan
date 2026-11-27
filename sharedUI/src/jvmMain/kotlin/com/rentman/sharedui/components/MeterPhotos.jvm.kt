@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 internal actual fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): PhotoSource = PhotoSource(camera = {}, gallery = {})
 
 @Composable
-internal actual fun rememberPhotoFiles(): PhotoFiles = PhotoFiles(crop = { _, _ -> }, read = { emptyList() }, discard = {})
+internal actual fun rememberPhotoFiles(): PhotoFiles = PhotoFiles(crop = { _, _ -> }, read = { _, _ -> emptyList() }, discard = {})
 
 @Composable
 internal actual fun rememberPhotoImage(photo: String): ImageBitmap? = null

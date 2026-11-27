@@ -51,7 +51,10 @@ internal sealed interface CreateBillUiState {
         /** A failure that isn't about the reading, e.g. the bill already exists or the disk. */
         val saveError: DomainError? = null,
         val isSaving: Boolean = false,
-    ) : CreateBillUiState
+    ) : CreateBillUiState {
+        /** What the new reading follows: after a meter replacement, the new meter's first reading. */
+        val lastReading: Int? get() = if (meterReplaced) newMeterStart.trim().toIntOrNull() else context.previousReading
+    }
 }
 
 internal sealed interface CreateBillNavEvent {

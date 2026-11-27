@@ -2,14 +2,12 @@ package com.rentman.sharedui.components
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class CropRectTest {
     private val box = CropRect(left = 0.2f, top = 0.3f, right = 0.6f, bottom = 0.5f)
 
     @Test
     fun theWholePhotoIsTheWholePhoto() {
-        assertTrue(CropRect.Whole.isWhole)
         assertEquals(CropRect(0f, 0f, 1f, 1f), CropRect.Whole)
     }
 
@@ -62,5 +60,30 @@ class CropRectTest {
 
         val tiny = CropRect(0f, 0f, 0.0001f, 0.0001f).inPixels(width = 100, height = 100)
         assertEquals(listOf(1, 1), listOf(tiny.width, tiny.height))
+    }
+
+    @Test
+    fun aBoxInsideAnotherIsGivenInThatOnesFractions() {
+        val display = CropRect(left = 0.3f, top = 0.35f, right = 0.5f, bottom = 0.45f)
+        val inBox = display.within(box) // box is 0.2..0.6 across, 0.3..0.5 down
+
+        assertEquals(0.25f, inBox.left, 0.0001f)
+        assertEquals(0.25f, inBox.top, 0.0001f)
+        assertEquals(0.75f, inBox.right, 0.0001f)
+        assertEquals(0.75f, inBox.bottom, 0.0001f)
+    }
+
+    @Test
+    fun aBoxReachingOutsideAnotherIsCutAtItsEdges() {
+        val inBox = CropRect(left = 0.1f, top = 0.4f, right = 0.4f, bottom = 0.6f).within(box)
+
+        assertEquals(0f, inBox.left, 0.0001f)
+        assertEquals(1f, inBox.bottom, 0.0001f)
+    }
+
+    @Test
+    fun aBoxHoldsAnotherWhenThatOnesMiddleIsInsideIt() {
+        assertEquals(true, box.holds(CropRect(left = 0.3f, top = 0.35f, right = 0.7f, bottom = 0.45f))) // middle 0.5, 0.4
+        assertEquals(false, box.holds(CropRect(left = 0.55f, top = 0.35f, right = 0.9f, bottom = 0.45f))) // middle 0.725
     }
 }

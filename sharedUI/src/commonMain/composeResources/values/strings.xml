@@ -229,9 +229,11 @@
     <string name="scan_from_gallery">Choose from gallery</string>
     <string name="meter_photo_gallery">Gallery</string>
     <string name="meter_photo_description">Photo of the meter. Tap to open it full size.</string>
-    <string name="crop_title">Pick the part to keep</string>
-    <string name="crop_hint">Drag the box, or its corners, around the meter's number. Only this part is saved.</string>
+    <string name="crop_title">Box the meter</string>
+    <string name="crop_hint">The box starts on this renter's meter. Drag it, or its corners, to fit. This part is kept as proof.</string>
     <string name="crop_use">Use this part</string>
+    <string name="next_meter">Next meter</string>
+    <string name="finding_meter">Finding the meter…</string>
     <string name="crop_whole">Use whole photo</string>
     <string name="crop_cancel">Cancel</string>
     <string name="crop_reading">Reading the photo…</string>

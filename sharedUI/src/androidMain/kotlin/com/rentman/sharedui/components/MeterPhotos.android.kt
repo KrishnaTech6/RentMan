@@ -61,7 +61,7 @@ internal actual fun rememberPhotoFiles(): PhotoFiles {
     return remember(context) {
         PhotoFiles(
             crop = { photo, part -> MeterPhotoFiles.crop(context, photo, part) },
-            read = { photo -> MeterPhotoFiles.read(context, photo) },
+            read = { photo, part -> MeterPhotoFiles.read(context, photo, part) },
             discard = { photo -> MeterPhotoFiles.delete(context, photo) },
         )
     }
