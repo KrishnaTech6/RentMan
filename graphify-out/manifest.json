@@ -912,22 +912,22 @@
     "semantic_hash": "4d2d7c9c3093fa6f723865a723ee3c49"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillContract.kt": {
-    "mtime": 1795514738.9896631,
-    "seen": 1795530739.30236,
-    "ast_hash": "ca5da0fd5c73088d9eb225a9955bf911",
-    "semantic_hash": "ca5da0fd5c73088d9eb225a9955bf911"
+    "mtime": 1795766158.1590514,
+    "seen": 1795766902.875814,
+    "ast_hash": "afa6ad417015370dbeabbc0de2326a6a",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillScreen.kt": {
-    "mtime": 1795754630.8955445,
-    "seen": 1795758421.5883489,
-    "ast_hash": "289342da925c4acfbb5dd35830cbcfe6",
+    "mtime": 1795766158.1598623,
+    "seen": 1795766902.875814,
+    "ast_hash": "4aeb2907d0251c025f8a97ff855e67db",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillViewModel.kt": {
-    "mtime": 1795514738.9900744,
-    "seen": 1795530739.302361,
-    "ast_hash": "e1039da5639298e5f5c9e3dbf3550da8",
-    "semantic_hash": "e1039da5639298e5f5c9e3dbf3550da8"
+    "mtime": 1795766158.1592956,
+    "seen": 1795766902.875815,
+    "ast_hash": "1bdab547dbb19f13980a47233967e760",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/home/HomeContract.kt": {
     "mtime": 1795575752.4975996,
@@ -1098,10 +1098,10 @@
     "semantic_hash": "362b0c9e136ee1c79b1cc6c1fe1edce9"
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/bill/CreateBillViewModelTest.kt": {
-    "mtime": 1795539729.700841,
-    "seen": 1795573716.39,
-    "ast_hash": "f1796ad3b10184866f4fa56936833352",
-    "semantic_hash": "f1796ad3b10184866f4fa56936833352"
+    "mtime": 1795764484.7798893,
+    "seen": 1795766902.875836,
+    "ast_hash": "f3cc3133f8490b057750831d2283e022",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/bill/Fakes.kt": {
     "mtime": 1795524963.2368848,
@@ -1242,10 +1242,10 @@
     "semantic_hash": "c7099c59ff9a3502662a89cb8c86b57b"
   },
   "ARCHITECTURE.md": {
-    "mtime": 1795540535.3902388,
-    "seen": 1795573716.390016,
-    "ast_hash": "84f64230e598c56ad30953fa61072b1e",
-    "semantic_hash": "84f64230e598c56ad30953fa61072b1e"
+    "mtime": 1795766729.8130004,
+    "seen": 1795766902.875852,
+    "ast_hash": "70cfc247f06b5913bbe2e82b7a4a60e6",
+    "semantic_hash": ""
   },
   "CLAUDE.md": {
     "mtime": 1795446584.6735904,
@@ -1266,9 +1266,9 @@
     "semantic_hash": ""
   },
   "PLAN.md": {
-    "mtime": 1795758121.1532977,
-    "seen": 1795758421.588385,
-    "ast_hash": "8164e876a54f46fcc0fd60aa247ff138",
+    "mtime": 1795766729.8127704,
+    "seen": 1795766902.875854,
+    "ast_hash": "aae8380ae0497936b588463b78866d05",
     "semantic_hash": ""
   },
   "design/project/AddRenter.dc.html": {
@@ -1386,10 +1386,10 @@
     "semantic_hash": "e18c9e4ab47dc2c071a6470e6c591349"
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/MeterReadingParser.kt": {
-    "mtime": 1795514772.1381094,
-    "seen": 1795530739.302298,
-    "ast_hash": "cc5261d3ffb84e1ade1757270fdd55c5",
-    "semantic_hash": "cc5261d3ffb84e1ade1757270fdd55c5"
+    "mtime": 1795765728.5212264,
+    "seen": 1795766902.875747,
+    "ast_hash": "d99bfbb5d5d3c807be4d7a1c40d93a07",
+    "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/RemoveBill.kt": {
     "mtime": 1795525075.901092,
@@ -1410,10 +1410,10 @@
     "semantic_hash": "ff6c32d3d0599e0f3c3a57b7a1e8e848"
   },
   "domain/src/commonTest/kotlin/com/rentman/domain/billing/MeterReadingParserTest.kt": {
-    "mtime": 1795514772.1375551,
-    "seen": 1795530739.3023202,
-    "ast_hash": "81971f517297f0187703d1c82eff4f80",
-    "semantic_hash": "81971f517297f0187703d1c82eff4f80"
+    "mtime": 1795765728.5208728,
+    "seen": 1795766902.8757708,
+    "ast_hash": "faaaf44919c144c50edcc66a7fda49db",
+    "semantic_hash": ""
   },
   "domain/src/commonTest/kotlin/com/rentman/domain/billing/RemoveBillUseCaseTest.kt": {
     "mtime": 1795524854.0029442,
@@ -1440,10 +1440,10 @@
     "semantic_hash": "e60a5bbf0eb6393045cdf543bd2dfae5"
   },
   "sharedUI/src/androidMain/kotlin/com/rentman/sharedui/components/MeterPhotoFiles.kt": {
-    "mtime": 1795521040.8859541,
-    "seen": 1795530739.302342,
-    "ast_hash": "fe79458df3d1f5d0a76fb08db6bee0d9",
-    "semantic_hash": "fe79458df3d1f5d0a76fb08db6bee0d9"
+    "mtime": 1795766663.4431553,
+    "seen": 1795766902.875796,
+    "ast_hash": "8df22587b8bd9ffe917fabf33c2e17aa",
+    "semantic_hash": ""
   },
   "sharedUI/src/androidMain/kotlin/com/rentman/sharedui/components/MeterPhotoProvider.kt": {
     "mtime": 1795514891.1818745,
@@ -1452,58 +1452,58 @@
     "semantic_hash": "f409ace9ca2fad4c470dd65ade597d27"
   },
   "sharedUI/src/androidMain/kotlin/com/rentman/sharedui/components/MeterPhotos.android.kt": {
-    "mtime": 1795522840.1230943,
-    "seen": 1795530739.302343,
-    "ast_hash": "fa5428bdba2997bc1f01bdf50abe8b41",
-    "semantic_hash": "fa5428bdba2997bc1f01bdf50abe8b41"
+    "mtime": 1795766663.443333,
+    "seen": 1795766902.875797,
+    "ast_hash": "7f0f8ca92e40962efecdb2065c00686f",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/CropRect.kt": {
-    "mtime": 1795520875.3631492,
-    "seen": 1795530739.302351,
-    "ast_hash": "7ccd8c6d4aac1a61993e82454732dec5",
-    "semantic_hash": "7ccd8c6d4aac1a61993e82454732dec5"
+    "mtime": 1795766672.2807035,
+    "seen": 1795766902.875803,
+    "ast_hash": "6f6daf0abe66fe873d7f743e37fb403a",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MeterCropper.kt": {
-    "mtime": 1795521438.172732,
-    "seen": 1795530739.3023539,
-    "ast_hash": "ae449f2250cc1e564ea70341539f8e70",
-    "semantic_hash": "ae449f2250cc1e564ea70341539f8e70"
+    "mtime": 1795766729.8124123,
+    "seen": 1795766902.875807,
+    "ast_hash": "5efd027aad7c4ab766ec36db20e184b9",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MeterPhotos.kt": {
-    "mtime": 1795522840.1217513,
-    "seen": 1795530739.3023539,
-    "ast_hash": "ce020ddd6c3c9fe5b8fc0e04425e4bca",
-    "semantic_hash": "ce020ddd6c3c9fe5b8fc0e04425e4bca"
+    "mtime": 1795766663.4443154,
+    "seen": 1795766902.875807,
+    "ast_hash": "3be8d3d635e33728097d6c3b99f5d809",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MeterScanFlow.kt": {
-    "mtime": 1795522840.1234732,
-    "seen": 1795530739.3023539,
-    "ast_hash": "d6efc086457bf9b8d68cfd56a55dffcd",
-    "semantic_hash": "d6efc086457bf9b8d68cfd56a55dffcd"
+    "mtime": 1795766729.8116946,
+    "seen": 1795766902.875807,
+    "ast_hash": "e81c713050393aa2ba84d014c3256516",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/components/CropRectTest.kt": {
-    "mtime": 1795520875.360699,
-    "seen": 1795530739.3023748,
-    "ast_hash": "10e0e4be25ad95ebe9c7656e9ea43788",
-    "semantic_hash": "10e0e4be25ad95ebe9c7656e9ea43788"
+    "mtime": 1795766672.280332,
+    "seen": 1795766902.875832,
+    "ast_hash": "cd132eda06cc754cc1377a1c8ffbe618",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/components/PhotoFilesTest.kt": {
-    "mtime": 1795522220.1439521,
-    "seen": 1795530739.302376,
-    "ast_hash": "06fc26dca8beeab83b93c02322e08a6a",
-    "semantic_hash": "06fc26dca8beeab83b93c02322e08a6a"
+    "mtime": 1795766663.4444318,
+    "seen": 1795766902.8758342,
+    "ast_hash": "f67d0228afbcb266e8ebdf4425c8d05d",
+    "semantic_hash": ""
   },
   "sharedUI/src/iosMain/kotlin/com/rentman/sharedui/components/IosMeterPhotoFiles.kt": {
-    "mtime": 1795521070.8716443,
-    "seen": 1795530739.302388,
-    "ast_hash": "2a04a518df186d90d22549ec3403f7a3",
-    "semantic_hash": "2a04a518df186d90d22549ec3403f7a3"
+    "mtime": 1795766663.4427133,
+    "seen": 1795766902.875846,
+    "ast_hash": "88fc15e237945d5bf99dcfedc6cc3a76",
+    "semantic_hash": ""
   },
   "sharedUI/src/iosMain/kotlin/com/rentman/sharedui/components/MeterPhotos.ios.kt": {
-    "mtime": 1795522867.7895074,
-    "seen": 1795530739.302388,
-    "ast_hash": "0cfe9a62b2c68bcc5213c63eb9752d86",
-    "semantic_hash": "0cfe9a62b2c68bcc5213c63eb9752d86"
+    "mtime": 1795766663.4430256,
+    "seen": 1795766902.875846,
+    "ast_hash": "664786f2ceecef43a7fecfc9e4c078a7",
+    "semantic_hash": ""
   },
   "sharedUI/src/iosMain/kotlin/com/rentman/sharedui/components/ViewControllers.ios.kt": {
     "mtime": 1795515306.6399302,
@@ -1512,10 +1512,10 @@
     "semantic_hash": "c19aee13a916a998e0f8a84fd999e69f"
   },
   "sharedUI/src/jvmMain/kotlin/com/rentman/sharedui/components/MeterPhotos.jvm.kt": {
-    "mtime": 1795522840.122188,
-    "seen": 1795530739.3023942,
-    "ast_hash": "c786358c5fa36bd10a91f0609f4a19ad",
-    "semantic_hash": "c786358c5fa36bd10a91f0609f4a19ad"
+    "mtime": 1795766663.4435232,
+    "seen": 1795766902.875851,
+    "ast_hash": "7b53eaf8190fc9d3f2ffc2149290ea32",
+    "semantic_hash": ""
   },
   "docs/adr/0009-a-wrong-bill-is-removed-and-made-again.md": {
     "mtime": 1795532029.834665,
@@ -1653,6 +1653,30 @@
     "mtime": 1795575847.3560343,
     "seen": 1795758421.588369,
     "ast_hash": "bc2b10c94b43c64aad21be85c81f230c",
+    "semantic_hash": ""
+  },
+  "domain/src/commonTest/kotlin/com/rentman/domain/billing/SuggestMeterReadingUseCaseTest.kt": {
+    "mtime": 1795764478.827422,
+    "seen": 1795766902.875776,
+    "ast_hash": "03532419a0c7e860ff2669dfde28a87c",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MeterText.kt": {
+    "mtime": 1795766708.7485404,
+    "seen": 1795766902.875808,
+    "ast_hash": "5d7b641204ce016e5cfa34289eeb8a69",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/components/MeterPhotoSamples.kt": {
+    "mtime": 1795766123.5422807,
+    "seen": 1795766902.875833,
+    "ast_hash": "2b7f31b234910b838816a9bfc27c1858",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/components/MeterTextTest.kt": {
+    "mtime": 1795766729.8114696,
+    "seen": 1795766902.8758342,
+    "ast_hash": "238d25a15921c9b3e560156fd93a95a2",
     "semantic_hash": ""
   }
 }
