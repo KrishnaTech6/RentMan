@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The house with the rupee, drawn in the same 1024 coordinates as the iPhone icon (iosApp/App/Assets.xcassets) and scaled
+  into the middle 60dp of the 108dp layer, inside the 66dp every Android launcher shape keeps.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.094"
+        android:scaleY="0.094"
+        android:translateX="5.87"
+        android:translateY="5.97">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M512,214 L812,474 H730 V808 H294 V474 H212 Z"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineJoin="round"
+            android:strokeWidth="40" />
+        <group
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:translateX="413"
+            android:translateY="497">
+            <path
+                android:fillColor="#00000000"
+                android:pathData="M20,20 H200 M20,92 H200 M70,20 C190,20 190,164 70,164 H40 L176,300"
+                android:strokeColor="#FF2747C9"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:strokeWidth="56" />
+        </group>
+    </group>
+</vector>
