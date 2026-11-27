@@ -63,7 +63,8 @@ private sealed interface Grab {
  */
 @Composable
 internal fun MeterCropper(photo: String, onUse: (CropRect) -> Unit, onCancel: () -> Unit) {
-    var box by remember { mutableStateOf(CropRect(left = 0.1f, top = 0.3f, right = 0.9f, bottom = 0.7f)) }
+    // Centred, the size the landlord picked for a whole meter on a real phone (about 40% of the photo each way). They drag it to fit.
+    var box by remember { mutableStateOf(CropRect(left = 0.3f, top = 0.3f, right = 0.7f, bottom = 0.7f)) }
     val image = rememberPhotoImage(photo)
     Dialog(onDismissRequest = onCancel, properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = false)) {
         Column(

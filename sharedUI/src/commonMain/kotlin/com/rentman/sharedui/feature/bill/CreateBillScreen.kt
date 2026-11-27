@@ -5,6 +5,7 @@ import com.rentman.sharedui.components.ErrorMessage
 import com.rentman.sharedui.components.TextAction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -66,6 +69,7 @@ import com.rentman.sharedui.feature.bill.CreateBillIntent.Back
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ChangeReading
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ClearMeterPhoto
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterScanned
+import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingPicked
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterReplacedChanged
 import com.rentman.sharedui.feature.bill.CreateBillIntent.NewMeterStartChanged
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingChanged
@@ -90,6 +94,7 @@ import com.rentman.sharedui.resources.meter_photo_retake
 import com.rentman.sharedui.resources.scan_meter
 import com.rentman.sharedui.resources.scan_meter_hint
 import com.rentman.sharedui.resources.scan_nothing
+import com.rentman.sharedui.resources.reading_choices
 import com.rentman.sharedui.resources.scan_read
 import com.rentman.sharedui.resources.loading
 import com.rentman.sharedui.resources.math_rate
@@ -204,6 +209,8 @@ private fun ColumnScope.ReadingStep(
             state.context.previousReading?.let {
                 BasicText(stringResource(Res.string.last_reading, it.toString()), style = TextStyle(fontSize = 14.sp, color = RentManColors.TextMuted))
             }
+            // Hidden when the only number read is already the reading.
+            if (state.readingChoices.any { it.toString() != state.reading }) ReadingChoices(state, onPick = { onIntent(ReadingPicked(it)) })
         }
         MeterPhotoRow(state, onScan, onPick, onOpenPhoto, onClear = { onIntent(ClearMeterPhoto) })
         Math(state)
@@ -217,6 +224,30 @@ private fun ColumnScope.ReadingStep(
         onClick = { onIntent(Review) },
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     )
+}
+
+/** The other numbers read from the photo, in case the first guess was a serial number or took a decimal digit as a whole one. */
+@Composable
+private fun ReadingChoices(state: Content, onPick: (Int) -> Unit) {
+    BasicText(stringResource(Res.string.reading_choices), style = TextStyle(fontSize = 14.sp, color = RentManColors.TextMuted), modifier = Modifier.padding(top = 6.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        state.readingChoices.forEach { value ->
+            val selected = state.reading == value.toString()
+            val shape = RoundedCornerShape(12.dp)
+            Box(
+                Modifier
+                    .heightIn(min = 48.dp)
+                    .clip(shape)
+                    .background(if (selected) RentManColors.PrimarySoft else RentManColors.Surface, shape)
+                    .border(if (selected) 2.dp else 1.dp, if (selected) RentManColors.Primary else RentManColors.Border, shape)
+                    .clickable(role = Role.Button) { onPick(value) }
+                    .padding(horizontal = 14.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                BasicText(value.toString(), style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = RentManColors.Text))
+            }
+        }
+    }
 }
 
 /** The working shown to the landlord and the renter: 1325 − 1240 = 85 units × ₹8 = ₹680. */

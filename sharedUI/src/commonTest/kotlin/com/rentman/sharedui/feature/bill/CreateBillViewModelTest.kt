@@ -20,6 +20,7 @@ import com.rentman.domain.tenancy.RenterId
 import com.rentman.sharedui.feature.address.FakeAddressRepository
 import com.rentman.domain.billing.SuggestMeterReadingUseCase
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterScanned
+import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingPicked
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ClearMeterPhoto
 import com.rentman.sharedui.feature.bill.CreateBillIntent.Back
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ChangeReading
@@ -276,6 +277,43 @@ class CreateBillViewModelTest {
     }
 
     @Test
+    fun aSerialNumberOnThePhotoIsOfferedAsAChoiceButTheReadingIsFilledIn() = runTest {
+        val vm = viewModel() // the meter was at 1240
+
+        vm.onIntent(MeterScanned("9f3a.jpg", listOf("SR 4567", "01325")))
+
+        assertEquals(listOf(1325, 4567), vm.content().readingChoices)
+        assertEquals("1325", vm.content().reading)
+    }
+
+    @Test
+    fun aPhotoWithOnlyASerialNumberFillsInNothingButOffersItToTap() = runTest {
+        val vm = viewModel() // the meter was at 1240: 706047 can't follow it
+        vm.onIntent(ReadingChanged("1300"))
+
+        vm.onIntent(MeterScanned("9f3a.jpg", listOf("Sr No 706047")))
+
+        val content = vm.content()
+        assertEquals("1300", content.reading)
+        assertEquals(ScanResult.NothingFound, content.scanResult)
+        assertEquals(listOf(70604, 706047), content.readingChoices)
+    }
+
+    @Test
+    fun tappingAnotherNumberFromThePhotoMakesItTheReading() = runTest {
+        val vm = viewModel()
+        vm.onIntent(MeterScanned("9f3a.jpg", listOf("01300", "01325")))
+        vm.onIntent(ReadingChanged("13"))
+
+        vm.onIntent(ReadingPicked(1300))
+
+        val content = vm.content()
+        assertEquals("1300", content.reading)
+        assertEquals(ScanResult.Read, content.scanResult)
+        assertEquals(60, content.bill().units) // the preview follows the picked number
+    }
+
+    @Test
     fun theSavedBillCarriesThePhotoAsProof() = runTest {
         val bills = FakeBillRepository()
         val vm = viewModel(bills = bills)
@@ -324,6 +362,7 @@ class CreateBillViewModelTest {
 
         assertEquals("second.jpg", vm.content().meterPhoto)
         assertEquals("1325", vm.content().reading)
+        assertEquals(listOf(1325), vm.content().readingChoices)
     }
 
     @Test
@@ -335,6 +374,7 @@ class CreateBillViewModelTest {
 
         assertEquals(null, vm.content().meterPhoto)
         assertEquals(null, vm.content().scanResult)
+        assertEquals(emptyList(), vm.content().readingChoices)
         assertEquals("1325", vm.content().reading)
         assertEquals(null, vm.content().bill().meterPhotoPath)
     }

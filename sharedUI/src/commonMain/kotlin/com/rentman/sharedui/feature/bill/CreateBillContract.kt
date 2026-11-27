@@ -16,6 +16,8 @@ internal sealed interface CreateBillIntent {
     data class MeterReplacedChanged(val replaced: Boolean) : CreateBillIntent
     /** The camera took a photo of the meter. [lines] are the text the phone read from it. */
     data class MeterScanned(val photo: String, val lines: List<String>) : CreateBillIntent
+    /** One of the numbers read from the photo was tapped as the reading. */
+    data class ReadingPicked(val value: Int) : CreateBillIntent
     data object ClearMeterPhoto : CreateBillIntent
     data object Review : CreateBillIntent
     data object ChangeReading : CreateBillIntent
@@ -40,6 +42,8 @@ internal sealed interface CreateBillUiState {
         val meterPhoto: String? = null,
         /** Set after a scan, until the reading is typed over. */
         val scanResult: ScanResult? = null,
+        /** The numbers read from the photo that could be the reading, likeliest first. Kept while the photo is. */
+        val readingChoices: List<Int> = emptyList(),
         /** The bill the typed reading would give, or why it can't be made yet. Recalculated on every change. */
         val preview: Outcome<Bill>,
         /** Show the problems in [preview]. Off while typing, so an empty field isn't red before it was tried. */

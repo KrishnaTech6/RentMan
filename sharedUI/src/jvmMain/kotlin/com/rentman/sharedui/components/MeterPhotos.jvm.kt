@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 
 /** The JVM target only runs tests: there is no camera, no gallery and no photo viewer. */
 @Composable
-internal actual fun rememberPhotoSource(onPhoto: (photo: String, alreadyCropped: Boolean) -> Unit): PhotoSource = PhotoSource(camera = {}, gallery = {})
+internal actual fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): PhotoSource = PhotoSource(camera = {}, gallery = {})
 
 @Composable
 internal actual fun rememberPhotoFiles(): PhotoFiles = PhotoFiles(crop = { _, _ -> }, read = { emptyList() }, discard = {})

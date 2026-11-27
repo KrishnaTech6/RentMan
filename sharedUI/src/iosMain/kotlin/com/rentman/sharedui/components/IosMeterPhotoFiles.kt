@@ -9,7 +9,9 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.useContents
 import org.jetbrains.skia.Image
+import platform.CoreGraphics.CGContextSetInterpolationQuality
 import platform.CoreGraphics.CGImageCreateWithImageInRect
+import platform.CoreGraphics.kCGInterpolationHigh
 import platform.CoreGraphics.CGImageGetHeight
 import platform.CoreGraphics.CGImageGetWidth
 import platform.CoreGraphics.CGImageRelease
@@ -26,6 +28,7 @@ import platform.Foundation.NSUUID
 import platform.Foundation.writeToFile
 import platform.UIKit.UIGraphicsBeginImageContextWithOptions
 import platform.UIKit.UIGraphicsEndImageContext
+import platform.UIKit.UIGraphicsGetCurrentContext
 import platform.UIKit.UIGraphicsGetImageFromCurrentImageContext
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
@@ -97,15 +100,34 @@ internal object IosMeterPhotoFiles {
         return runCatching { Image.makeFromEncoded(bytes).toComposeImageBitmap() }.getOrNull()
     }
 
-    /** The lines of text Apple's Vision finds on the saved photo, or none if it can't be read. */
+    /** The lines of text Apple's Vision finds on the saved photo, with a counter's digit pieces joined ([readingLines]), or none. */
     fun recognize(name: String): List<String> {
         val path = pathOf(name) ?: return emptyList()
-        val cgImage = UIImage.imageWithContentsOfFile(path)?.CGImage ?: return emptyList()
+        val saved = UIImage.imageWithContentsOfFile(path) ?: return emptyList()
+        // A small crop is enlarged first, or Vision misses digits. The file is not changed.
+        val (width, height) = saved.size.useContents { width to height }
+        val scale = readScale(width.toInt(), height.toInt()).toDouble()
+        val image = if (scale > 1.0) {
+            UIGraphicsBeginImageContextWithOptions(CGSizeMake(width * scale, height * scale), true, 1.0)
+            // Smooth enlarging, as in the tests on real photos (MeterTextTest): blocky digits are read worse.
+            CGContextSetInterpolationQuality(UIGraphicsGetCurrentContext(), kCGInterpolationHigh)
+            saved.drawInRect(CGRectMake(0.0, 0.0, width * scale, height * scale))
+            UIGraphicsGetImageFromCurrentImageContext().also { UIGraphicsEndImageContext() }
+        } else {
+            saved
+        }
+        val cgImage = (image ?: saved).CGImage ?: return emptyList()
         val request = VNRecognizeTextRequest().apply {
             recognitionLevel = VNRequestTextRecognitionLevelAccurate
             usesLanguageCorrection = false // numbers, not words
         }
         VNImageRequestHandler(cgImage, emptyMap<Any?, Any?>()).performRequests(listOf(request), null)
-        return request.results.orEmpty().mapNotNull { (it as? VNRecognizedTextObservation)?.topCandidates(1u)?.firstOrNull() as? VNRecognizedText }.map { it.string }
+        val pieces = request.results.orEmpty().mapNotNull { result ->
+            val observation = result as? VNRecognizedTextObservation ?: return@mapNotNull null
+            val text = (observation.topCandidates(1u).firstOrNull() as? VNRecognizedText)?.string ?: return@mapNotNull null
+            // Vision's box is in fractions with its origin at the bottom left; TextPiece counts from the top.
+            observation.boundingBox.useContents { TextPiece(text, origin.x.toFloat(), (1 - origin.y - size.height).toFloat(), (origin.x + size.width).toFloat(), (1 - origin.y).toFloat()) }
+        }
+        return readingLines(pieces)
     }
 }

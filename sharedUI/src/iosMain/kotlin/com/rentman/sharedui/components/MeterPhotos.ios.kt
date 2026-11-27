@@ -18,7 +18,6 @@ import platform.QuickLook.QLPreviewItemProtocol
 import platform.UIKit.UIImage
 import platform.UIKit.UIImagePickerController
 import platform.UIKit.UIImagePickerControllerDelegateProtocol
-import platform.UIKit.UIImagePickerControllerEditedImage
 import platform.UIKit.UIImagePickerControllerOriginalImage
 import platform.UIKit.UIImagePickerControllerSourceType
 import platform.UIKit.UINavigationControllerDelegateProtocol
@@ -35,9 +34,8 @@ private class PhotoPickerDelegate(private val onPhoto: (String) -> Unit) :
     NSObject(), UIImagePickerControllerDelegateProtocol, UINavigationControllerDelegateProtocol {
 
     override fun imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo: Map<Any?, *>) {
-        // The square the person cropped to, or the whole photo if the crop was skipped.
-        val image = (didFinishPickingMediaWithInfo[UIImagePickerControllerEditedImage]
-            ?: didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage]) as? UIImage
+        // The whole photo: the part with the reading is chosen on our own crop screen, as on Android.
+        val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
         // Whatever is shown next appears on top of the top screen, so it must wait until the picker has finished closing: shown while the
         // picker is still sliding away, it goes away with it a moment later.
         picker.dismissViewControllerAnimated(true) {
@@ -58,14 +56,14 @@ private class PhotoPickerDelegate(private val onPhoto: (String) -> Unit) :
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
 @Composable
-internal actual fun rememberPhotoSource(onPhoto: (photo: String, alreadyCropped: Boolean) -> Unit): PhotoSource {
+internal actual fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): PhotoSource {
     val currentOnPhoto by rememberUpdatedState(onPhoto)
-    // Apple's own crop (a square, move and scale) is on for the camera and the library, so the photo comes back already cropped.
-    val delegate = remember { PhotoPickerDelegate { currentOnPhoto(it, true) } }
+    val delegate = remember { PhotoPickerDelegate { currentOnPhoto(it) } }
     fun present(source: UIImagePickerControllerSourceType) {
         val picker = UIImagePickerController()
         picker.sourceType = source
-        picker.allowsEditing = true
+        // Apple's own crop is a square only, which cuts off a wide display and keeps serial numbers in view, so it stays off.
+        picker.allowsEditing = false
         picker.delegate = delegate
         topViewController()?.presentViewController(picker, animated = true, completion = null)
     }

@@ -39,8 +39,8 @@ internal data class CropRect(val left: Float, val top: Float, val right: Float, 
     companion object {
         val Whole = CropRect(0f, 0f, 1f, 1f)
 
-        /** Small enough to pick out a meter's number, big enough to still get hold of. */
-        const val MIN_SIZE = 0.1f
+        /** Small enough to box only a meter's number window (about 7% of a photo of the whole meter), big enough to still get hold of. */
+        const val MIN_SIZE = 0.05f
     }
 }
 

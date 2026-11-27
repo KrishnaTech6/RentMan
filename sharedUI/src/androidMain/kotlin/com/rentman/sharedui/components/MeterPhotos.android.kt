@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-internal actual fun rememberPhotoSource(onPhoto: (photo: String, alreadyCropped: Boolean) -> Unit): PhotoSource {
+internal actual fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): PhotoSource {
     val context = LocalContext.current
     val currentOnPhoto by rememberUpdatedState(onPhoto)
     // The file being shot is remembered across a rotation: the camera app can outlive this screen's state.
@@ -37,8 +37,7 @@ internal actual fun rememberPhotoSource(onPhoto: (photo: String, alreadyCropped:
         val (name, from) = incoming ?: return@LaunchedEffect
         val ready = MeterPhotoFiles.prepare(context, name, from)
         incoming = null
-        // Android has no crop of its own, so the crop screen is shown.
-        if (ready) currentOnPhoto(name, false)
+        if (ready) currentOnPhoto(name)
     }
     return remember(camera, gallery) {
         PhotoSource(

@@ -46,9 +46,7 @@ internal fun MeterScanFlow(
     val currentOnScanned by rememberUpdatedState(onScanned)
     var cropping by rememberSaveable { mutableStateOf<String?>(null) }
     var finishing by remember { mutableStateOf<Pair<String, CropRect>?>(null) }
-    val source = rememberPhotoSource { photo, alreadyCropped ->
-        if (alreadyCropped) finishing = photo to CropRect.Whole else cropping = photo
-    }
+    val source = rememberPhotoSource { photo -> cropping = photo }
     LaunchedEffect(finishing) {
         val (photo, part) = finishing ?: return@LaunchedEffect
         if (!part.isWhole) files.crop(photo, part)

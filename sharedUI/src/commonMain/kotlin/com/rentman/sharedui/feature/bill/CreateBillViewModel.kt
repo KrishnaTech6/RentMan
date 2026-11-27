@@ -17,6 +17,7 @@ import com.rentman.sharedui.feature.bill.CreateBillIntent.Back
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ChangeReading
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ClearMeterPhoto
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterScanned
+import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingPicked
 import com.rentman.sharedui.feature.bill.CreateBillIntent.MeterReplacedChanged
 import com.rentman.sharedui.feature.bill.CreateBillIntent.NewMeterStartChanged
 import com.rentman.sharedui.feature.bill.CreateBillIntent.ReadingChanged
@@ -80,7 +81,10 @@ internal class CreateBillViewModel(
                 ).withPreview()
             }
             is MeterScanned -> content { it.scanned(intent) }
-            ClearMeterPhoto -> content { it.copy(meterPhoto = null, scanResult = null).withPreview() }
+            is ReadingPicked -> content {
+                it.copy(reading = intent.value.toString(), scanResult = ScanResult.Read, showProblems = false, saveError = null).withPreview()
+            }
+            ClearMeterPhoto -> content { it.copy(meterPhoto = null, scanResult = null, readingChoices = emptyList()).withPreview() }
             Review -> content { if (it.preview is Outcome.Success) it.copy(step = BillStep.Review) else it.copy(showProblems = true) }
             ChangeReading -> content { it.copy(step = BillStep.Reading, saveError = null) }
             is Save, Back, Retry -> unchanged
@@ -126,15 +130,16 @@ internal class CreateBillViewModel(
         if (state is Content) change(state) else state
     }
 
-    /** A photo is kept even if no number could be read from it. A suggested number replaces the reading but is only a suggestion. */
+    /** A photo is kept even if no number could be read from it. A believable number replaces the reading; all can be tapped. */
     private fun Content.scanned(scan: MeterScanned): Content {
         // After a meter replacement the new meter's first reading is what the number has to be compared with.
         val last = if (meterReplaced) newMeterStart.trim().toIntOrNull() else context.previousReading
         val suggestion = suggestReading(scan.lines, last)
         return copy(
             meterPhoto = scan.photo,
-            reading = suggestion?.toString() ?: reading,
-            scanResult = if (suggestion != null) ScanResult.Read else ScanResult.NothingFound,
+            reading = suggestion.reading?.toString() ?: reading,
+            scanResult = if (suggestion.reading != null) ScanResult.Read else ScanResult.NothingFound,
+            readingChoices = suggestion.choices,
             showProblems = false,
             saveError = null,
         ).withPreview()

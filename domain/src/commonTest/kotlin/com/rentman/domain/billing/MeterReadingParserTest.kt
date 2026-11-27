@@ -47,6 +47,12 @@ class MeterReadingParserTest {
     }
 
     @Test
+    fun aJumpOfMoreThanTwoThousandUnitsIsNotBelievable() {
+        // 03500 is five digits wide like a display, but 2,260 units in one month is not a believable bill.
+        assertEquals(1500, best("03500", "1500", previous = 1240))
+    }
+
+    @Test
     fun theMetersOtherPrintedNumbersAreNotTheReading() {
         // 1200 imp/kWh is closer to the last reading than 1325 is, but the display has five digits.
         assertEquals(1325, best("1200 imp/kWh", "230 V", "5-30 A", "Cl 1.0", "50 Hz", "2021", "01325", previous = 1190))

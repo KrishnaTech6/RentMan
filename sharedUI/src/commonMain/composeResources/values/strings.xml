@@ -223,6 +223,7 @@
     <string name="meter_photo_attached">Meter photo attached</string>
     <string name="meter_photo_retake">Retake</string>
     <string name="meter_photo_remove">Remove photo</string>
+    <string name="reading_choices">Numbers in the photo. Tap the reading:</string>
     <string name="scan_read">Read from the photo. Check it against the meter.</string>
     <string name="scan_nothing">No number found in the photo. Type the reading in.</string>
     <string name="scan_from_gallery">Choose from gallery</string>

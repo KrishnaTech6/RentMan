@@ -78,7 +78,7 @@ internal object MeterPhotoFiles {
     }
 
     /** The lines of text ML Kit reads on the saved photo. */
-    suspend fun read(context: Context, name: String): List<String> = fileOf(context, name)?.let { recognize(context, it) } ?: emptyList()
+    suspend fun read(context: Context, name: String): List<String> = fileOf(context, name)?.let { recognize(it) } ?: emptyList()
 
     /** The saved photo as a picture, or null if it isn't there or can't be decoded. */
     suspend fun image(context: Context, name: String): ImageBitmap? = onIo {
@@ -110,16 +110,32 @@ internal object MeterPhotoFiles {
         }
     }
 
-    private suspend fun recognize(context: Context, file: File): List<String> = suspendCancellableCoroutine { continuation ->
+    private suspend fun recognize(file: File): List<String> = suspendCancellableCoroutine { continuation ->
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        val image = runCatching { InputImage.fromFilePath(context, Uri.fromFile(file)) }.getOrNull()
+        // The saved photo is already upright, so only its size changes: a small crop is enlarged, or digits are missed.
+        val bitmap = runCatching {
+            BitmapFactory.decodeFile(file.path)?.let { saved ->
+                val scale = readScale(saved.width, saved.height)
+                if (scale > 1) Bitmap.createScaledBitmap(saved, saved.width * scale, saved.height * scale, true) else saved
+            }
+        }.getOrNull()
+        val image = bitmap?.let { InputImage.fromBitmap(it, 0) }
         if (image == null) {
             recognizer.close()
             continuation.resume(emptyList())
             return@suspendCancellableCoroutine
         }
         recognizer.process(image)
-            .addOnSuccessListener { text -> continuation.resume(text.textBlocks.flatMap { block -> block.lines.map { it.text } }) }
+            .addOnSuccessListener { text ->
+                // ML Kit's boxes are in pixels of the image it read; TextPiece wants fractions of it.
+                val width = image.width.toFloat()
+                val height = image.height.toFloat()
+                val pieces = text.textBlocks.flatMap { it.lines }.map { line ->
+                    val box = line.boundingBox
+                    if (box == null) TextPiece(line.text, 0f, 0f, 0f, 0f) else TextPiece(line.text, box.left / width, box.top / height, box.right / width, box.bottom / height)
+                }
+                continuation.resume(readingLines(pieces))
+            }
             .addOnFailureListener { continuation.resume(emptyList()) }
             .addOnCompleteListener { recognizer.close() }
     }

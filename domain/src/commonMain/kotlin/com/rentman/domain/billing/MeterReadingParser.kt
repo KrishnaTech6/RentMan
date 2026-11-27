@@ -11,8 +11,8 @@ object MeterReadingParser {
     private const val MAX_DIGITS = 7
     private val DISPLAY_WIDTH = 5..6
 
-    /** More than this many units in one billing period is not a believable month. */
-    private const val MAX_JUMP = 5_000
+    /** More than this many units in one billing period is not a believable month (a big month is about 1,000). */
+    private const val MAX_JUMP = 2_000
 
     private val NUMBER = Regex("""\d+(?:[.,]\d+)?""")
     private val ONLY_DIGITS_AND_SEPARATORS = Regex("""[\d\s.,]+""")
@@ -24,23 +24,27 @@ object MeterReadingParser {
 
     /**
      * The numbers in [lines] that could be the reading, most likely first, each only once. The decimal part is dropped. A
-     * display five or six digits wide is taken over other numbers, and so is a number that is not below [previous] (the last
-     * reading) and not far above it. A six or seven digit number is also offered without its last digit, which a meter may
-     * show as a separate decimal digit.
+     * [believable] number comes first, because the meter only moves a few hundred units a month while serial and standard
+     * numbers are anywhere. Among those, the one closest to [previous] comes first, and a display five or six digits wide
+     * breaks a tie (and decides alone when there is no last reading). A six or seven digit number is also offered without its
+     * last digit, which a meter may show as a separate decimal digit. Numbers below [previous] are still offered last: the
+     * meter may have been replaced.
      */
     fun candidates(lines: List<String>, previous: Int?): List<Int> {
         val found = lines.flatMap { tokensOf(it) }.flatMapIndexed { order, token -> candidatesOf(token, order) }
-        fun inRange(value: Int) = previous == null || (value >= previous && value - previous <= MAX_JUMP)
         return found.sortedWith(
             compareBy<Candidate>(
-                { if (it.width in DISPLAY_WIDTH) 0 else 1 },
-                { if (inRange(it.value)) 0 else 1 },
+                { if (believable(it.value, previous)) 0 else 1 },
                 { previous?.let { last -> abs(it.value - last) } ?: 0 },
+                { if (it.width in DISPLAY_WIDTH) 0 else 1 },
                 { it.read },
                 { it.order },
             ),
         ).map { it.value }.distinct()
     }
+
+    /** Whether [value] can follow [previous] (the last reading) in one bill: not below it and not more than [MAX_JUMP] above it. */
+    fun believable(value: Int, previous: Int?): Boolean = previous == null || (value >= previous && value - previous <= MAX_JUMP)
 
     /** The integer part of each number on a line. A line of only digits is one number the camera read in pieces. */
     private fun tokensOf(line: String): List<Pair<String, Boolean>> {
@@ -65,8 +69,19 @@ object MeterReadingParser {
     }
 }
 
-/** Suggests the reading from what was read off a photo of the meter, or null if nothing in it looks like one. */
+/**
+ * What a photo of the meter suggests: the [reading] to fill in, and the [choices] to tap, likeliest first. The reading is only set
+ * when the likeliest number is [MeterReadingParser.believable]: a serial number filled in is worse than an empty box.
+ */
+data class MeterSuggestion(val reading: Int?, val choices: List<Int>)
+
 class SuggestMeterReadingUseCase {
-    operator fun invoke(lines: List<String>, previousReading: Int?): Int? =
-        MeterReadingParser.candidates(lines, previousReading).firstOrNull()
+    operator fun invoke(lines: List<String>, previousReading: Int?): MeterSuggestion {
+        val choices = MeterReadingParser.candidates(lines, previousReading).take(MAX_CHOICES)
+        return MeterSuggestion(choices.firstOrNull()?.takeIf { MeterReadingParser.believable(it, previousReading) }, choices)
+    }
+
+    private companion object {
+        const val MAX_CHOICES = 3
+    }
 }

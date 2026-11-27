@@ -9,13 +9,12 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Where a meter photo comes from: the [camera] or the [gallery]. Both need the phone's screen, so this is a UI-only hook like the
  * share sheet. A photo that comes back is already in the app's meter photo folder, turned upright and shrunk, and [onPhoto] gets its
- * file name, and whether the phone already let the person crop it (iOS does, with its own square crop; Android has none, so our own
- * crop screen is shown). It is not called if the person cancels.
+ * file name, and our own crop screen is shown next on both phones. It is not called if the person cancels.
  */
 internal class PhotoSource(val camera: () -> Unit, val gallery: () -> Unit)
 
 @Composable
-internal expect fun rememberPhotoSource(onPhoto: (photo: String, alreadyCropped: Boolean) -> Unit): PhotoSource
+internal expect fun rememberPhotoSource(onPhoto: (photo: String) -> Unit): PhotoSource
 
 /** What is done to a photo that is in the meter photo folder. They work off the main thread. */
 internal class PhotoFiles(
@@ -32,6 +31,18 @@ private val READ_LIMIT = 15.seconds
 /** The lines of text on [photo], or none if reading takes longer than [limit], so a stuck reader can never freeze the screen. */
 internal suspend fun PhotoFiles.readWithin(photo: String, limit: Duration = READ_LIMIT): List<String> =
     withTimeoutOrNull(limit) { read(photo) } ?: emptyList()
+
+/** The longer side, in pixels, a photo is enlarged to before its text is read. Text on a small crop comes out in pieces without it. */
+private const val READ_SIDE = 2_000
+
+/** Enlarging more than this only blurs the digits. */
+private const val MAX_READ_SCALE = 5
+
+/** How many times to enlarge a [width] by [height] photo before its text is read: 1 for a big photo, at most [MAX_READ_SCALE]. */
+internal fun readScale(width: Int, height: Int): Int {
+    val longer = maxOf(width, height, 1)
+    return ((READ_SIDE + longer - 1) / longer).coerceIn(1, MAX_READ_SCALE)
+}
 
 @Composable
 internal expect fun rememberPhotoFiles(): PhotoFiles
