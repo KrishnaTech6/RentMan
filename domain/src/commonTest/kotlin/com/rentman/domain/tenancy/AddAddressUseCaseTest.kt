@@ -8,22 +8,22 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AddAddressUseCaseTest {
-    private val repository = FakeAddressRepository(listOf(Address(AddressId(1), "338 A")))
+    private val repository = FakeAddressRepository(listOf(Address(AddressId(1), "12 A")))
     private val addAddress = AddAddressUseCase(repository)
     private val observeAddresses = ObserveAddressesUseCase(repository)
 
     @Test
     fun addsANewAddress() = runTest {
-        val result = addAddress("AIMS G-703")
+        val result = addAddress("Park View G-7")
 
-        assertEquals(Outcome.Success(Address(AddressId(2), "AIMS G-703")), result)
+        assertEquals(Outcome.Success(Address(AddressId(2), "Park View G-7")), result)
     }
 
     @Test
     fun trimsAndCollapsesWhitespace() = runTest {
-        val result = addAddress("  Supertech   B9-1906 ")
+        val result = addAddress("  Lake Tower   B9-19 ")
 
-        assertEquals("Supertech B9-1906", (result as Outcome.Success).value.name)
+        assertEquals("Lake Tower B9-19", (result as Outcome.Success).value.name)
     }
 
     @Test
@@ -33,17 +33,17 @@ class AddAddressUseCaseTest {
 
     @Test
     fun rejectsADuplicateIgnoringCase() = runTest {
-        assertEquals(Outcome.Failure(DomainError.DuplicateName("338 a")), addAddress("338 a"))
+        assertEquals(Outcome.Failure(DomainError.DuplicateName("12 a")), addAddress("12 a"))
     }
 
     @Test
     fun observedListUpdatesAfterAnAdd() = runTest {
         observeAddresses().test {
-            assertEquals(listOf("338 A"), (awaitItem() as Outcome.Success).value.map(Address::name))
+            assertEquals(listOf("12 A"), (awaitItem() as Outcome.Success).value.map(Address::name))
 
-            addAddress("AIMS I-301")
+            addAddress("Park View I-3")
 
-            assertEquals(listOf("338 A", "AIMS I-301"), (awaitItem() as Outcome.Success).value.map(Address::name))
+            assertEquals(listOf("12 A", "Park View I-3"), (awaitItem() as Outcome.Success).value.map(Address::name))
         }
     }
 }

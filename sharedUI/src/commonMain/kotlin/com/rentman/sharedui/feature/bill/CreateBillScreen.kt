@@ -466,7 +466,7 @@ private fun LineRow(label: String, amount: Paise, detail: String?, muted: Boolea
 
 
 
-private val previewAddress = Address(AddressId(1), "338 A")
+private val previewAddress = Address(AddressId(1), "12 A")
 private val previewRenter = Renter(
     id = RenterId(1),
     addressId = previewAddress.id,

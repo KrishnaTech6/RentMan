@@ -7,7 +7,7 @@ A landlord's tool for tracking renters across several addresses: what each one o
 ### Places and people
 
 **Address**:
-A building or flat location the landlord owns, picked from a list, e.g. "338 A" or "AIMS G-703". One address can have several renters.
+A building or flat location the landlord owns, picked from a list, e.g. "12 A" or "Park View G-7". One address can have several renters.
 _Avoid_: Property, building, location
 
 **Unit**:

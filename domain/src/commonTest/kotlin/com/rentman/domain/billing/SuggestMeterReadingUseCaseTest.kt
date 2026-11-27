@@ -21,9 +21,9 @@ class SuggestMeterReadingUseCaseTest {
     @Test
     fun whenNoNumberFitsTheLastReadingNothingIsFilledInButTheNumbersCanStillBeTapped() {
         // A loose crop of a whole meter: the display came out in pieces, only label and serial numbers are left.
-        val suggestion = suggest(listOf("IS : 13779", "6", "5", "66", "4", "8815388", "Sr No 706047"), previousReading = 6504)
+        val suggestion = suggest(listOf("IS : 13779", "6", "5", "66", "4", "8815388", "Sr No 804512"), previousReading = 6504)
         assertEquals(null, suggestion.reading)
-        assertEquals(listOf(13779, 70604, 706047), suggestion.choices)
+        assertEquals(listOf(13779, 80451, 804512), suggestion.choices)
     }
 
     @Test

@@ -42,7 +42,7 @@ import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MonthsViewModelTest {
-    private val home = Address(AddressId(1), "338 A")
+    private val home = Address(AddressId(1), "12 A")
     private val ravi = Renter(
         id = RenterId(1), addressId = home.id, unit = "Ground floor", name = "Ravi Kumar", phone = "919876543210",
         monthlyRent = 7_500L.rupees, dueDay = 5, agreementStart = LocalDate(2026, 1, 1), raisePercent = 10, raiseEveryMonths = 11,

@@ -54,7 +54,7 @@ private val EXAMPLES = mapOf(
     ),
     MessageKind.PaymentReceived to mapOf(
         "name" to "Ravi Kumar",
-        "unit_address" to "Ground floor · 338 A",
+        "unit_address" to "Ground floor · 12 A",
         "amount" to "₹7,500",
         "pending" to "₹1,880",
     ),

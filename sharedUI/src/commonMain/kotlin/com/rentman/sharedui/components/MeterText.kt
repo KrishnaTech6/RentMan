@@ -56,7 +56,7 @@ internal fun readingLines(pieces: List<TextPiece>): List<String> =
  */
 internal fun findMeters(pieces: List<TextPiece>, lastReading: Int?): List<MeterSpot> {
     // A row of pieces is cut into runs (a 0 read as a 1 spoils only one digit); one printed number is read only as itself, so a
-    // serial number like 706047 can't give a run like 7060 that happens to fit.
+    // serial number like 804512 can't give a run like 7060 that happens to fit.
     val rows = digitRows(pieces).map { row -> row to runsOf(digitsOf(row)) }
     val wholes = pieces.filter { it.text.trim().matches(WHOLE_DISPLAY) }
         .map { listOf(it) to MeterReadingParser.candidates(listOf(it.text), lastReading).map(Int::toString) }

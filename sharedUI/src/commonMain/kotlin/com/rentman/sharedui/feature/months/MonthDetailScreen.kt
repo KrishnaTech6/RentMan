@@ -183,7 +183,7 @@ private fun RenterMonthRow(row: RenterMonth, onClick: () -> Unit) {
     }
 }
 
-private val previewAddress = Address(AddressId(1), "338 A")
+private val previewAddress = Address(AddressId(1), "12 A")
 private val previewMonth = BillingMonth.of(2026, 11)
 
 private fun previewRow(id: Long, name: String, billed: Long, collected: Long, late: Long, hasBill: Boolean = true) = RenterMonth(

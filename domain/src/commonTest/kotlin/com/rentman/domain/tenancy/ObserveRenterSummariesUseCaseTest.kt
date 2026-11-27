@@ -11,8 +11,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ObserveRenterSummariesUseCaseTest {
-    private val a338 = Address(AddressId(1), "338 A")
-    private val aims = Address(AddressId(2), "AIMS G-703")
+    private val a12 = Address(AddressId(1), "12 A")
+    private val parkView = Address(AddressId(2), "Park View G-7")
 
     private fun renter(name: String, address: Address, unit: String? = null) = Renter(
         id = RenterId(name.length.toLong()),
@@ -33,24 +33,24 @@ class ObserveRenterSummariesUseCaseTest {
 
     @Test
     fun pairsEachRenterWithTheirAddress() = runTest {
-        val ravi = renter("Ravi", a338, unit = "Ground floor")
-        val neha = renter("Neha", aims)
+        val ravi = renter("Ravi", a12, unit = "Ground floor")
+        val neha = renter("Neha", parkView)
         val useCase = ObserveRenterSummariesUseCase(
             FakeRenterRepository(listOf(ravi, neha)),
-            FakeAddressRepository(listOf(a338, aims)),
+            FakeAddressRepository(listOf(a12, parkView)),
         )
 
         useCase().test {
             val summaries = (awaitItem() as Outcome.Success).value
-            assertEquals(listOf(RenterSummary(neha, aims), RenterSummary(ravi, a338)), summaries)
+            assertEquals(listOf(RenterSummary(neha, parkView), RenterSummary(ravi, a12)), summaries)
         }
     }
 
     @Test
     fun aFailureReadingRentersIsReportedNotShownAsAnEmptyList() = runTest {
         val useCase = ObserveRenterSummariesUseCase(
-            FakeRenterRepository(listOf(renter("Ravi", a338)), failReads = true),
-            FakeAddressRepository(listOf(a338)),
+            FakeRenterRepository(listOf(renter("Ravi", a12)), failReads = true),
+            FakeAddressRepository(listOf(a12)),
         )
 
         useCase().test {
@@ -61,8 +61,8 @@ class ObserveRenterSummariesUseCaseTest {
     @Test
     fun aFailureReadingAddressesIsReportedToo() = runTest {
         val useCase = ObserveRenterSummariesUseCase(
-            FakeRenterRepository(listOf(renter("Ravi", a338))),
-            FakeAddressRepository(listOf(a338), failReads = true),
+            FakeRenterRepository(listOf(renter("Ravi", a12))),
+            FakeAddressRepository(listOf(a12), failReads = true),
         )
 
         useCase().test {
@@ -72,7 +72,7 @@ class ObserveRenterSummariesUseCaseTest {
 
     @Test
     fun noRentersIsAnEmptyListNotAnError() = runTest {
-        val useCase = ObserveRenterSummariesUseCase(FakeRenterRepository(), FakeAddressRepository(listOf(a338)))
+        val useCase = ObserveRenterSummariesUseCase(FakeRenterRepository(), FakeAddressRepository(listOf(a12)))
 
         useCase().test {
             assertEquals(Outcome.Success(emptyList()), awaitItem())

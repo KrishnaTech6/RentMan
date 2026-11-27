@@ -38,7 +38,7 @@ class RoomBackupRepositoryTest {
     private fun neha() = sampleBackup().let { s ->
         BackupFile(
             schemaVersion = s.schemaVersion, exportedAt = 0,
-            address = listOf(s.address.single().copy(id = 7, name = "AIMS G-703")),
+            address = listOf(s.address.single().copy(id = 7, name = "Park View G-7")),
             renter = listOf(s.renter.single().copy(id = 8, addressId = 7, name = "Neha Verma", remindersMutedMonth = null, raiseSnoozedUntil = null)),
             fixedCharge = emptyList(), rentChange = emptyList(), bill = emptyList(), billLine = emptyList(), payment = emptyList(),
             settings = null,
@@ -124,7 +124,7 @@ class RoomBackupRepositoryTest {
     fun restoringASecondFileWithoutChangingAnythingKeepsTheFirstSnapshot() = runTest {
         // "Wrong file, try another": the data from before the first restore must not be lost.
         seed(neha())
-        val other = neha().let { it.copy(address = it.address.map { a -> a.copy(name = "Supertech B9-1906") }) }
+        val other = neha().let { it.copy(address = it.address.map { a -> a.copy(name = "Lake Tower B9-19") }) }
         repository.restore(BackupCodec.encode(sampleBackup())) // snapshot = Neha, data = Ravi
         repository.restore(BackupCodec.encode(other)) // nothing was changed in between
 
@@ -217,7 +217,7 @@ class RoomBackupRepositoryTest {
         seed(neha())
         // Valid for our checks, but the address names clash for the database, which ignores case, so the insert fails
         // after the old data was already cleared.
-        val clash = sampleBackup().let { it.copy(address = it.address + it.address.single().copy(id = 2, name = "338 a")) }
+        val clash = sampleBackup().let { it.copy(address = it.address + it.address.single().copy(id = 2, name = "12 a")) }
 
         val result = repository.restore(BackupCodec.encode(clash))
 

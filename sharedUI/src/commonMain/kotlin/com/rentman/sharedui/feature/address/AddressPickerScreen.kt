@@ -203,7 +203,7 @@ private fun NewAddress(state: Content, onIntent: (AddressPickerIntent) -> Unit) 
 
 
 
-private val previewAddresses = listOf("338 A", "338 B", "AIMS G-703").mapIndexed { i, name -> Address(AddressId(i + 1L), name) }
+private val previewAddresses = listOf("12 A", "12 B", "Park View G-7").mapIndexed { i, name -> Address(AddressId(i + 1L), name) }
 
 @Preview
 @Composable
@@ -216,4 +216,4 @@ private fun ErrorPreview() = AddressPickerScreen(Error(DomainError.Storage("disk
 @Preview
 @Composable
 private fun ContentPreview() =
-    AddressPickerScreen(Content(previewAddresses, selectedId = AddressId(3), nameError = DomainError.DuplicateName("338 A"))) {}
+    AddressPickerScreen(Content(previewAddresses, selectedId = AddressId(3), nameError = DomainError.DuplicateName("12 A"))) {}

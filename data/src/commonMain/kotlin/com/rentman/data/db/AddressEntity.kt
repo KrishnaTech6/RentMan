@@ -10,7 +10,7 @@ import androidx.room3.PrimaryKey
 @Serializable
 internal data class AddressEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    /** Unique and case-insensitive, so "338 a" and "338 A" are the same address. */
+    /** Unique and case-insensitive, so "12 a" and "12 A" are the same address. */
     @ColumnInfo(collate = ColumnInfo.NOCASE) val name: String,
     val archived: Boolean = false,
     /** Epoch millis. */

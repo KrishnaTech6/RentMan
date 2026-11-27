@@ -28,8 +28,8 @@ import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddressPickerViewModelTest {
-    private val a338 = Address(AddressId(1), "338 A")
-    private val aims = Address(AddressId(2), "AIMS G-703")
+    private val a12 = Address(AddressId(1), "12 A")
+    private val parkView = Address(AddressId(2), "Park View G-7")
 
     @BeforeTest
     fun setMain() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -42,57 +42,57 @@ class AddressPickerViewModelTest {
 
     @Test
     fun showsTheAddressesOnceLoaded() = runTest {
-        viewModel(FakeAddressRepository(listOf(aims, a338))).uiState.test {
-            assertEquals(Content(addresses = listOf(a338, aims)), expectMostRecentItem())
+        viewModel(FakeAddressRepository(listOf(parkView, a12))).uiState.test {
+            assertEquals(Content(addresses = listOf(a12, parkView)), expectMostRecentItem())
         }
     }
 
     @Test
     fun selectingAnAddressMarksItSelected() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338, aims)))
+        val vm = viewModel(FakeAddressRepository(listOf(a12, parkView)))
 
-        vm.onIntent(Select(aims.id))
+        vm.onIntent(Select(parkView.id))
 
-        assertEquals(aims, (vm.uiState.value as Content).selected)
+        assertEquals(parkView, (vm.uiState.value as Content).selected)
     }
 
     @Test
     fun addingSelectsTheNewAddressAndClearsTheField() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338)))
-        vm.onIntent(NameChanged("AIMS I-301"))
+        val vm = viewModel(FakeAddressRepository(listOf(a12)))
+        vm.onIntent(NameChanged("Park View I-3"))
 
-        vm.onIntent(Add("AIMS I-301"))
+        vm.onIntent(Add("Park View I-3"))
 
         val state = vm.uiState.value as Content
-        assertEquals(listOf("338 A", "AIMS I-301"), state.addresses.map(Address::name))
-        assertEquals("AIMS I-301", state.selected?.name)
+        assertEquals(listOf("12 A", "Park View I-3"), state.addresses.map(Address::name))
+        assertEquals("Park View I-3", state.selected?.name)
         assertEquals("", state.newName)
         assertEquals(false, state.isSaving)
     }
 
     @Test
     fun aBlankNameShowsAnErrorAndDoesNotSave() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338)))
+        val vm = viewModel(FakeAddressRepository(listOf(a12)))
 
         vm.onIntent(Add("   "))
 
         val state = vm.uiState.value as Content
         assertEquals(DomainError.BlankName, state.nameError)
-        assertEquals(listOf(a338), state.addresses)
+        assertEquals(listOf(a12), state.addresses)
     }
 
     @Test
     fun aDuplicateNameShowsAnError() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338)))
+        val vm = viewModel(FakeAddressRepository(listOf(a12)))
 
-        vm.onIntent(Add("338 a"))
+        vm.onIntent(Add("12 a"))
 
-        assertEquals(DomainError.DuplicateName("338 a"), (vm.uiState.value as Content).nameError)
+        assertEquals(DomainError.DuplicateName("12 a"), (vm.uiState.value as Content).nameError)
     }
 
     @Test
     fun typingClearsTheNameError() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338)))
+        val vm = viewModel(FakeAddressRepository(listOf(a12)))
         vm.onIntent(Add(""))
 
         vm.onIntent(NameChanged("A"))
@@ -103,12 +103,12 @@ class AddressPickerViewModelTest {
     @Test
     fun aSecondAddWhileSavingIsIgnored() = runTest {
         val gate = CompletableDeferred<Unit>()
-        val repository = FakeAddressRepository(listOf(a338), gate = gate)
+        val repository = FakeAddressRepository(listOf(a12), gate = gate)
         val vm = viewModel(repository)
 
-        vm.onIntent(Add("AIMS I-301"))
+        vm.onIntent(Add("Park View I-3"))
         assertEquals(true, (vm.uiState.value as Content).isSaving)
-        vm.onIntent(Add("AIMS I-301"))
+        vm.onIntent(Add("Park View I-3"))
         gate.complete(Unit)
 
         assertEquals(1, repository.addCalls)
@@ -117,33 +117,33 @@ class AddressPickerViewModelTest {
 
     @Test
     fun aStorageFailureWhileSavingShowsTheErrorState() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338), failAdd = true))
+        val vm = viewModel(FakeAddressRepository(listOf(a12), failAdd = true))
 
-        vm.onIntent(Add("AIMS I-301"))
+        vm.onIntent(Add("Park View I-3"))
 
         assertEquals(Error(DomainError.Storage("disk")), vm.uiState.value)
     }
 
     @Test
     fun confirmingEmitsThePickedAddress() = runTest {
-        val vm = viewModel(FakeAddressRepository(listOf(a338)))
+        val vm = viewModel(FakeAddressRepository(listOf(a12)))
 
         vm.navigation.test {
-            vm.onIntent(Confirm(a338.id))
+            vm.onIntent(Confirm(a12.id))
 
-            assertEquals(AddressPickerNavEvent.Picked(a338.id), awaitItem())
+            assertEquals(AddressPickerNavEvent.Picked(a12.id), awaitItem())
         }
     }
 
     @Test
     fun aStorageFailureShowsErrorAndRetryRecovers() = runTest {
-        val repository = FakeAddressRepository(listOf(a338), failReads = true)
+        val repository = FakeAddressRepository(listOf(a12), failReads = true)
         val vm = viewModel(repository)
         assertIs<Error>(vm.uiState.value)
 
         repository.failReads = false
         vm.onIntent(Retry)
 
-        assertEquals(Content(addresses = listOf(a338)), vm.uiState.value)
+        assertEquals(Content(addresses = listOf(a12)), vm.uiState.value)
     }
 }

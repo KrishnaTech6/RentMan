@@ -400,7 +400,7 @@ private fun chargeProblem(state: Content, field: ChargeField): String? =
 
 
 
-private val previewAddress = Address(AddressId(1), "338 A")
+private val previewAddress = Address(AddressId(1), "12 A")
 private val previewContent = Content(
     addresses = listOf(previewAddress),
     agreementStart = LocalDate(2026, 11, 1),

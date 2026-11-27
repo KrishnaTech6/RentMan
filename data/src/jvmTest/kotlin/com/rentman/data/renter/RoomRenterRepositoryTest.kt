@@ -33,7 +33,7 @@ class RoomRenterRepositoryTest {
     @AfterTest
     fun closeDatabase() = database.close()
 
-    private suspend fun address(name: String = "338 A"): AddressId = ((addresses.add(name) as Outcome.Success).value).id
+    private suspend fun address(name: String = "12 A"): AddressId = ((addresses.add(name) as Outcome.Success).value).id
 
     private fun renter(addressId: AddressId, name: String = "Ravi Kumar") = Renter(
         addressId = addressId,

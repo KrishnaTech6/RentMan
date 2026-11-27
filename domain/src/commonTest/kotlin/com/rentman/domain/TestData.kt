@@ -12,7 +12,7 @@ import kotlinx.datetime.LocalDate
 
 /** Shared builders for domain tests. Ravi is the example from PLAN.md: rent ₹7,500, water ₹200, meter 1240. */
 object TestData {
-    val address = Address(AddressId(1), "338 A")
+    val address = Address(AddressId(1), "12 A")
     val water = FixedCharge(label = "Water", amount = 200L.rupees)
 
     fun renter(

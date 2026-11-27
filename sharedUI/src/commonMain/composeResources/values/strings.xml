@@ -15,7 +15,7 @@
     <!-- Address picker -->
     <string name="choose_address">Choose address</string>
     <string name="new_address">NEW ADDRESS</string>
-    <string name="new_address_hint">e.g. Supertech B9-1906</string>
+    <string name="new_address_hint">e.g. Lake Tower B9-19</string>
     <string name="new_address_note">It's added to the list and picked for this renter.</string>
     <string name="add">Add</string>
     <string name="use_address">Use %1$s</string>

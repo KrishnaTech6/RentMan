@@ -301,15 +301,15 @@ class CreateBillViewModelTest {
 
     @Test
     fun aPhotoWithOnlyASerialNumberFillsInNothingButOffersItToTap() = runTest {
-        val vm = viewModel() // the meter was at 1240: 706047 can't follow it
+        val vm = viewModel() // the meter was at 1240: 804512 can't follow it
         vm.onIntent(ReadingChanged("1300"))
 
-        vm.onIntent(MeterScanned("9f3a.jpg", listOf("Sr No 706047")))
+        vm.onIntent(MeterScanned("9f3a.jpg", listOf("Sr No 804512")))
 
         val content = vm.content()
         assertEquals("1300", content.reading)
         assertEquals(ScanResult.NothingFound, content.scanResult)
-        assertEquals(listOf(70604, 706047), content.readingChoices)
+        assertEquals(listOf(80451, 804512), content.readingChoices)
     }
 
     @Test

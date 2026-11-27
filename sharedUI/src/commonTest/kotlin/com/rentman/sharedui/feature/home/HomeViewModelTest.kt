@@ -64,7 +64,7 @@ import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
-    private val home = Address(AddressId(1), "338 A")
+    private val home = Address(AddressId(1), "12 A")
     private val ravi = Renter(
         id = RenterId(1),
         addressId = home.id,

@@ -36,14 +36,14 @@ input{font-family:Inter,system-ui,sans-serif}
 
   <div style="padding: 22px 20px 8px; font-size: 13px; font-weight: 700; color: #475467; letter-spacing: 0.4px">NEW ADDRESS</div>
   <div style="margin: 0 16px; display: flex; gap: 10px">
-    <input aria-label="New address" placeholder="e.g. Supertech B9-1906" style="flex: 1; min-width: 0; height: 52px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D0D5DD; border-radius: 12px; background: #FFFFFF; font-size: 16px; color: #101828">
+    <input aria-label="New address" placeholder="e.g. Lake Tower B9-19" style="flex: 1; min-width: 0; height: 52px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D0D5DD; border-radius: 12px; background: #FFFFFF; font-size: 16px; color: #101828">
     <button style="height: 52px; padding: 0 18px; border-radius: 12px; border: none; background: #101828; color: #FFFFFF; font-size: 15px; font-weight: 700">Add</button>
   </div>
   <span style="margin: 10px 20px 0; font-size: 13px; color: #475467; line-height: 1.4">It's added to the list and picked for this renter.</span>
 
   <div style="flex: 1"></div>
   <div style="padding: 12px 16px 24px; background: #FFFFFF; border-top: 1px solid #E4E7EC">
-    <a href="AddRenter.dc.html" style="height: 56px; border-radius: 14px; background: #2747C9; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Use AIMS G-703</a>
+    <a href="AddRenter.dc.html" style="height: 56px; border-radius: 14px; background: #2747C9; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Use Park View G-7</a>
   </div>
 </div>
 </x-dc>
@@ -51,12 +51,12 @@ input{font-family:Inter,system-ui,sans-serif}
 class Component extends DCLogic {
   renderVals() {
     var list = [
-      { name: '338 A', count: '3 renters' },
-      { name: '338 B', count: '1 renter' },
-      { name: '338 C', count: '1 renter' },
-      { name: 'AIMS G-703', count: 'Empty', sel: true },
-      { name: 'AIMS I-301', count: '1 renter' },
-      { name: 'Supertech B9-1906', count: '1 renter' }
+      { name: '12 A', count: '3 renters' },
+      { name: '12 B', count: '1 renter' },
+      { name: '12 C', count: '1 renter' },
+      { name: 'Park View G-7', count: 'Empty', sel: true },
+      { name: 'Park View I-3', count: '1 renter' },
+      { name: 'Lake Tower B9-19', count: '1 renter' }
     ];
     return {
       addresses: list.map(function (a, i) {

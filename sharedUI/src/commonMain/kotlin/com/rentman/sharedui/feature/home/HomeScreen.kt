@@ -411,7 +411,7 @@ private val mutedStyle = TextStyle(fontSize = 16.sp, color = RentManColors.TextM
 private fun initials(name: String): String =
     name.split(' ').filter(String::isNotBlank).take(2).joinToString("") { it.first().uppercase() }
 
-private val previewHome = Address(AddressId(1), "338 A")
+private val previewHome = Address(AddressId(1), "12 A")
 private val previewRenter = Renter(
     id = RenterId(1),
     addressId = previewHome.id,

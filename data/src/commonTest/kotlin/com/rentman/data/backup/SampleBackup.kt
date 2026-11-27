@@ -9,11 +9,11 @@ import com.rentman.data.db.PaymentEntity
 import com.rentman.data.db.RentChangeEntity
 import com.rentman.data.db.RenterEntity
 
-/** Ravi at 338 A with a bill, two payments (one removed), a raise and settings: a little of every table. */
+/** Ravi at 12 A with a bill, two payments (one removed), a raise and settings: a little of every table. */
 internal fun sampleBackup() = BackupFile(
     schemaVersion = BackupCodec.SCHEMA_VERSION,
     exportedAt = 1_700_000_000_000,
-    address = listOf(AddressEntity(id = 1, name = "338 A", archived = false, createdAt = 10)),
+    address = listOf(AddressEntity(id = 1, name = "12 A", archived = false, createdAt = 10)),
     renter = listOf(
         RenterEntity(
             id = 1, addressId = 1, unit = "Ground floor", name = "Ravi Kumar", phone = "919876543210",

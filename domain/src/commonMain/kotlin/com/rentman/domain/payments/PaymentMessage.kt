@@ -6,7 +6,7 @@ import com.rentman.domain.money.Paise
 import com.rentman.domain.tenancy.RenterSummary
 
 /**
- * The line posted in the landlord's WhatsApp group when rent comes in, "Paid: Ravi Kumar (Ground floor · 338 A) - ₹7,500" with
+ * The line posted in the landlord's WhatsApp group when rent comes in, "Paid: Ravi Kumar (Ground floor · 12 A) - ₹7,500" with
  * our [template]. [pending] is what is left after this payment (never below zero). Amounts are formatted by [money].
  */
 object PaymentMessage {

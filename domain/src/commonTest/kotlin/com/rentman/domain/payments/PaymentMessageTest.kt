@@ -14,21 +14,21 @@ class PaymentMessageTest {
     fun namesTheRenterTheirUnitAndAddressAndTheAmount() {
         val summary = RenterSummary(TestData.renter(), TestData.address)
 
-        assertEquals("Paid: Ravi Kumar (Ground floor · 338 A) - ₹7500", PaymentMessage.text(summary, 7_500L.rupees, money))
+        assertEquals("Paid: Ravi Kumar (Ground floor · 12 A) - ₹7500", PaymentMessage.text(summary, 7_500L.rupees, money))
     }
 
     @Test
     fun withoutAUnitOnlyTheAddressIsShown() {
         val summary = RenterSummary(TestData.renter().copy(unit = null), TestData.address)
 
-        assertEquals("Paid: Ravi Kumar (338 A) - ₹4000", PaymentMessage.text(summary, 4_000L.rupees, money))
+        assertEquals("Paid: Ravi Kumar (12 A) - ₹4000", PaymentMessage.text(summary, 4_000L.rupees, money))
     }
 
     @Test
     fun extraSpacesAroundTheNameAreDropped() {
         val summary = RenterSummary(TestData.renter(name = "  Ravi Kumar "), TestData.address)
 
-        assertEquals("Paid: Ravi Kumar (Ground floor · 338 A) - ₹100", PaymentMessage.text(summary, 100L.rupees, money))
+        assertEquals("Paid: Ravi Kumar (Ground floor · 12 A) - ₹100", PaymentMessage.text(summary, 100L.rupees, money))
     }
 
     @Test

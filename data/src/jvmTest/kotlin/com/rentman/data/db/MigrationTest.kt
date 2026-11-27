@@ -49,7 +49,7 @@ class MigrationTest {
     fun settingsAndAddressesSurviveAndTheMessagesStartAsOurs() = runTest {
         versionOneDatabase(
             "INSERT INTO app_settings (id, globalRatePaise, reminderMinuteOfDay, reminderRepeatDays, lastBackupAt) VALUES (1, 900, 600, 2, 1700000000000)",
-            "INSERT INTO address (id, name, archived, createdAt) VALUES (1, '338 A', 0, 1700000000000)",
+            "INSERT INTO address (id, name, archived, createdAt) VALUES (1, '12 A', 0, 1700000000000)",
         )
         val database = versionTwo()
 
@@ -58,7 +58,7 @@ class MigrationTest {
             Outcome.Success(AppSettings(Paise(900), 600, 2, Instant.fromEpochMilliseconds(1_700_000_000_000))),
             settings.observe().first(),
         )
-        assertEquals(listOf("338 A"), (RoomAddressRepository(database.addressDao(), kotlin.time.Clock.System).observeAll().first() as Outcome.Success).value.map { it.name })
+        assertEquals(listOf("12 A"), (RoomAddressRepository(database.addressDao(), kotlin.time.Clock.System).observeAll().first() as Outcome.Success).value.map { it.name })
 
         // The new columns work: the landlord's own wording is stored and read back.
         settings.save(AppSettings().withMessage(MessageKind.Bill, "Namaste {first_name}"))

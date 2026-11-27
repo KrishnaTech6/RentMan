@@ -18,7 +18,7 @@ Room 3 (`androidx.room3`) over SQLite with `BundledSQLiteDriver`. The tables bel
 | Column | Type | Notes |
 |---|---|---|
 | id | INTEGER PK autogen | |
-| name | TEXT NOT NULL | Unique, case-insensitive (`NOCASE`). e.g. "AIMS G-703". |
+| name | TEXT NOT NULL | Unique, case-insensitive (`NOCASE`). e.g. "Park View G-7". |
 | archived | INTEGER NOT NULL DEFAULT 0 | Hidden from the picker, kept for history. |
 | createdAt | INTEGER NOT NULL | epoch millis |
 

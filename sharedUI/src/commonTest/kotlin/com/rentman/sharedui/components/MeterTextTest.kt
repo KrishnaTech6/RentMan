@@ -29,9 +29,9 @@ class MeterTextTest {
 
     @Test
     fun longerNumbersAndWordsAreLeftAsTheyAre() {
-        val lines = readingLines(listOf(piece("Sr No", 0.10f), piece("706047", 0.20f), piece("3200", 0.40f)))
+        val lines = readingLines(listOf(piece("Sr No", 0.10f), piece("804512", 0.20f), piece("3200", 0.40f)))
 
-        assertEquals(listOf("Sr No", "706047", "3200"), lines)
+        assertEquals(listOf("Sr No", "804512", "3200"), lines)
     }
 
     @Test
@@ -67,7 +67,7 @@ class MeterTextTest {
 
     @Test
     fun aPhotoWithNoDisplayFindsNoMeter() {
-        assertEquals(emptyList(), findMeters(listOf(TextPiece("Sr No 706047", 0.1f, 0.1f, 0.3f, 0.12f), TextPiece("3200", 0.5f, 0.5f, 0.6f, 0.52f)), lastReading = 6504))
+        assertEquals(emptyList(), findMeters(listOf(TextPiece("Sr No 804512", 0.1f, 0.1f, 0.3f, 0.12f), TextPiece("3200", 0.5f, 0.5f, 0.6f, 0.52f)), lastReading = 6504))
     }
 
     @Test

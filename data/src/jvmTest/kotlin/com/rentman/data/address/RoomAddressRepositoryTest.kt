@@ -28,11 +28,11 @@ class RoomAddressRepositoryTest {
     @Test
     fun addedAddressesComeBackSortedIgnoringCase() = runTest {
         repository.add("b-block")
-        repository.add("AIMS G-703")
-        repository.add("338 A")
+        repository.add("Park View G-7")
+        repository.add("12 A")
 
         repository.observeAll().test {
-            assertEquals(listOf("338 A", "AIMS G-703", "b-block"), awaitItem().names())
+            assertEquals(listOf("12 A", "b-block", "Park View G-7"), awaitItem().names())
         }
     }
 
@@ -41,26 +41,26 @@ class RoomAddressRepositoryTest {
         repository.observeAll().test {
             assertEquals(emptyList(), awaitItem().names())
 
-            repository.add("338 A")
+            repository.add("12 A")
 
-            assertEquals(listOf("338 A"), awaitItem().names())
+            assertEquals(listOf("12 A"), awaitItem().names())
         }
     }
 
     @Test
     fun addReturnsTheStoredAddressWithItsId() = runTest {
-        val result = repository.add("338 A")
+        val result = repository.add("12 A")
 
         val address = (result as Outcome.Success).value
-        assertEquals("338 A", address.name)
+        assertEquals("12 A", address.name)
         assertEquals(1L, address.id.value)
     }
 
     @Test
     fun aNameThatDiffersOnlyByCaseIsRejectedByTheDatabase() = runTest {
-        repository.add("338 A")
+        repository.add("12 A")
 
-        val duplicate = repository.add("338 a")
+        val duplicate = repository.add("12 a")
 
         val failure = assertIs<Outcome.Failure>(duplicate)
         assertIs<DomainError.Storage>(failure.error)

@@ -75,7 +75,7 @@ internal class FakeSettingsRepository(
 
 /** Ravi from PLAN.md: rent ₹7,500, water ₹200, meter at 1240. */
 internal object Ravi {
-    val address = Address(AddressId(1), "338 A")
+    val address = Address(AddressId(1), "12 A")
 
     fun renter(billsElectricity: Boolean = true) = Renter(
         id = RenterId(1),

@@ -33,7 +33,7 @@ class RoomPaymentRepositoryTest {
     fun closeDatabase() = database.close()
 
     private suspend fun renterId(): RenterId {
-        val address = (RoomAddressRepository(database.addressDao(), Clock.System).add("338 A") as Outcome.Success).value
+        val address = (RoomAddressRepository(database.addressDao(), Clock.System).add("12 A") as Outcome.Success).value
         val renter = Renter(
             addressId = address.id,
             unit = null,

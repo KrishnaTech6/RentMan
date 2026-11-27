@@ -61,7 +61,7 @@ import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddRenterViewModelTest {
-    private val home = Address(AddressId(1), "338 A")
+    private val home = Address(AddressId(1), "12 A")
     private val clock = object : Clock {
         override fun now(): Instant = Instant.parse("2026-11-23T10:00:00Z")
     }
