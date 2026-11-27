@@ -42,10 +42,10 @@
     "semantic_hash": "c3ee017212c87cf1f45089026262db64"
   },
   "data/src/commonMain/kotlin/com/rentman/data/DataModule.kt": {
-    "mtime": 1795506980.5513015,
-    "seen": 1795508596.599724,
-    "ast_hash": "25dd335ff2c62007f1a2b2ed9aaaf4c1",
-    "semantic_hash": "25dd335ff2c62007f1a2b2ed9aaaf4c1"
+    "mtime": 1795791194.5070739,
+    "seen": 1795793606.785581,
+    "ast_hash": "f4c5caf2202ca57d4c8f7da8a0297e04",
+    "semantic_hash": ""
   },
   "data/src/commonMain/kotlin/com/rentman/data/Safe.kt": {
     "mtime": 1795444505.2908957,
@@ -96,16 +96,16 @@
     "semantic_hash": "f34ca852a93528dcb5f982b26086a3ab"
   },
   "data/src/commonMain/kotlin/com/rentman/data/db/AppDatabase.kt": {
-    "mtime": 1795506980.550881,
-    "seen": 1795508596.5997288,
-    "ast_hash": "05eba1867c9f047c578f9ee82d7caf91",
-    "semantic_hash": "05eba1867c9f047c578f9ee82d7caf91"
+    "mtime": 1795791182.8111587,
+    "seen": 1795793606.7855859,
+    "ast_hash": "387aed2e8fa40f5afff37a62b3ef4eb6",
+    "semantic_hash": ""
   },
   "data/src/commonMain/kotlin/com/rentman/data/db/AppSettingsEntity.kt": {
-    "mtime": 1795506980.5500681,
-    "seen": 1795508596.5997288,
-    "ast_hash": "84bf2998dd1358e9f8ad7c594f39a63a",
-    "semantic_hash": "84bf2998dd1358e9f8ad7c594f39a63a"
+    "mtime": 1795791182.8105896,
+    "seen": 1795793606.7855859,
+    "ast_hash": "f1944346910454696b0f65be90ac1f4d",
+    "semantic_hash": ""
   },
   "data/src/commonMain/kotlin/com/rentman/data/db/BackupDao.kt": {
     "mtime": 1795511409.6742296,
@@ -192,10 +192,10 @@
     "semantic_hash": "c13b1c4ac1f8a77353e19618debaa595"
   },
   "data/src/commonMain/kotlin/com/rentman/data/settings/RoomSettingsRepository.kt": {
-    "mtime": 1795506980.5503805,
-    "seen": 1795508596.5997372,
-    "ast_hash": "f5ecf7888015261009e9c629f58c9ba6",
-    "semantic_hash": "f5ecf7888015261009e9c629f58c9ba6"
+    "mtime": 1795791182.8122041,
+    "seen": 1795793606.7855942,
+    "ast_hash": "cdfe79c3adb2d3787a5f4faae500b8e4",
+    "semantic_hash": ""
   },
   "data/src/commonTest/kotlin/com/rentman/data/SafeTest.kt": {
     "mtime": 1795444443.3416367,
@@ -204,10 +204,10 @@
     "semantic_hash": "79bea1eb334490fd8c07930395d60a8e"
   },
   "data/src/commonTest/kotlin/com/rentman/data/backup/BackupCodecTest.kt": {
-    "mtime": 1795514652.4942997,
-    "seen": 1795530739.30228,
-    "ast_hash": "adc3534f85ce13114e6c21263f7291d0",
-    "semantic_hash": "adc3534f85ce13114e6c21263f7291d0"
+    "mtime": 1795791276.7298815,
+    "seen": 1795793606.785595,
+    "ast_hash": "c9879f54aed8fb95f4b04bc41fad4808",
+    "semantic_hash": ""
   },
   "data/src/commonTest/kotlin/com/rentman/data/backup/SampleBackup.kt": {
     "mtime": 1795506899.8572285,
@@ -306,10 +306,10 @@
     "semantic_hash": "dd9e52b1bece368605ee81c4d7ffc9a7"
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/Outcome.kt": {
-    "mtime": 1795524892.4955854,
-    "seen": 1795530739.302293,
-    "ast_hash": "359ebb02806c75e809850e18cb1ee8d4",
-    "semantic_hash": "359ebb02806c75e809850e18cb1ee8d4"
+    "mtime": 1795791168.07617,
+    "seen": 1795793606.785604,
+    "ast_hash": "0c0c70846d06fbd374dcb5da13a5937e",
+    "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/backup/Backup.kt": {
     "mtime": 1795511291.1356864,
@@ -330,10 +330,10 @@
     "semantic_hash": "7bbf7c37affcfe5ea8b9876cd4f1e02f"
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/BillMessage.kt": {
-    "mtime": 1795455855.3283126,
-    "seen": 1795508596.599749,
-    "ast_hash": "6baa1c61f1603f893526413f2bd4ec4f",
-    "semantic_hash": "6baa1c61f1603f893526413f2bd4ec4f"
+    "mtime": 1795791097.9943044,
+    "seen": 1795793606.785606,
+    "ast_hash": "c5ef78f36c5ca405482752b88cca0873",
+    "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/BillUseCases.kt": {
     "mtime": 1795575678.3057237,
@@ -396,10 +396,10 @@
     "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/settings/AppSettings.kt": {
-    "mtime": 1795506848.5097413,
-    "seen": 1795508596.599754,
-    "ast_hash": "d82d9e13efbb4dd9ce73621c53070a67",
-    "semantic_hash": "d82d9e13efbb4dd9ce73621c53070a67"
+    "mtime": 1795792064.8048487,
+    "seen": 1795793606.785616,
+    "ast_hash": "1c9974917b2ab22429ca3d16da9a6d94",
+    "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/settings/SettingsUseCases.kt": {
     "mtime": 1795531729.9614809,
@@ -720,10 +720,10 @@
     "semantic_hash": "2859f1f41d87e91a0f6b49422c83cd24"
   },
   "iosApp/project.yml": {
-    "mtime": 1795515420.3569396,
-    "seen": 1795530739.30234,
-    "ast_hash": "ffe9531624c1db2be6f414338423c38b",
-    "semantic_hash": "ffe9531624c1db2be6f414338423c38b"
+    "mtime": 1795793279.0967865,
+    "seen": 1795793606.785724,
+    "ast_hash": "70b3cc21dc03098d6a1dbe6a5eb55e31",
+    "semantic_hash": ""
   },
   "settings.gradle.kts": {
     "mtime": 1795373489.3187697,
@@ -834,10 +834,10 @@
     "semantic_hash": "03db856ca9afb3773a15608a90d9d128"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/DomainErrorText.kt": {
-    "mtime": 1795524996.087114,
-    "seen": 1795530739.302352,
-    "ast_hash": "b4ad77682b1369cefb3f9fa21fcd4514",
-    "semantic_hash": "b4ad77682b1369cefb3f9fa21fcd4514"
+    "mtime": 1795791348.8049622,
+    "seen": 1795793606.785664,
+    "ast_hash": "6fa04afa1d808b78741cba9a15cbe1aa",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/Fields.kt": {
     "mtime": 1795455915.1267378,
@@ -888,9 +888,9 @@
     "semantic_hash": "d315cc0885a230351393a7655737eedd"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/di/Modules.kt": {
-    "mtime": 1795575812.287902,
-    "seen": 1795758421.588346,
-    "ast_hash": "cbc6134bd2c7d72d59c8620570afa1b5",
+    "mtime": 1795791566.5792186,
+    "seen": 1795793606.785673,
+    "ast_hash": "c5c06be059f934380909d6dfdcfe3dca",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/address/AddressPickerContract.kt": {
@@ -912,21 +912,21 @@
     "semantic_hash": "4d2d7c9c3093fa6f723865a723ee3c49"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillContract.kt": {
-    "mtime": 1795766158.1590514,
-    "seen": 1795766902.875814,
-    "ast_hash": "afa6ad417015370dbeabbc0de2326a6a",
+    "mtime": 1795791331.7800858,
+    "seen": 1795793606.785675,
+    "ast_hash": "6375119acf8f2bc82159164cf72bf8c8",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillScreen.kt": {
-    "mtime": 1795766158.1598623,
-    "seen": 1795766902.875814,
-    "ast_hash": "4aeb2907d0251c025f8a97ff855e67db",
+    "mtime": 1795791340.0771425,
+    "seen": 1795793606.785675,
+    "ast_hash": "4d88f9b941daba92e407e443c4f1528d",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/bill/CreateBillViewModel.kt": {
-    "mtime": 1795766158.1592956,
-    "seen": 1795766902.875815,
-    "ast_hash": "1bdab547dbb19f13980a47233967e760",
+    "mtime": 1795791331.7797098,
+    "seen": 1795793606.785676,
+    "ast_hash": "2c2c1cbc9b9129ec35d7e913494d3c4f",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/home/HomeContract.kt": {
@@ -948,21 +948,21 @@
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/payment/RecordPaymentContract.kt": {
-    "mtime": 1795754610.5516882,
-    "seen": 1795758421.588354,
-    "ast_hash": "373727a054434829e932cccf310ac4d9",
+    "mtime": 1795792070.983175,
+    "seen": 1795793606.785682,
+    "ast_hash": "aac4892621afd9a2c71259d6479c9fed",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/payment/RecordPaymentScreen.kt": {
-    "mtime": 1795754797.9102597,
-    "seen": 1795758421.588354,
-    "ast_hash": "476dda5c1c875f3ca9dbbbb9fef239a4",
+    "mtime": 1795792064.8806977,
+    "seen": 1795793606.785683,
+    "ast_hash": "a3acff1243d0a0e0983ddd8c63fd7733",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/payment/RecordPaymentViewModel.kt": {
-    "mtime": 1795754610.5520468,
-    "seen": 1795758421.588355,
-    "ast_hash": "5cc24d0437639e7bb0e2b36a3ba14230",
+    "mtime": 1795792064.8299434,
+    "seen": 1795793606.785683,
+    "ast_hash": "9f5cb925efc90aa675fdb44e80457645",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/renter/AddRenterContract.kt": {
@@ -1002,22 +1002,22 @@
     "semantic_hash": "86d2edf92bd4588a160f4de735d29beb"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/settings/SettingsContract.kt": {
-    "mtime": 1795531729.9621415,
-    "seen": 1795573716.3899899,
-    "ast_hash": "1f1c4410f4a65608512b250ee6499a16",
-    "semantic_hash": "1f1c4410f4a65608512b250ee6499a16"
+    "mtime": 1795791642.0118144,
+    "seen": 1795793606.785687,
+    "ast_hash": "1893e410ca51c252de29c9f367f9d181",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/settings/SettingsScreen.kt": {
-    "mtime": 1795526641.686928,
-    "seen": 1795530739.302368,
-    "ast_hash": "4e9a9b4ffb9524f49b262bdf16c7680e",
-    "semantic_hash": "4e9a9b4ffb9524f49b262bdf16c7680e"
+    "mtime": 1795791648.9807723,
+    "seen": 1795793606.785687,
+    "ast_hash": "163b4311c217d50109783c9080309fa3",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/settings/SettingsViewModel.kt": {
-    "mtime": 1795531729.9625902,
-    "seen": 1795573716.3899908,
-    "ast_hash": "ff1562b07d50abbc810fa62bd23fb7d0",
-    "semantic_hash": "ff1562b07d50abbc810fa62bd23fb7d0"
+    "mtime": 1795791642.0121312,
+    "seen": 1795793606.7856882,
+    "ast_hash": "aed7d3ea51c96272ddf86da799b6ea54",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/mvi/FlowExt.kt": {
     "mtime": 1795443831.6357336,
@@ -1044,9 +1044,9 @@
     "semantic_hash": "8fcac3372f72a041d51562b252cfd554"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/navigation/AppNavigation.kt": {
-    "mtime": 1795575812.2868023,
-    "seen": 1795758421.588362,
-    "ast_hash": "1c6ce9ba50ed0cd7027b2f3abaeabcdb",
+    "mtime": 1795791642.0114958,
+    "seen": 1795793606.78569,
+    "ast_hash": "52a3c0a645dceb789d3883705b3eab33",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/navigation/Navigator.kt": {
@@ -1056,9 +1056,9 @@
     "semantic_hash": "4f59331eba247ddf7654c2b8d117dc1a"
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/navigation/Routes.kt": {
-    "mtime": 1795575812.2858574,
-    "seen": 1795758421.588363,
-    "ast_hash": "45bb0a15670e842aa0e81a5574a3198f",
+    "mtime": 1795791642.0111394,
+    "seen": 1795793606.7856908,
+    "ast_hash": "e11b59b66a8bae87c4c49a81f3d993d2",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/reminders/ReminderText.kt": {
@@ -1098,9 +1098,9 @@
     "semantic_hash": "362b0c9e136ee1c79b1cc6c1fe1edce9"
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/bill/CreateBillViewModelTest.kt": {
-    "mtime": 1795764484.7798893,
-    "seen": 1795766902.875836,
-    "ast_hash": "f3cc3133f8490b057750831d2283e022",
+    "mtime": 1795791414.42581,
+    "seen": 1795793606.785697,
+    "ast_hash": "0518368e8f5ce3d7d24a1e901bd34919",
     "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/bill/Fakes.kt": {
@@ -1122,9 +1122,9 @@
     "semantic_hash": "b8a6c0b592a2b4e82d4b7a79bfb90a3a"
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/payment/RecordPaymentViewModelTest.kt": {
-    "mtime": 1795754638.635941,
-    "seen": 1795758421.5883698,
-    "ast_hash": "b3798d9766a417e7f2518f232a6a6c79",
+    "mtime": 1795792064.83963,
+    "seen": 1795793606.7857,
+    "ast_hash": "3877c383794250c631cd06ff097fff4c",
     "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/renter/AddRenterViewModelTest.kt": {
@@ -1158,10 +1158,10 @@
     "semantic_hash": "5dd9a4a7927ae97e71209006d665e131"
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/settings/SettingsViewModelTest.kt": {
-    "mtime": 1795527760.1776628,
-    "seen": 1795530739.3023841,
-    "ast_hash": "ba9a6c4d0207d306af97b11b172ad293",
-    "semantic_hash": "ba9a6c4d0207d306af97b11b172ad293"
+    "mtime": 1795791649.0046864,
+    "seen": 1795793606.785703,
+    "ast_hash": "9e67bd3e9829f9efe949ab4de5e0695d",
+    "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/mvi/FlatMapFirstTest.kt": {
     "mtime": 1795443831.6479828,
@@ -1254,10 +1254,10 @@
     "semantic_hash": "4b9c20d0f975013b3ac230f63b3a4c8f"
   },
   "DATABASE.md": {
-    "mtime": 1795539735.7520025,
-    "seen": 1795573716.390017,
-    "ast_hash": "500a676a7d50f4c8eb0e384aa251f51c",
-    "semantic_hash": "500a676a7d50f4c8eb0e384aa251f51c"
+    "mtime": 1795791796.2751324,
+    "seen": 1795793606.785713,
+    "ast_hash": "f7acd1b5e62fdf8c7b58e55ac720de34",
+    "semantic_hash": ""
   },
   "GLOSSARY.md": {
     "mtime": 1795576112.0140197,
@@ -1266,9 +1266,9 @@
     "semantic_hash": ""
   },
   "PLAN.md": {
-    "mtime": 1795766729.8127704,
-    "seen": 1795766902.875854,
-    "ast_hash": "aae8380ae0497936b588463b78866d05",
+    "mtime": 1795792070.983426,
+    "seen": 1795793606.785714,
+    "ast_hash": "322fcca4f136beedb6736720de35441d",
     "semantic_hash": ""
   },
   "design/project/AddRenter.dc.html": {
@@ -1548,9 +1548,9 @@
     "semantic_hash": "301291f4c9d130a3b8007626983de138"
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/MonthReviewMessage.kt": {
-    "mtime": 1795758047.876424,
-    "seen": 1795758421.58828,
-    "ast_hash": "9df8d8711bf9d1def63776b7b7566cfd",
+    "mtime": 1795791097.9947026,
+    "seen": 1795793606.785609,
+    "ast_hash": "16f33d41077ce30a5a9b3d31328de896",
     "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/billing/MonthsUseCases.kt": {
@@ -1566,9 +1566,9 @@
     "semantic_hash": ""
   },
   "domain/src/commonMain/kotlin/com/rentman/domain/payments/PaymentMessage.kt": {
-    "mtime": 1795754605.2444654,
-    "seen": 1795758421.5882869,
-    "ast_hash": "beea48fbced2638dcb3d9f14f5e23573",
+    "mtime": 1795792064.8071995,
+    "seen": 1795793606.7856152,
+    "ast_hash": "8fc045bccb53eb3ce9d4320be5b62b06",
     "semantic_hash": ""
   },
   "domain/src/commonTest/kotlin/com/rentman/domain/billing/MonthReviewMessageTest.kt": {
@@ -1590,9 +1590,9 @@
     "semantic_hash": ""
   },
   "domain/src/commonTest/kotlin/com/rentman/domain/payments/PaymentMessageTest.kt": {
-    "mtime": 1795754599.388212,
-    "seen": 1795758421.588313,
-    "ast_hash": "14e59fcd97a02e0cbfb797cb7bf8fb12",
+    "mtime": 1795791098.02465,
+    "seen": 1795793606.7856388,
+    "ast_hash": "5d6885c73c33f7a1d72200b54d3e70ec",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MonthCard.kt": {
@@ -1608,21 +1608,21 @@
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/months/MonthDetailContract.kt": {
-    "mtime": 1795758063.0212488,
-    "seen": 1795758421.588351,
-    "ast_hash": "50c3a873a079f8bff846cb6aec759361",
+    "mtime": 1795791433.7513804,
+    "seen": 1795793606.785679,
+    "ast_hash": "25b1de7e2d2227d633a2eea78cf53bdd",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/months/MonthDetailScreen.kt": {
-    "mtime": 1795758063.021936,
-    "seen": 1795758421.588352,
-    "ast_hash": "dc732c37dbd297504f60c2d2e6399ab4",
+    "mtime": 1795791433.752331,
+    "seen": 1795793606.7856798,
+    "ast_hash": "71f56a8d9bd646646375662a2851cf73",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/months/MonthDetailViewModel.kt": {
-    "mtime": 1795758063.0215323,
-    "seen": 1795758421.588352,
-    "ast_hash": "2a538f9474389a013206e409aab2a78a",
+    "mtime": 1795791433.7516553,
+    "seen": 1795793606.7856798,
+    "ast_hash": "cffe5d1a658cdb29db52cbb551dcfa8b",
     "semantic_hash": ""
   },
   "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/months/MonthsContract.kt": {
@@ -1644,9 +1644,9 @@
     "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/months/MonthDetailViewModelTest.kt": {
-    "mtime": 1795758063.0227852,
-    "seen": 1795758421.588368,
-    "ast_hash": "7159649db70d9bbbe9b046e70f3c7983",
+    "mtime": 1795791433.7532837,
+    "seen": 1795793606.785698,
+    "ast_hash": "61c845f1a88d5220cbebdc279ec35a6d",
     "semantic_hash": ""
   },
   "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/months/MonthsViewModelTest.kt": {
@@ -1677,6 +1677,96 @@
     "mtime": 1795766729.8114696,
     "seen": 1795766902.8758342,
     "ast_hash": "238d25a15921c9b3e560156fd93a95a2",
+    "semantic_hash": ""
+  },
+  "data/schemas/com.rentman.data.db.AppDatabase/2.json": {
+    "mtime": 1795791188.3921087,
+    "seen": 1795793606.78558,
+    "ast_hash": "52d7de67c1666c6b041c239a340f369c",
+    "semantic_hash": ""
+  },
+  "data/src/commonMain/kotlin/com/rentman/data/db/Migrations.kt": {
+    "mtime": 1795791182.8115327,
+    "seen": 1795793606.785588,
+    "ast_hash": "188241a4fef0afc7031fddf5652bf529",
+    "semantic_hash": ""
+  },
+  "data/src/jvmTest/kotlin/com/rentman/data/db/MigrationTest.kt": {
+    "mtime": 1795791236.3634548,
+    "seen": 1795793606.7856011,
+    "ast_hash": "27390e9383e5f7d2d26a3d3c051736ea",
+    "semantic_hash": ""
+  },
+  "domain/src/commonMain/kotlin/com/rentman/domain/messages/MessageTemplate.kt": {
+    "mtime": 1795792064.880196,
+    "seen": 1795793606.785612,
+    "ast_hash": "bf185c9cafd7e8db8de87d1abafaa447",
+    "semantic_hash": ""
+  },
+  "domain/src/commonMain/kotlin/com/rentman/domain/messages/MessageUseCases.kt": {
+    "mtime": 1795791555.4563017,
+    "seen": 1795793606.785613,
+    "ast_hash": "aa15d150584906015f982e4f52b71bd0",
+    "semantic_hash": ""
+  },
+  "domain/src/commonTest/kotlin/com/rentman/domain/messages/MessageTemplateTest.kt": {
+    "mtime": 1795792064.8136837,
+    "seen": 1795793606.785635,
+    "ast_hash": "2155d377e1493cc70ffb5864852005b7",
+    "semantic_hash": ""
+  },
+  "domain/src/commonTest/kotlin/com/rentman/domain/messages/MessageUseCasesTest.kt": {
+    "mtime": 1795792064.8168688,
+    "seen": 1795793606.7856362,
+    "ast_hash": "ce3f7cccdda4779246f00e3df6b6cfd9",
+    "semantic_hash": ""
+  },
+  "iosApp/App/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1795793279.0513237,
+    "seen": 1795793606.785651,
+    "ast_hash": "c5d5aeafe79232c2195e36ca041e38c5",
+    "semantic_hash": ""
+  },
+  "iosApp/App/Assets.xcassets/Contents.json": {
+    "mtime": 1795793279.0487607,
+    "seen": 1795793606.785651,
+    "ast_hash": "9deb2ada1cc834bbebf8bbad9c8978a1",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/components/MessageKindText.kt": {
+    "mtime": 1795792064.8205602,
+    "seen": 1795793606.785665,
+    "ast_hash": "2980d23d5a37d5b110a75a0c82cba8cd",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/messages/MessageEditContract.kt": {
+    "mtime": 1795792064.8265522,
+    "seen": 1795793606.7856781,
+    "ast_hash": "d5c805c0aea9574004baf448979d0a84",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/messages/MessageEditScreen.kt": {
+    "mtime": 1795792064.8235297,
+    "seen": 1795793606.7856781,
+    "ast_hash": "684d7b0e71816d6b1619d3889419ea33",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonMain/kotlin/com/rentman/sharedui/feature/messages/MessageEditViewModel.kt": {
+    "mtime": 1795791832.5873756,
+    "seen": 1795793606.785679,
+    "ast_hash": "2a94d84d5e1508a5ccca419a7099ed0c",
+    "semantic_hash": ""
+  },
+  "sharedUI/src/commonTest/kotlin/com/rentman/sharedui/feature/messages/MessageEditViewModelTest.kt": {
+    "mtime": 1795792064.8330193,
+    "seen": 1795793606.785698,
+    "ast_hash": "0c78d09da020a4c8f43403044b2b86fb",
+    "semantic_hash": ""
+  },
+  "iosApp/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png": {
+    "mtime": 1795793279.038756,
+    "seen": 1795793606.785724,
+    "ast_hash": "eb521f498868482757e64df7ef8b0678",
     "semantic_hash": ""
   }
 }
